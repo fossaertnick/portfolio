@@ -83,6 +83,10 @@ h1{
     color: deepskyblue;
 }
 
+.notSelected{
+    background-color: yellow;
+    border-color: orange;
+}
 .selected{
     background-color: darkorange;
 }

@@ -5,13 +5,16 @@ window.addEventListener("load", initialize);
 const sortOrder = ["Age", "Firstname", "Lastname"];
 const voices = ["Dan Castellaneta", "Nancy Cartwright", "Hank Azaria"];
 
-let divOverview, slcChoice, slcSort, divDetails;
+let divOverview, slcChoice, slcSort, divDetails, divVoices, divVoiceCharacters;
 
 function initialize() {
 
   // initialisering DOM
   divOverview = document.querySelector("#overview");
   divDetails = document.querySelector("#details");
+  divVoices = document.querySelector("#voices");
+  divVoiceCharacters = document.querySelector("#characters");
+
   slcChoice = document.querySelector("#choise");
   slcSort = document.getElementById("sort-items"); // heb hier 'getElementById' gebruikt gewoon om eens te veranderen
 
@@ -22,6 +25,7 @@ function initialize() {
   FillUpSlcType();
   FillUpSlcSort();
   loadPeople();
+  LoadVoiceButtons();
 }
 
 // core function
@@ -52,16 +56,34 @@ function FillUpSlcType() { // ik ben me ervan bewust dat dit hard gecodeerd staa
 }
 function FillUpSlcSort() { // ik ben me ervan bewust dat dit hard gecodeerd staat
 
-  slcSort[slcSort.length] = new Option("Leeftijd", "age");
-  slcSort[slcSort.length] = new Option("VoorNaam", "firstname");
-  slcSort[slcSort.length] = new Option("FamilieNaam", "lastname");
+  
+  for(const sort in sortOrder){
+
+    slcSort[slcSort.length] = new Option(sortOrder[sort], sortOrder[sort])
+  }
+}
+function LoadVoiceButtons(){
+
+  for(const button in voices){
+
+    const btnVoice = document.createElement("button");
+    btnVoice.id = `${voices[button]}`;
+    btnVoice.addEventListener("mouseover", changeColors)
+    btnVoice.addEventListener("mouseout", resetColor)
+    btnVoice.addEventListener("click", showVoices);
+    btnVoice.className = "notSelected";
+    btnVoice.textContent = voices[button];
+    divVoices.appendChild(btnVoice);
+  }
+
 }
 
-// supporting function LoadPeople
+// supporting functions
 function appointRightFace(person) {
 
   const imgFace = document.createElement("img");
   imgFace.id = members[person].firstname;
+  imgFace.className = "characters img";
   imgFace.addEventListener("click", showInfo); // ik heb er een click van gemaakt die in een alert zal komen
 
   if (members[person].type === "family") {
@@ -132,7 +154,6 @@ function GetInfo(selectedFigure) {
 
   return divDetailedInfo;
 }
-
 // supporting function FillUpSlcType (and shows character of selected type)
 function typeSelected() {
 
@@ -158,10 +179,38 @@ function typeSelected() {
     }
   }
 }
-
 function sortSelected() {
 
   // MOET NOG UITGEWERKT WORDEN
+}
+function showVoices(){
+
+  const selectedVoiceId = this.id;
+  divVoiceCharacters.innerHTML = "";
+  
+  for (var person in members) {
+
+    if (members[person].voice === selectedVoiceId) {
+
+      const divPerson = document.createElement("div");
+
+      const h3Name = document.createElement("h3");
+      h3Name.textContent = members[person].firstname;
+
+      const imgFace = appointRightFace(person);
+
+      divPerson.appendChild(h3Name);
+      divPerson.appendChild(imgFace);
+
+      divVoiceCharacters.appendChild(divPerson);
+    }
+  }
+}
+function changeColors(){
+  this.className = "selected";
+}
+function resetColor(){
+    this.className = "notSelected";
 }
 
 
