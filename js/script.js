@@ -33,15 +33,7 @@ function loadPeople() {
 
   for (const person in members) {
 
-    const divPerson = document.createElement("div");
-
-    const h3Name = document.createElement("h3");
-    h3Name.textContent = members[person].firstname;
-
-    const imgFace = appointRightFace(person);
-
-    divPerson.appendChild(h3Name);
-    divPerson.appendChild(imgFace);
+    const divPerson = CreatePerson(person);
 
     divOverview.appendChild(divPerson);
   }
@@ -158,6 +150,7 @@ function GetInfo(selectedFigure) {
 function typeSelected() {
 
   divDetails.innerHTML = "";
+  divVoiceCharacters.innerHTML = "";
   const selectedTypeValue = slcChoice.value
 
   divOverview.innerHTML = "";
@@ -165,15 +158,7 @@ function typeSelected() {
 
     if (members[person].type === selectedTypeValue) {
 
-      const divPerson = document.createElement("div");
-
-      const h3Name = document.createElement("h3");
-      h3Name.textContent = members[person].firstname;
-
-      const imgFace = appointRightFace(person);
-
-      divPerson.appendChild(h3Name);
-      divPerson.appendChild(imgFace);
+      const divPerson = CreatePerson(person);
 
       divOverview.appendChild(divPerson);
     }
@@ -187,20 +172,13 @@ function showVoices(){
 
   const selectedVoiceId = this.id;
   divVoiceCharacters.innerHTML = "";
+  divDetails.innerHTML = "";
   
   for (var person in members) {
 
     if (members[person].voice === selectedVoiceId) {
 
-      const divPerson = document.createElement("div");
-
-      const h3Name = document.createElement("h3");
-      h3Name.textContent = members[person].firstname;
-
-      const imgFace = appointRightFace(person);
-
-      divPerson.appendChild(h3Name);
-      divPerson.appendChild(imgFace);
+      const divPerson = CreatePerson(person)
 
       divVoiceCharacters.appendChild(divPerson);
     }
@@ -212,7 +190,20 @@ function changeColors(){
 function resetColor(){
     this.className = "notSelected";
 }
+function CreatePerson(person){
 
+        const divPerson = document.createElement("div");
+
+      const h3Name = document.createElement("h3");
+      h3Name.textContent = members[person].firstname;
+
+      const imgFace = appointRightFace(person);
+
+      divPerson.appendChild(h3Name);
+      divPerson.appendChild(imgFace);
+
+      return divPerson;
+}
 
 
 
