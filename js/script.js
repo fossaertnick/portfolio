@@ -5,7 +5,7 @@ window.addEventListener("load", initialize);
 const sortOrder = ["Age", "Firstname", "Lastname"];
 const voices = ["Dan Castellaneta", "Nancy Cartwright", "Hank Azaria"];
 
-let divOverview, slcChoice, slcSort, divDetails, divVoices, divVoiceCharacters;
+let divOverview, slcChoice, slcSort, divDetails, divVoices, divVoiceCharacters, parRandomQuote;
 
 function initialize() {
 
@@ -33,7 +33,7 @@ function loadPeople() {
 
   for (const person in members) {
 
-    const divPerson = CreatePerson(person);
+    const divPerson = createPerson(person);
 
     divOverview.appendChild(divPerson);
   }
@@ -48,15 +48,15 @@ function FillUpSlcType() { // ik ben me ervan bewust dat dit hard gecodeerd staa
 }
 function FillUpSlcSort() { // ik ben me ervan bewust dat dit hard gecodeerd staat
 
-  
-  for(const sort in sortOrder){
+
+  for (const sort in sortOrder) {
 
     slcSort[slcSort.length] = new Option(sortOrder[sort], sortOrder[sort])
   }
 }
-function LoadVoiceButtons(){
+function LoadVoiceButtons() {
 
-  for(const button in voices){
+  for (const button in voices) {
 
     const btnVoice = document.createElement("button");
     btnVoice.id = `${voices[button]}`;
@@ -92,6 +92,7 @@ function appointRightFace(person) {
 }
 function showInfo() {
 
+  divVoiceCharacters.innerHTML = "";
   const selectedFigureName = this.id;
   const selectedFigure = members.find(e => e.firstname === selectedFigureName);
   const divDetailedInfo = GetInfo(selectedFigure);
@@ -125,7 +126,7 @@ function GetInfo(selectedFigure) {
   h4Quote.textContent = `Quote:`
 
   const parQuote = document.createElement("p");
-  parQuote.textContent = `${selectedFigure.quote}`;
+  parQuote.textContent = `${selectedFigure.quote}`; // findRandomQuote(selectedFigure)
 
   const h4Voice = document.createElement("h4");
   h4Voice.className = "bg-deepsky-blue";
@@ -158,52 +159,68 @@ function typeSelected() {
 
     if (members[person].type === selectedTypeValue) {
 
-      const divPerson = CreatePerson(person);
+      const divPerson = createPerson(person);
 
       divOverview.appendChild(divPerson);
     }
   }
 }
+function sortSelected() {   // Ik heb niet direct een idee hoe hier aan te beginnen :/
+
+
+}
 function sortSelected() {
 
   // MOET NOG UITGEWERKT WORDEN
 }
-function showVoices(){
+function showVoices() {
 
   const selectedVoiceId = this.id;
   divVoiceCharacters.innerHTML = "";
   divDetails.innerHTML = "";
-  
+
   for (var person in members) {
 
     if (members[person].voice === selectedVoiceId) {
 
-      const divPerson = CreatePerson(person)
+      const divPerson = createPerson(person)
 
       divVoiceCharacters.appendChild(divPerson);
     }
   }
 }
-function changeColors(){
+function changeColors() {
   this.className = "selected";
 }
-function resetColor(){
-    this.className = "notSelected";
+function resetColor() {
+  this.className = "notSelected";
 }
-function CreatePerson(person){
+function createPerson(person) {
 
-        const divPerson = document.createElement("div");
+  const divPerson = document.createElement("div");
 
-      const h3Name = document.createElement("h3");
-      h3Name.textContent = members[person].firstname;
+  const h3Name = document.createElement("h3");
+  h3Name.textContent = members[person].firstname;
 
-      const imgFace = appointRightFace(person);
+  const imgFace = appointRightFace(person);
 
-      divPerson.appendChild(h3Name);
-      divPerson.appendChild(imgFace);
+  divPerson.appendChild(h3Name);
+  divPerson.appendChild(imgFace);
 
-      return divPerson;
+  return divPerson;
 }
+/*function findRandomQuote(selectedFigure){
+
+  
+  for(const prop in selectedFigure){
+    if(typeof members[selectedFigure] == "object"){
+
+      const randomIndexNrByQuotes = Math.floor(Math.random() * prop.length);
+      parRandomQuote = members[selectedFigure].favorite_quotes.find(e => e === randomIndexNrByQuotes);
+    }
+  }
+  return parRandomQuote;
+}*/
 
 
 
