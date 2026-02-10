@@ -1,7 +1,8 @@
 # Naam van jouw project
 
-## Project
-Beschrijf hier je project
+## Projectbeschrijving
+
+**actuele** beschrijving van wat de applicatie doet.
 
 ## Extra info
 Plaats hier de nodig informatie om het
