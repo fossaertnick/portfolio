@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Mde.Project.Mobile.Pages.StatisticsPage"
+             Shell.FlyoutBehavior="Flyout">
+    
+    <VerticalStackLayout Spacing="15" Padding="20">
+
+        <Label Text="Statistieken" FontSize="35" HorizontalOptions="End" Margin="0,0,30,0"/>
+
+        <HorizontalStackLayout Spacing="10" Margin="0,35,0,0" HorizontalOptions="Center">
+            <Label Text="# Memorias" WidthRequest="100" VerticalOptions="Center"/>
+            <Border WidthRequest="200" Padding="10,0,0,0">
+                <Label Text="79" HeightRequest="40" VerticalTextAlignment="Center"/>
+            </Border>
+        </HorizontalStackLayout>
+
+        <HorizontalStackLayout Spacing="10" HorizontalOptions="End" Margin="0,0,30,0">
+            <Label Text="# werk:" WidthRequest="100" VerticalOptions="Center"/>
+            <Border WidthRequest="75" Padding="10,0,0,0">
+                <Label Text="15" HeightRequest="25" VerticalTextAlignment="Center"/>
+            </Border>
+        </HorizontalStackLayout>
+        <HorizontalStackLayout Spacing="10" HorizontalOptions="End" Margin="0,0,30,0">
+            <Label Text="# reis:" WidthRequest="100" VerticalOptions="Center"/>
+            <Border WidthRequest="75" Padding="10,0,0,0">
+                <Label Text="42" HeightRequest="25" VerticalTextAlignment="Center"/>
+            </Border>
+        </HorizontalStackLayout>
+        <HorizontalStackLayout Spacing="10" HorizontalOptions="End" Margin="0,0,30,0">
+            <Label Text="# uitgaan:" WidthRequest="100" VerticalOptions="Center"/>
+            <Border WidthRequest="75" Padding="10,0,0,0">
+                <Label Text="7" HeightRequest="25" VerticalTextAlignment="Center"/>
+            </Border>
+        </HorizontalStackLayout>
+        <HorizontalStackLayout Spacing="10" HorizontalOptions="End" Margin="0,0,30,0">
+            <Label Text="# andere:" WidthRequest="100" VerticalOptions="Center"/>
+            <Border WidthRequest="75" Padding="10,0,0,0">
+                <Label Text="16" HeightRequest="25" VerticalTextAlignment="Center"/>
+            </Border>
+        </HorizontalStackLayout>
+
+
+
+        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+            <Label Text="Fotos" WidthRequest="100" VerticalOptions="Center"/>
+            <Border WidthRequest="200" Padding="10,0,0,0">
+                <Label Text="213" HeightRequest="40" VerticalTextAlignment="Center"/>
+            </Border>
+        </HorizontalStackLayout>
+
+        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+            <Label Text="Videos" WidthRequest="100" VerticalOptions="Center"/>
+            <Border WidthRequest="200" Padding="10,0,0,0">
+                <Label Text="33" HeightRequest="40" VerticalTextAlignment="Center"/>
+            </Border>
+        </HorizontalStackLayout>
+
+        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+            <Label Text="Muziek" WidthRequest="100" VerticalOptions="Center"/>
+            <Border WidthRequest="200" Padding="10,0,0,0">
+                <Label Text="41" HeightRequest="40" VerticalTextAlignment="Center"/>
+            </Border>
+        </HorizontalStackLayout>
+
+        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+            <Label Text="Favoriete stad" WidthRequest="100" VerticalOptions="Center"/>
+            <Border WidthRequest="200" Padding="10,0,0,0">
+                <Label Text="Brugge" HeightRequest="40" VerticalTextAlignment="Center"/>
+            </Border>
+        </HorizontalStackLayout>
+
+    </VerticalStackLayout>
+</ContentPage>
