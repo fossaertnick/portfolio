@@ -1,12 +1,20 @@
+using Mde.Project.Mobile.ViewModels;
+
 namespace Mde.Project.Mobile.Pages;
 
 public partial class SettingsPage : ContentPage
 {
-	public SettingsPage()
+    private readonly SettingsViewModel _viewModel;
+
+    // constructor
+    public SettingsPage(SettingsViewModel viewModel)
 	{
 		InitializeComponent();
-	}
+        BindingContext = viewModel;
+        _viewModel = viewModel;
+    }
 
+    // methoden
     private async void AvatarButton_Clicked(object sender, EventArgs e)
     {
         bool bevestiging = await DisplayAlertAsync(
@@ -14,11 +22,11 @@ public partial class SettingsPage : ContentPage
                 "Weet je zeker dat je je avatar wilt veranderen?",
                 "Ja",
                 "Nee"
-);
+        );
 
         if (bevestiging)
         {
-            await Shell.Current.GoToAsync("//settingsPage");
+            _viewModel.ChangeAvatarCommand.Execute(null);
         }
         else
         {

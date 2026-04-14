@@ -2,6 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="https://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:viewModels="clr-namespace:Mde.Project.Mobile.ViewModels"
+             x:DataType="viewModels:MainViewModel"
              x:Class="Mde.Project.Mobile.Pages.MainPage"
              Shell.FlyoutBehavior="Disabled"
              Shell.TabBarIsVisible="False">
@@ -16,8 +18,8 @@
         </Grid.ColumnDefinitions>
             
         <Button 
-            x:Name="AddButton"
-            Clicked="AddButton_Clicked"
+            Command="{Binding NavigationCommand}"
+            CommandParameter="add"
             Text="ADD"
             FontSize="90"
             WidthRequest="250"
@@ -30,8 +32,8 @@
             VerticalOptions="Center"/>
 
         <Button 
-            x:Name="ListButton"
-            Clicked="ListButton_Clicked"
+            Command="{Binding NavigationCommand}"
+            CommandParameter="list"
             Text="List"
             WidthRequest="200"
             HeightRequest="20"
@@ -41,9 +43,9 @@
             Margin="5,0,0,0"/>
             
         <Button 
-            x:Name="AvatarButton"
+            Command="{Binding NavigationCommand}"
+            CommandParameter="//settingsPage"
             ImageSource="dotnet_bot.png"
-            Clicked="AvatarButton_Clicked"
             HorizontalOptions="Center"
             WidthRequest="200"
             HeightRequest="20"

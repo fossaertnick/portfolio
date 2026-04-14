@@ -1,14 +1,21 @@
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using Mde.Project.Mobile.ViewModels;
 namespace Mde.Project.Mobile.Pages;
 
 public partial class CreateOrUpdatePage : ContentPage
 {
-	public CreateOrUpdatePage()
+    private readonly CreateOrUpdateViewModel _viewModel;
+
+    // constructor
+    public CreateOrUpdatePage(CreateOrUpdateViewModel viewModel)
 	{
 		InitializeComponent();
-	}
+        BindingContext = viewModel;
+        _viewModel = viewModel;
+    }
 
+    // methoden
     private async void CancelButton_Clicked(object sender, EventArgs e)
     {
         bool bevestiging = await DisplayAlertAsync(
@@ -20,17 +27,11 @@ public partial class CreateOrUpdatePage : ContentPage
 
         if (bevestiging)
         {
-		    await Shell.Current.GoToAsync("list");
+		    _viewModel.SpecificActionCommand.Execute("cancel");
         }
         else
         {
             return;
         }
-    }
-
-    private async void CreateButton_Clicked(object sender, EventArgs e)
-    {
-        await Shell.Current.GoToAsync("list");
-        await Toast.Make("Nieuwe memoria aangemaakt").Show();
     }
 }

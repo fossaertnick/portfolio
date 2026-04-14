@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:Mde.Project.Mobile.ViewModels"
+             x:DataType="viewModels:DetailsViewModel"
              x:Class="Mde.Project.Mobile.Pages.DetailsPage"
              Shell.TabBarIsVisible="False">
 
@@ -10,14 +12,14 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <VerticalStackLayout>
-            <Label Grid.ColumnSpan="2" Text="Cenote Valladolid" HorizontalTextAlignment="Center" FontSize="35" />
+            <Label Text="{Binding SelectedLocation.Name}" Grid.ColumnSpan="2" HorizontalTextAlignment="Center" FontSize="35" />
 
             <HorizontalStackLayout HorizontalOptions="Center">
                 <Border Grid.Column="0" Margin="0,25,25,0" Padding="5">
-                    <Label Text="Werk gelegenheid op:"/>
+                    <Label Text="{Binding SelectedLocation.Occation}"/>
                 </Border>
                 <Border Grid.Column="1" Margin="0,25,25,0" Padding="5">
-                    <Label Text="23/07/2017"/>
+                    <Label Text="{Binding SelectedLocation.CreatedOn, StringFormat='{}{0:dd MMMM yyyy}'}"/>
                 </Border>
             </HorizontalStackLayout>
             
@@ -26,13 +28,13 @@
                     <Label Text="X"/>
                 </Border>
                 <Border Grid.Column="0" Margin="5,25,30,0" Padding="5">
-                    <Label Text="35.6762° N"/>
+                    <Label Text="{Binding SelectedLocation.Latitude}"/>
                 </Border>
                 <Border Grid.Column="1" Margin="15,25,5,0" Padding="5">
                     <Label Text="Y"/>
                 </Border>
                 <Border Grid.Column="1" Margin="0,25,25,0" Padding="5">
-                    <Label Text="35.6762° N"/>
+                    <Label Text="{Binding SelectedLocation.Longitude}"/>
                 </Border>
             </HorizontalStackLayout>
 
@@ -43,7 +45,8 @@
                     </DataTemplate>
                 </CarouselView.ItemTemplate>
             </CarouselView>
-            
+            <Label Grid.ColumnSpan="2" Text="Hier komt een carrouselview te staan met de media" HorizontalTextAlignment="Center" />
+            <BoxView HeightRequest="50" BackgroundColor="Transparent"/>
             <Label Grid.ColumnSpan="2" Text="Hier komt de beschrijving te staan van de memoria" HorizontalTextAlignment="Center" />
         </VerticalStackLayout>
     </Grid>
