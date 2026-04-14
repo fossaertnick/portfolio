@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:locations="clr-namespace:Mde.Project.Mobile.Domain.Locations"
+             xmlns:viewModels="clr-namespace:Mde.Project.Mobile.ViewModels"
+             x:DataType="viewModels:ListViewModel"
              x:Class="Mde.Project.Mobile.Pages.ListPage"
-             Shell.TabBarIsVisible="False">
+             x:Name="page"
+             Shell.TabBarIsVisible="False"
+             Shell.FlyoutBehavior="Disabled">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -16,57 +21,50 @@
         <Border Margin="50,0,10,0">
             <SearchBar Placeholder="Filter" Grid.Row="0" Grid.Column="0" Keyboard="Text"/>
         </Border>
-        <Button x:Name="MapButton" Text="Map" Grid.Row="0" Grid.Column="1" HeightRequest="20" Margin="10,0,50,0" Clicked="MapButton_Clicked"/>
+        <Button Command="{Binding NavigationCommand}"
+                CommandParameter="map" Text="Map" Grid.Row="0" Grid.Column="1" HeightRequest="20" 
+                Margin="10,0,50,0" Clicked="MapButton_Clicked"/>
 
-            <CollectionView x:Name="MemoriaList" ItemsSource="{Binding MyCollectionView}"
+            <CollectionView x:Name="MemoriaList" ItemsSource="{Binding Locations}"
                             Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="5, 25, 5, 25">
                 <CollectionView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="locations:KnownLocation">
                     <SwipeView>
-                            <SwipeView.RightItems>
-                                <SwipeItems >
-                                    <SwipeItem x:Name="Delete" Text="Delete" BackgroundColor="Red"/>
-                                    <SwipeItem x:Name="Update" Text="Update" BackgroundColor="Orange"/>
-                                    <SwipeItem x:Name="Details" Text="Details" BackgroundColor="Gray"/>
-                                </SwipeItems>
-                            </SwipeView.RightItems>
-                            <Border StrokeThickness="1"
+                        <SwipeView.RightItems>
+                            <SwipeItems >
+                                <SwipeItem x:Name="Delete" Text="Delete" BackgroundColor="Red"/>
+                                <SwipeItem x:Name="Update" Text="Update" BackgroundColor="Orange"/>
+                                <SwipeItem Command="{Binding BindingContext.DetailsSendLocationCommand, Source={x:Reference page}}" 
+                                           CommandParameter="{Binding .}" Text="Details" BackgroundColor="Gray"/>
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <Border StrokeThickness="1"
                                     Stroke="LightGray"
                                     StrokeShape="RoundRectangle 10"
                                     Margin="5"
                                     Padding="10">
 
                             <Border.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" NumberOfTapsRequired="1"/>
+                                <TapGestureRecognizer Command="{Binding BindingContext.DetailsSendLocationCommand, Source={x:Reference page}}" 
+                                                      NumberOfTapsRequired="1" CommandParameter="{Binding .}"/>
                             </Border.GestureRecognizers>
 
                                     <Grid ColumnDefinitions="Auto,*"
                                           RowDefinitions="Auto,Auto"
                                           ColumnSpacing="10">
 
-                                    <!-- Avatar / icoon -->
-                                    <Border 
-                                        WidthRequest="40"
-                                        HeightRequest="40"
-                                        BackgroundColor="LightGray"
-                                        Padding="0">
-                                        <Label Text="{Binding ., StringFormat='{0:0}'}"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center"/>
-                                    </Border>
-
                                     <!-- Titel -->
                                     <Label Grid.Column="1"
-                                           Text="{Binding .}"
+                                           Text="{Binding Name}"
                                            FontSize="16"
                                            FontAttributes="Bold" />
 
                                     <!-- Subtekst -->
                                     <Label Grid.Column="1"
                                            Grid.Row="1"
-                                           Text="Extra info hier"
                                            FontSize="12"
-                                           TextColor="Gray" />
+                                           TextColor="Gray" 
+                                           Text="{Binding CreatedOn}"/>
 
                                 </Grid>
 
@@ -78,8 +76,8 @@
 
         
         <Button 
-            x:Name="AddButton"
-            Clicked="AddButton_Clicked"
+            Command="{Binding NavigationCommand}"
+            CommandParameter="add"
             Text="Add"
             WidthRequest="200"
             HeightRequest="20"
@@ -89,9 +87,9 @@
             Margin="5,0,0,0"/>
 
         <Button 
-            x:Name="AvatarButton"
             ImageSource="dotnet_bot.png"
-            Clicked="AvatarButton_Clicked"
+            Command="{Binding NavigationCommand}"
+            CommandParameter="//settingsPage"
             HorizontalOptions="Center"
             WidthRequest="200"
             HeightRequest="20"

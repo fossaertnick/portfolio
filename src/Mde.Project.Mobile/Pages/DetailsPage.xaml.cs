@@ -1,19 +1,13 @@
+using Mde.Project.Mobile.Domain.Locations;
+using Mde.Project.Mobile.ViewModels;
+
 namespace Mde.Project.Mobile.Pages;
 
-[QueryProperty(nameof(Test), "tryout")]
 public partial class DetailsPage : ContentPage
 {
-	// testproperty
-	public string Test 
-	{
-		get { return Test; }
-		set
-		{
-			lblTest.Text = value;
-		}
-	}
-	public DetailsPage()
+    public DetailsPage(DetailsViewModel viewModel)
 	{
 		InitializeComponent();
+		BindingContext = viewModel;
 	}
 }

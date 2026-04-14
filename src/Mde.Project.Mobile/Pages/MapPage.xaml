@@ -2,8 +2,11 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:maps="clr-namespace:Microsoft.Maui.Controls.Maps;assembly=Microsoft.Maui.Controls.Maps"
+             xmlns:viewModels="clr-namespace:Mde.Project.Mobile.ViewModels"
+             x:DataType="viewModels:MapViewModel"             
              x:Class="Mde.Project.Mobile.Pages.MapPage"
-             Shell.TabBarIsVisible="False">
+             Shell.TabBarIsVisible="False"
+             Shell.FlyoutBehavior="Disabled">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -18,16 +21,19 @@
         <Border Margin="50,0,10,0">
             <SearchBar Placeholder="Filter" Grid.Row="0" Grid.Column="0" Keyboard="Text"/>
         </Border>
-        <Button x:Name="ListButton" Text="List" Grid.Row="0" Grid.Column="1" HeightRequest="20" Margin="10,0,50,0" Clicked="ListButton_Clicked"/>
+        <Button Text="List" Grid.Row="0" Grid.Column="1" 
+                HeightRequest="20" Margin="10,0,50,0"
+                Command="{Binding NavigationCommand}"
+                CommandParameter="list"/>
 
         <Label 
             Grid.Row="1" Grid.ColumnSpan="2" Margin="50"
             Text="Hier komt een map te staan waar de gebruiker zijn memorias op kan zien. Deze view moet nog geimplementeerd worden "/>
 
         <Button 
-            x:Name="AddButton"
+            Command="{Binding NavigationCommand}"
+            CommandParameter="add"
             Text="Add"
-            Clicked="AddButton_Clicked"
             WidthRequest="200"
             HeightRequest="20"
             Grid.Row="2"
@@ -36,9 +42,9 @@
             Margin="5,0,0,0"/>
 
         <Button 
-            x:Name="AvatarButton"
+            Command="{Binding NavigationCommand}"
+            CommandParameter="//settingsPage"
             ImageSource="dotnet_bot.png"
-            Clicked="AvatarButton_Clicked"
             HorizontalOptions="Center"
             WidthRequest="200"
             HeightRequest="20"
