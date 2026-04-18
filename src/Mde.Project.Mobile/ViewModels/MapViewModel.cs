@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Mde.Project.Mobile.Pages;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,11 +14,11 @@ namespace Mde.Project.Mobile.ViewModels
         {
             if (destination == "add")
             {
-                await Shell.Current.GoToAsync("add");
+                await Shell.Current.GoToAsync($"{nameof(CreateOrUpdatePage)}?mode=create");
             }
             else if (destination == "list")
             {
-                await Shell.Current.GoToAsync("list");
+                await Shell.Current.GoToAsync(nameof(ListPage));
             }
             else
             {

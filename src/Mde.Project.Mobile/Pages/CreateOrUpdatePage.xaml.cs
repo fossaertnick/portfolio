@@ -16,6 +16,11 @@ public partial class CreateOrUpdatePage : ContentPage
     }
 
     // methoden
+    protected async override void OnAppearing()
+    {
+        base.OnAppearing();
+        await _viewModel.InitializeNewMemoriaAsync();
+    }
     private async void CancelButton_Clicked(object sender, EventArgs e)
     {
         bool bevestiging = await DisplayAlertAsync(
@@ -27,7 +32,7 @@ public partial class CreateOrUpdatePage : ContentPage
 
         if (bevestiging)
         {
-		    _viewModel.SpecificActionCommand.Execute("cancel");
+		    _viewModel.CancelCommand.Execute("cancel");
         }
         else
         {

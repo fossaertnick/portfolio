@@ -49,11 +49,11 @@ namespace Mde.Project.Mobile
 
             builder.Logging.AddDebug();
 #endif
-            Routing.RegisterRoute("manual", typeof(ManualPage));
-            Routing.RegisterRoute("list", typeof(ListPage));
-            Routing.RegisterRoute("add", typeof(CreateOrUpdatePage));
-            Routing.RegisterRoute("details", typeof(DetailsPage));
-            Routing.RegisterRoute("map", typeof(MapPage));
+            Routing.RegisterRoute(nameof(ManualPage), typeof(ManualPage));
+            Routing.RegisterRoute(nameof(ListPage), typeof(ListPage));
+            Routing.RegisterRoute(nameof(CreateOrUpdatePage), typeof(CreateOrUpdatePage));
+            Routing.RegisterRoute(nameof(DetailsPage), typeof(DetailsPage));
+            Routing.RegisterRoute(nameof(MapPage), typeof(MapPage));
 
             builder.Services.AddSingleton<ListPage>();
             builder.Services.AddTransient<ListViewModel>();
@@ -73,7 +73,7 @@ namespace Mde.Project.Mobile
             builder.Services.AddSingleton<CreateOrUpdatePage>();
             builder.Services.AddTransient<CreateOrUpdateViewModel>();
 
-            builder.Services.AddTransient<IKnownLocationService, MockLocationService>();
+            builder.Services.AddSingleton<IMemoriaService, MockMemoriaService>();
 
             return builder.Build();
         }

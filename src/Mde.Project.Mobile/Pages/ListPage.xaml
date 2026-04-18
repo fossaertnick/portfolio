@@ -18,23 +18,27 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Border Margin="50,0,10,0">
-            <SearchBar Placeholder="Filter" Grid.Row="0" Grid.Column="0" Keyboard="Text"/>
-        </Border>
-        <Button Command="{Binding NavigationCommand}"
+        <Border Margin="50,0,10,0" Grid.Row="0" Grid.Column="0">
+                <SearchBar Placeholder="Filter..."  
+                           Text="{Binding SearchTerm}" Keyboard="Text"/>
+            </Border>
+
+            <Button Command="{Binding NavigationCommand}"
                 CommandParameter="map" Text="Map" Grid.Row="0" Grid.Column="1" HeightRequest="20" 
                 Margin="10,0,50,0" Clicked="MapButton_Clicked"/>
 
             <CollectionView x:Name="MemoriaList" ItemsSource="{Binding Locations}"
                             Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="5, 25, 5, 25">
                 <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="locations:KnownLocation">
+                <DataTemplate x:DataType="locations:Memoria">
                     <SwipeView>
                         <SwipeView.RightItems>
                             <SwipeItems >
-                                <SwipeItem x:Name="Delete" Text="Delete" BackgroundColor="Red"/>
-                                <SwipeItem x:Name="Update" Text="Update" BackgroundColor="Orange"/>
-                                <SwipeItem Command="{Binding BindingContext.DetailsSendLocationCommand, Source={x:Reference page}}" 
+                                <SwipeItem x:Name="DeleteButton" Clicked="DeleteButton_Clicked" BindingContext="{Binding .}"
+                                           Text="Delete" BackgroundColor="Red"/>
+                                <SwipeItem Command="{Binding BindingContext.UpdateMemoriaCommand, Source={x:Reference page}}" 
+                                           CommandParameter="{Binding .}" Text="Update" BackgroundColor="Orange"/>
+                                <SwipeItem Command="{Binding BindingContext.DetailsMemoriaCommand, Source={x:Reference page}}" 
                                            CommandParameter="{Binding .}" Text="Details" BackgroundColor="Gray"/>
                             </SwipeItems>
                         </SwipeView.RightItems>
@@ -45,7 +49,7 @@
                                     Padding="10">
 
                             <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding BindingContext.DetailsSendLocationCommand, Source={x:Reference page}}" 
+                                <TapGestureRecognizer Command="{Binding BindingContext.DetailsMemoriaCommand, Source={x:Reference page}}" 
                                                       NumberOfTapsRequired="1" CommandParameter="{Binding .}"/>
                             </Border.GestureRecognizers>
 
