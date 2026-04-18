@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:Mde.Project.Mobile.ViewModels"
+             x:DataType="viewModels:CreateOrUpdateViewModel"
+             x:Class="Mde.Project.Mobile.Pages.CreateOrUpdatePage"
+             Shell.TabBarIsVisible="False"
+             Shell.FlyoutBehavior="Disabled">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Label Text="{Binding PageTitle}" TextColor="Green" Grid.Row="0" Grid.Column="0" HorizontalTextAlignment="Start" Padding="10,0,0,0" VerticalTextAlignment="Center" Margin="25,0,10,0" FontSize="35" />
+        <Border Grid.Row="0" Grid.Column="1" HeightRequest="50" Margin="10,0,25,0" Padding="10,0,0,0">
+            <Entry Text="{Binding Name}" Placeholder="title" Keyboard="Text"/>
+        </Border>
+        <VerticalStackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" >
+            <Border Margin="25,25,25,0" Padding="10,0,0,0">
+                <Entry Text="{Binding Longitude}" Placeholder="x-coördinaten"/>
+            </Border>
+            <Border Margin="25,25,25,0" Padding="10,0,0,0">
+                <Entry Text="{Binding Latitude}" Placeholder="y-coördinaten"/>
+            </Border>
+                <HorizontalStackLayout HorizontalOptions="Center">
+                    <Border Margin="25,25,25,0" Padding="10,0,0,0" WidthRequest="100">
+                        <DatePicker Date="{Binding CreatedOn, Mode=TwoWay}"/>
+                    </Border>
+                <Border Margin="25,25,25,0" Padding="10,0,0,0" WidthRequest="100">
+                    <TimePicker Time="{Binding CreatedOn, Mode=TwoWay}"/>
+                </Border>
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center" Margin="25,25,25,0">
+                <RadioButton Content="reis" GroupName="occasion" IsChecked="{Binding Occation, Converter={StaticResource BoolToOccasionConverter}, ConverterParameter=reis}"/>
+                <RadioButton Content="werk" GroupName="occasion" IsChecked="{Binding Occation, Converter={StaticResource BoolToOccasionConverter}, ConverterParameter=werk}"/>
+                <RadioButton Content="uitgaan" GroupName="occasion" IsChecked="{Binding Occation, Converter={StaticResource BoolToOccasionConverter}, ConverterParameter=uitgaan}"/>
+                <RadioButton Content="andere" GroupName="occasion" IsChecked="{Binding Occation, Converter={StaticResource BoolToOccasionConverter}, ConverterParameter=andere}"/>
+            </HorizontalStackLayout>
+            <HorizontalStackLayout HorizontalOptions="Center">
+                <Border Margin="25,25,25,0" HeightRequest="100" WidthRequest="100">
+                    <Button Text="camera"  BackgroundColor="Transparent" TextColor="Black"/>
+                </Border>
+                <Border Margin="25,25,25,0" WidthRequest="100">
+                    <Button Text="muziek"  BackgroundColor="Transparent" TextColor="Black"/>
+                </Border>            
+            </HorizontalStackLayout>
+            <Border Margin="25,25,25,0" Padding="10,0,0,0">
+                <Entry Placeholder="kernwoorden"/>
+            </Border>
+            <Border Margin="25,25,25,0" Padding="10,0,0,0" HeightRequest="150">
+                <Editor Text="{Binding Description}" Placeholder="beschrijving" Keyboard="Plain"/>
+            </Border>
+
+        </VerticalStackLayout>
+        <Button 
+            Command="{Binding CreateCommand}"
+            Text="Create"
+            WidthRequest="200"
+            HeightRequest="20"
+            Grid.Row="2"
+            Grid.Column="0"
+            HorizontalOptions="Center"
+            Margin="5,0,0,0"/>
+
+        <Button 
+            x:Name="CancelButton"
+            Text="Cancel"
+            Clicked="CancelButton_Clicked"
+            BackgroundColor="Red"
+            HorizontalOptions="Center"
+            WidthRequest="200"
+            HeightRequest="20"
+            Grid.Row="2"
+            Grid.Column="1"
+            Margin="0,0,5,0"/>
+    </Grid>
+</ContentPage>

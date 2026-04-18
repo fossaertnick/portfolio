@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:Mde.Project.Mobile.ViewModels"
+             x:DataType="viewModels:SettingsViewModel"  
+             x:Class="Mde.Project.Mobile.Pages.SettingsPage">
+    <VerticalStackLayout Spacing="15" Padding="20">
+
+        <Label Text="Settings" FontSize="35" HorizontalOptions="End" Margin="0,0,30,0"/>
+
+        <HorizontalStackLayout Spacing="10" Margin="0,35,0,0" HorizontalOptions="Center">
+            <Label Text="Name" WidthRequest="100" VerticalOptions="Center"/>
+            <Border WidthRequest="200" Padding="10,0,0,0">
+                <Entry Placeholder="Voornaam"/>
+            </Border>        
+        </HorizontalStackLayout>
+
+        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+            <Label Text="Middle name" WidthRequest="100" VerticalOptions="Center"/>
+            <Border WidthRequest="200" Padding="10,0,0,0">
+                <Entry Placeholder="Middle name"/>
+            </Border>        
+        </HorizontalStackLayout>
+
+        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+            <Label Text="Achternaam" WidthRequest="100" VerticalOptions="Center"/>
+            <Border WidthRequest="200" Padding="10,0,0,0">
+                <Entry Placeholder="Achternaam"/>
+            </Border>
+        </HorizontalStackLayout>
+
+        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+            <Label Text="Email" WidthRequest="100" VerticalOptions="Center"/>
+            <Border WidthRequest="200" Padding="10,0,0,0">
+                <Entry Placeholder="Email"/>
+            </Border>
+        </HorizontalStackLayout>
+
+        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+            <Label Text="Telephone" WidthRequest="100" VerticalOptions="Center"/>
+            <Border WidthRequest="200" Padding="10,0,0,0">
+                <Entry Placeholder="nummer"/>
+            </Border>
+        </HorizontalStackLayout>
+
+        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+            <Label Text="Avatar" WidthRequest="100" VerticalOptions="Center"/>
+            <ImageButton x:Name="AvatarButton" Source="dotnet_bot.png" WidthRequest="200" Clicked="AvatarButton_Clicked"/>
+        </HorizontalStackLayout>
+
+    </VerticalStackLayout>
+</ContentPage>
