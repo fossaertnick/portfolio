@@ -9,7 +9,7 @@
 
         private async void ManualPage_Clicked(object sender, EventArgs e)
         {
-            await Shell.Current.GoToAsync("manual");
+            await Shell.Current.GoToAsync(nameof(ManualPage));
         }
 
         private async void Logout_Clicked(object sender, EventArgs e)
