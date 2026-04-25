@@ -6,7 +6,8 @@
              x:DataType="viewModels:MapViewModel"             
              x:Class="Mde.Project.Mobile.Pages.MapPage"
              Shell.TabBarIsVisible="False"
-             Shell.FlyoutBehavior="Disabled">
+             Shell.FlyoutBehavior="Disabled"
+             Shell.NavBarIsVisible="False">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -26,10 +27,8 @@
                 Command="{Binding NavigationCommand}"
                 CommandParameter="list"/>
 
-        <Label 
-            Grid.Row="1" Grid.ColumnSpan="2" Margin="50"
-            Text="Hier komt een map te staan waar de gebruiker zijn memorias op kan zien. Deze view moet nog geimplementeerd worden "/>
-
+        <maps:Map x:Name="MapView" MapType="Street" Grid.Row="1" Grid.ColumnSpan="2" Margin="10"/>
+        
         <Button 
             Command="{Binding NavigationCommand}"
             CommandParameter="add"

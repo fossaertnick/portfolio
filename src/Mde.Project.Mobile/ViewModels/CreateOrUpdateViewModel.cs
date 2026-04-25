@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Mde.Project.Mobile.Domain;
 using Mde.Project.Mobile.Domain.Locations;
 using Mde.Project.Mobile.Pages;
 using System;
@@ -21,9 +22,13 @@ namespace Mde.Project.Mobile.ViewModels
         private string pageTitle;
         private string name;
         private string description;
-        private string occation;
+        private OccationType occation;
         private double longitude;
         private double latitude;
+        private string city;
+        private string country;
+        private string street;
+        private string houseNumber;
         private DateTime createdOn = DateTime.Now;
         private Memoria selectedMemoria;
 
@@ -62,11 +67,19 @@ namespace Mde.Project.Mobile.ViewModels
             get { return description; }
             set => SetProperty(ref description, value);
         }
-        public string Occation
+        public OccationType Occation
         {
             get { return occation; }
-            set => SetProperty(ref occation, value);
+            set
+            {
+                if(occation != value)
+                {
+                    occation = value;
+                    OnPropertyChanged();
+                }
+            }
         }
+
         public double Longitude
         {
             get { return longitude; }
@@ -76,6 +89,26 @@ namespace Mde.Project.Mobile.ViewModels
         {
             get { return latitude; }
             set => SetProperty(ref latitude, value);
+        }
+        public string City
+        {
+            get { return city; }
+            set => SetProperty(ref city, value);
+        }
+        public string Country
+        {
+            get { return country; }
+            set => SetProperty(ref country, value);
+        }
+        public string Street
+        {
+            get { return street; }
+            set => SetProperty(ref street, value);
+        }
+        public string HouseNumber
+        {
+            get { return houseNumber; }
+            set => SetProperty(ref houseNumber, value);
         }
         public DateTime CreatedOn
         {
@@ -98,15 +131,23 @@ namespace Mde.Project.Mobile.ViewModels
                         CreatedOn = selectedMemoria.CreatedOn;
                         Longitude = selectedMemoria.Longitude;
                         Latitude = selectedMemoria.Latitude;
+                        City = selectedMemoria.City;
+                        Country = selectedMemoria.Country;
+                        Street = selectedMemoria.Street;
+                        HouseNumber = selectedMemoria.HouseNumber;
                     }
                     else // (selectedMemoria == null)
                     {
-                        Name = default;
-                        Description = default;
+                        Name = string.Empty;
+                        Description = string.Empty;
                         Occation = default;
+                        City = string.Empty;
+                        Country = string.Empty;
+                        Street = string.Empty;
+                        HouseNumber = string.Empty;
                         CreatedOn = DateTime.Now;
-                        Longitude = default;
-                        Latitude = default;
+                        Longitude = 0.0;
+                        Latitude = 0.0;
                     }
                 }
             }
@@ -120,7 +161,22 @@ namespace Mde.Project.Mobile.ViewModels
         });
         public ICommand CreateCommand => new Command(async () =>
         {
-            CreateOrUpdateMemoriaAsync();
+            await CreateOrUpdateMemoriaAsync();
+        });
+        public ICommand ClickForLocationCommand => new Command(async () =>
+        {
+            Location currentCoordinates = await _memorialService.GetCurrentCoordinatesAsync();
+            if(currentCoordinates != null)
+            {
+                var (country, city, street, number) = await _memorialService.GetAddressConnectedToCoordinates(currentCoordinates);
+
+                Country = country;
+                City = city;
+                Street = street;
+                HouseNumber = number;
+                Latitude = currentCoordinates.Latitude;
+                Longitude = currentCoordinates.Longitude;
+            }
         });
 
         // constructor
@@ -130,69 +186,29 @@ namespace Mde.Project.Mobile.ViewModels
         }
 
         // methoden
-        private async void CreateOrUpdateMemoriaAsync()
+        private async Task CreateOrUpdateMemoriaAsync()
         {
-            Memoria memoria = new Memoria();
-            if (SelectedMemoria == null)
-            {
-                memoria = new Memoria();
-                memoria.CreatedOn = CreatedOn;
-            }
-            else
-            {
-                memoria = SelectedMemoria;
-            }
+            var memoria = SelectedMemoria ?? new Memoria();
 
             memoria.Name = Name;
-            memoria.Longitude = Longitude;
+            memoria.Country = Country;
+            memoria.City = City;
+            memoria.Street = Street;
+            memoria.HouseNumber = HouseNumber;
             memoria.Latitude = Latitude;
+            memoria.Longitude = Longitude;
             memoria.Description = Description;
             memoria.Occation = Occation;
+
+            if(memoria.CreatedOn == default)
+            {
+                memoria.CreatedOn = CreatedOn;
+            }
+
             memoria.LastEditedOn = DateTime.UtcNow;
 
-            if(memoria.Id.Equals(Guid.Empty))
-            {
-                await _memorialService.CreateMemoriaAsync(memoria);
-                await Toast.Make("Memoria created successfully!").Show();
-            }
-            else
-            {
-                await _memorialService.UpdateMemoriaAsync(memoria);
-                await Toast.Make("Memoria updated successfully!").Show();
-            }
-
+            await _memorialService.SaveChangesAsync(memoria);
             await Shell.Current.GoToAsync(nameof(ListPage));
-        }
-        private async Task GetCurrentCoordinatesASync()
-        {
-            try
-            {
-                var location = await Geolocation.GetLocationAsync();
-                if(location != null)
-                {
-                    Latitude = location.Latitude;
-                    Longitude = location.Longitude;
-                }
-            }
-            catch
-            {
-                Latitude = default;
-                Longitude = default;
-            }
-        }
-        public async Task InitializeNewMemoriaAsync()
-        {
-            Name = default;
-            Description = default;
-            Occation = default;
-            CreatedOn = DateTime.Now;
-
-            await GetCurrentCoordinatesASync();
-        }
-        public async Task CreateNewMemoriaAsync()
-        {
-            SelectedMemoria = null;
-            await InitializeNewMemoriaAsync();
         }
     }
 }
