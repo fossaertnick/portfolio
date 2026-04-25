@@ -1,11 +1,10 @@
 ﻿using CommunityToolkit.Maui;
-using Mde.Project.Mobile.Pages;
-using Microsoft.Extensions.Logging;
-using Microsoft.Maui.Handlers;
-using Microsoft.Maui.Controls.Maps;
 using Mde.Project.Mobile.Domain.Locations;
 using Mde.Project.Mobile.Domain.Locations.Mock;
+using Mde.Project.Mobile.Pages;
 using Mde.Project.Mobile.ViewModels;
+using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Handlers;
 
 namespace Mde.Project.Mobile
 {
@@ -16,6 +15,7 @@ namespace Mde.Project.Mobile
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiMaps()
                 .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
@@ -44,8 +44,10 @@ namespace Mde.Project.Mobile
                 {
                     handler.PlatformView.Background = null;
                 });
+                
 #endif
             });
+
 
             builder.Logging.AddDebug();
 #endif

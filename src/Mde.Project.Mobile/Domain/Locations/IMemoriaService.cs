@@ -13,5 +13,11 @@ namespace Mde.Project.Mobile.Domain.Locations
         Task DeleteMemoriaAsync(Memoria location);
         Task<Memoria> CreateMemoriaAsync(Memoria newMemoria);
         Task<Memoria> UpdateMemoriaAsync(Memoria updateMemoria);
+        Task SaveChangesAsync(Memoria saveMemoria);
+        
+        // map logica
+        Task<Location?> GetCurrentCoordinatesAsync();
+        Task<(string country, string city, string street, string number)> GetAddressConnectedToCoordinates(Location coordinates);
+        Task<bool> EnsureLocationPermission();
     }
 }

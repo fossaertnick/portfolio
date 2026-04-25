@@ -4,8 +4,11 @@
              xmlns:viewModels="clr-namespace:Mde.Project.Mobile.ViewModels"
              x:DataType="viewModels:CreateOrUpdateViewModel"
              x:Class="Mde.Project.Mobile.Pages.CreateOrUpdatePage"
+             xmlns:enum="clr-namespace:Mde.Project.Mobile.Domain"
              Shell.TabBarIsVisible="False"
-             Shell.FlyoutBehavior="Disabled">
+             Shell.FlyoutBehavior="Disabled"
+             Shell.NavBarIsVisible="False">
+    <ScrollView>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -21,25 +24,41 @@
             <Entry Text="{Binding Name}" Placeholder="title" Keyboard="Text"/>
         </Border>
         <VerticalStackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" >
-            <Border Margin="25,25,25,0" Padding="10,0,0,0">
-                <Entry Text="{Binding Longitude}" Placeholder="x-coördinaten"/>
-            </Border>
-            <Border Margin="25,25,25,0" Padding="10,0,0,0">
-                <Entry Text="{Binding Latitude}" Placeholder="y-coördinaten"/>
-            </Border>
+            
+            <HorizontalStackLayout HorizontalOptions="Center" Margin="0,25,0,0" Spacing="10">
+                <Border Padding="10">
+                    <Entry Text="{Binding Country}" Placeholder="Country" WidthRequest="150"/>
+                </Border>
+                <Border Padding="10">
+                    <Entry Text="{Binding City}" Placeholder="City" WidthRequest="150"/>
+                </Border>
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout HorizontalOptions="Center" Margin="0,25,0,0" Spacing="10">
+                <Border Padding="10">
+                    <Entry Text="{Binding Street}" Placeholder="Country" WidthRequest="150"/>
+                </Border>
+                <Border Padding="10">
+                    <Entry Text="{Binding HouseNumber}" Placeholder="Number" WidthRequest="150"/>
+                </Border>
+            </HorizontalStackLayout>
+                <Button Text="Where am I now?" Margin="25,25,25,0" Command="{Binding ClickForLocationCommand}"/>
+            
                 <HorizontalStackLayout HorizontalOptions="Center">
                     <Border Margin="25,25,25,0" Padding="10,0,0,0" WidthRequest="100">
                         <DatePicker Date="{Binding CreatedOn, Mode=TwoWay}"/>
                     </Border>
                 <Border Margin="25,25,25,0" Padding="10,0,0,0" WidthRequest="100">
-                    <TimePicker Time="{Binding CreatedOn, Mode=TwoWay}"/>
+                    <TimePicker Time="{Binding CreatedOn.Hour}"/>
                 </Border>
             </HorizontalStackLayout>
-            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center" Margin="25,25,25,0">
-                <RadioButton Content="reis" GroupName="occasion" IsChecked="{Binding Occation, Converter={StaticResource BoolToOccasionConverter}, ConverterParameter=reis}"/>
-                <RadioButton Content="werk" GroupName="occasion" IsChecked="{Binding Occation, Converter={StaticResource BoolToOccasionConverter}, ConverterParameter=werk}"/>
-                <RadioButton Content="uitgaan" GroupName="occasion" IsChecked="{Binding Occation, Converter={StaticResource BoolToOccasionConverter}, ConverterParameter=uitgaan}"/>
-                <RadioButton Content="andere" GroupName="occasion" IsChecked="{Binding Occation, Converter={StaticResource BoolToOccasionConverter}, ConverterParameter=andere}"/>
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center" Margin="25,25,25,0"
+                                   RadioButtonGroup.GroupName="Occation" 
+                                   RadioButtonGroup.SelectedValue="{Binding Occation, Mode=TwoWay}">
+                                <RadioButton Content="reis" Value="{x:Static enum:OccationType.Reis}"/>
+                                <RadioButton Content="werk" Value="{x:Static enum:OccationType.Werk}"/>
+                                <RadioButton Content="uitgaan" Value="{x:Static enum:OccationType.Uitgaan}"/>
+                                <RadioButton Content="andere" Value="{x:Static enum:OccationType.Ander}"/>
             </HorizontalStackLayout>
             <HorizontalStackLayout HorizontalOptions="Center">
                 <Border Margin="25,25,25,0" HeightRequest="100" WidthRequest="100">
@@ -59,7 +78,7 @@
         </VerticalStackLayout>
         <Button 
             Command="{Binding CreateCommand}"
-            Text="Create"
+            Text="{Binding PageTitle}"
             WidthRequest="200"
             HeightRequest="20"
             Grid.Row="2"
@@ -79,4 +98,5 @@
             Grid.Column="1"
             Margin="0,0,5,0"/>
     </Grid>
+    </ScrollView>
 </ContentPage>

@@ -14,13 +14,6 @@ public partial class CreateOrUpdatePage : ContentPage
         BindingContext = viewModel;
         _viewModel = viewModel;
     }
-
-    // methoden
-    protected async override void OnAppearing()
-    {
-        base.OnAppearing();
-        await _viewModel.InitializeNewMemoriaAsync();
-    }
     private async void CancelButton_Clicked(object sender, EventArgs e)
     {
         bool bevestiging = await DisplayAlertAsync(
