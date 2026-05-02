@@ -34,9 +34,9 @@ public partial class ListPage : ContentPage
         if (bevestiging)
         {
             var swipeItem = sender as SwipeItem;
-            if(swipeItem?.BindingContext is Memoria specificMemoria) 
+            if(swipeItem?.BindingContext is Guid specificMemoriaId) 
             {
-                _viewModel.DeleteMemoriaCommand.Execute(specificMemoria);
+                _viewModel.DeleteMemoriaCommand.Execute(specificMemoriaId);
             }
         }
         else

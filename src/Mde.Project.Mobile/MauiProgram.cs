@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui;
-using Mde.Project.Mobile.Domain.Locations;
 using Mde.Project.Mobile.Domain.Locations.Mock;
+using Mde.Project.Mobile.Domain.Services;
+using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Mde.Project.Mobile.Pages;
 using Mde.Project.Mobile.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -51,31 +52,44 @@ namespace Mde.Project.Mobile
 
             builder.Logging.AddDebug();
 #endif
-            Routing.RegisterRoute(nameof(ManualPage), typeof(ManualPage));
+                Routing.RegisterRoute(nameof(ManualPage), typeof(ManualPage));
             Routing.RegisterRoute(nameof(ListPage), typeof(ListPage));
             Routing.RegisterRoute(nameof(CreateOrUpdatePage), typeof(CreateOrUpdatePage));
             Routing.RegisterRoute(nameof(DetailsPage), typeof(DetailsPage));
             Routing.RegisterRoute(nameof(MapPage), typeof(MapPage));
 
-            builder.Services.AddSingleton<ListPage>();
+            builder.Services.AddTransient<ListPage>();
             builder.Services.AddTransient<ListViewModel>();
 
-            builder.Services.AddSingleton<DetailsPage>();
+            builder.Services.AddTransient<DetailsPage>();
             builder.Services.AddTransient<DetailsViewModel>();
 
-            builder.Services.AddSingleton<MainPage>();
+            builder.Services.AddTransient<MainPage>();
             builder.Services.AddTransient<MainViewModel>();
 
-            builder.Services.AddSingleton<MapPage>();
+            builder.Services.AddTransient<MapPage>();
             builder.Services.AddTransient<MapViewModel>();
 
-            builder.Services.AddSingleton<SettingsPage>();
+            builder.Services.AddTransient<SettingsPage>();
             builder.Services.AddTransient<SettingsViewModel>();
 
-            builder.Services.AddSingleton<CreateOrUpdatePage>();
+            builder.Services.AddTransient<CreateOrUpdatePage>();
             builder.Services.AddTransient<CreateOrUpdateViewModel>();
 
-            builder.Services.AddSingleton<IMemoriaService, MockMemoriaService>();
+            builder.Services.AddSingleton<IMemoriaService, MemoriaService>();
+            builder.Services.AddSingleton<IMediaService, MediaService>();
+            builder.Services.AddSingleton<ILocationService, LocationService>();
+
+            if(OperatingSystem.IsWindows())
+            {
+                builder.Services.AddSingleton<IMapService, WindowsMapService>();
+            }
+            else
+            {
+                builder.Services.AddSingleton<IMapService, AndroidMapService>();
+            }
+
+            builder.Services.AddHttpClient<IGeoCodingService, GoogleGeoCodingService>();
 
             return builder.Build();
         }

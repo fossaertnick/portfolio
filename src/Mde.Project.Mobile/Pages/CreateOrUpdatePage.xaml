@@ -2,9 +2,10 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:Mde.Project.Mobile.ViewModels"
+             xmlns:images="clr-namespace:Mde.Project.Mobile.Domain.Models"
              x:DataType="viewModels:CreateOrUpdateViewModel"
              x:Class="Mde.Project.Mobile.Pages.CreateOrUpdatePage"
-             xmlns:enum="clr-namespace:Mde.Project.Mobile.Domain"
+             xmlns:enum="clr-namespace:Mde.Project.Mobile.Domain.Models.enums"
              Shell.TabBarIsVisible="False"
              Shell.FlyoutBehavior="Disabled"
              Shell.NavBarIsVisible="False">
@@ -19,7 +20,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Label Text="{Binding PageTitle}" TextColor="Green" Grid.Row="0" Grid.Column="0" HorizontalTextAlignment="Start" Padding="10,0,0,0" VerticalTextAlignment="Center" Margin="25,0,10,0" FontSize="35" />
+        <Label Text="{Binding EditMode}" TextColor="Green" Grid.Row="0" Grid.Column="0" HorizontalTextAlignment="Start" Padding="10,0,0,0" VerticalTextAlignment="Center" Margin="25,0,10,0" FontSize="35" />
         <Border Grid.Row="0" Grid.Column="1" HeightRequest="50" Margin="10,0,25,0" Padding="10,0,0,0">
             <Entry Text="{Binding Name}" Placeholder="title" Keyboard="Text"/>
         </Border>
@@ -36,7 +37,7 @@
 
             <HorizontalStackLayout HorizontalOptions="Center" Margin="0,25,0,0" Spacing="10">
                 <Border Padding="10">
-                    <Entry Text="{Binding Street}" Placeholder="Country" WidthRequest="150"/>
+                    <Entry Text="{Binding Street}" Placeholder="Straat" WidthRequest="150"/>
                 </Border>
                 <Border Padding="10">
                     <Entry Text="{Binding HouseNumber}" Placeholder="Number" WidthRequest="150"/>
@@ -44,41 +45,52 @@
             </HorizontalStackLayout>
                 <Button Text="Where am I now?" Margin="25,25,25,0" Command="{Binding ClickForLocationCommand}"/>
             
-                <HorizontalStackLayout HorizontalOptions="Center">
+                <HorizontalStackLayout HorizontalOptions="Center" IsVisible="{Binding IsCreateMode}">
                     <Border Margin="25,25,25,0" Padding="10,0,0,0" WidthRequest="100">
                         <DatePicker Date="{Binding CreatedOn, Mode=TwoWay}"/>
                     </Border>
-                <Border Margin="25,25,25,0" Padding="10,0,0,0" WidthRequest="100">
-                    <TimePicker Time="{Binding CreatedOn.Hour}"/>
-                </Border>
-            </HorizontalStackLayout>
-            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center" Margin="25,25,25,0"
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center" Margin="25,25,25,0"
                                    RadioButtonGroup.GroupName="Occation" 
                                    RadioButtonGroup.SelectedValue="{Binding Occation, Mode=TwoWay}">
-                                <RadioButton Content="reis" Value="{x:Static enum:OccationType.Reis}"/>
-                                <RadioButton Content="werk" Value="{x:Static enum:OccationType.Werk}"/>
-                                <RadioButton Content="uitgaan" Value="{x:Static enum:OccationType.Uitgaan}"/>
-                                <RadioButton Content="andere" Value="{x:Static enum:OccationType.Ander}"/>
-            </HorizontalStackLayout>
-            <HorizontalStackLayout HorizontalOptions="Center">
-                <Border Margin="25,25,25,0" HeightRequest="100" WidthRequest="100">
-                    <Button Text="camera"  BackgroundColor="Transparent" TextColor="Black"/>
-                </Border>
-                <Border Margin="25,25,25,0" WidthRequest="100">
-                    <Button Text="muziek"  BackgroundColor="Transparent" TextColor="Black"/>
-                </Border>            
-            </HorizontalStackLayout>
-            <Border Margin="25,25,25,0" Padding="10,0,0,0">
-                <Entry Placeholder="kernwoorden"/>
-            </Border>
-            <Border Margin="25,25,25,0" Padding="10,0,0,0" HeightRequest="150">
+                    <RadioButton Content="reis" Value="{x:Static enum:OccationType.Reis}"/>
+                    <RadioButton Content="werk" Value="{x:Static enum:OccationType.Werk}"/>
+                    <RadioButton Content="uitgaan" Value="{x:Static enum:OccationType.Uitgaan}"/>
+                    <RadioButton Content="andere" Value="{x:Static enum:OccationType.Ander}"/>
+                </HorizontalStackLayout>
+                <Button x:Name="MediaChoice" Text="Kies media hier" Clicked="MediaChoice_Clicked" Margin="25,25,25,0"/>
+
+                <CollectionView ItemsSource="{Binding TemporaryItems}" ItemsLayout="HorizontalList">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="images:MediaItem">
+                            <HorizontalStackLayout Padding="8" Spacing="10">
+                                <!-- Foto -->
+                                <Image
+                                    Source="{Binding FilePath}"
+                                    WidthRequest="60"
+                                    HeightRequest="60"
+                                    Aspect="AspectFill" >
+
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                                                Path=BindingContext.DeleteTemporaryMediaItemCommand}" 
+                                            NumberOfTapsRequired="1" CommandParameter="{Binding .}"/>
+                                    </Image.GestureRecognizers>
+                                </Image>
+                            </HorizontalStackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            
+                <Border Margin="25,25,25,0" Padding="10,0,0,0" HeightRequest="150">
                 <Editor Text="{Binding Description}" Placeholder="beschrijving" Keyboard="Plain"/>
             </Border>
 
         </VerticalStackLayout>
         <Button 
             Command="{Binding CreateCommand}"
-            Text="{Binding PageTitle}"
+            Text="{Binding EditMode}"
             WidthRequest="200"
             HeightRequest="20"
             Grid.Row="2"

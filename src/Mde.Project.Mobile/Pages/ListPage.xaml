@@ -35,12 +35,12 @@
                     <SwipeView>
                         <SwipeView.RightItems>
                             <SwipeItems >
-                                <SwipeItem x:Name="DeleteButton" Clicked="DeleteButton_Clicked" BindingContext="{Binding .}"
+                                <SwipeItem x:Name="DeleteButton" Clicked="DeleteButton_Clicked" BindingContext="{Binding Id}"
                                            Text="Delete" BackgroundColor="Red"/>
                                 <SwipeItem Command="{Binding BindingContext.UpdateMemoriaCommand, Source={x:Reference page}}" 
-                                           CommandParameter="{Binding .}" Text="Update" BackgroundColor="Orange"/>
+                                           CommandParameter="{Binding Id}" Text="Update" BackgroundColor="Orange"/>
                                 <SwipeItem Command="{Binding BindingContext.DetailsMemoriaCommand, Source={x:Reference page}}" 
-                                           CommandParameter="{Binding .}" Text="Details" BackgroundColor="Gray"/>
+                                           CommandParameter="{Binding Id}" Text="Details" BackgroundColor="Gray"/>
                             </SwipeItems>
                         </SwipeView.RightItems>
                         <Border StrokeThickness="1"
@@ -51,7 +51,7 @@
 
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding BindingContext.DetailsMemoriaCommand, Source={x:Reference page}}" 
-                                                      NumberOfTapsRequired="1" CommandParameter="{Binding .}"/>
+                                                      NumberOfTapsRequired="1" CommandParameter="{Binding Id}"/>
                             </Border.GestureRecognizers>
 
                                     <Grid ColumnDefinitions="Auto,*"
@@ -65,13 +65,13 @@
                                            FontAttributes="Bold" />
 
                                     <!-- Subtekst -->
-                                    <Label Grid.Column="1"
+                                <Label Grid.Column="1"
                                            Grid.Row="1"
                                            FontSize="12"
                                            TextColor="Gray" 
                                            Text="{Binding CreatedOn}"/>
 
-                                </Grid>
+                            </Grid>
 
                             </Border>
                         </SwipeView>

@@ -9,12 +9,12 @@ namespace Mde.Project.Mobile.ViewModels
 {
     public class MainViewModel : ObservableObject
     {
-        // properties
+        // Commands
         public ICommand NavigationCommand => new Command<string>(async (destination) =>
         {
             if (destination == "add")
             {
-                await Shell.Current.GoToAsync($"{nameof(CreateOrUpdatePage)}?mode=create");
+                await Shell.Current.GoToAsync(nameof(CreateOrUpdatePage));
             }
             else if (destination == "list")
             {
