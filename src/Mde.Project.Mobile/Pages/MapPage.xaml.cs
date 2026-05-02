@@ -1,48 +1,48 @@
-using Mde.Project.Mobile.Domain.Locations;
+using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Mde.Project.Mobile.ViewModels;
 using Microsoft.Maui.Controls.Maps;
-using Microsoft.Maui.Devices;
-using Microsoft.Maui.Maps;
 
 namespace Mde.Project.Mobile.Pages;
 
 public partial class MapPage : ContentPage
 {
-    private readonly IMemoriaService _memoriaService;
+    private readonly IMapService _mapService;
     private readonly MapViewModel _viewModel;
-	public MapPage(MapViewModel viewModel)
-	{
-        InitializeComponent();
-		BindingContext = viewModel;
-        _viewModel = viewModel;
 
-        _viewModel.Locations.CollectionChanged += (s, e) => { UpdatePins(); };
-	}
+    // constructor
+    public MapPage(MapViewModel viewModel, IMapService mapService)
+    {
+        InitializeComponent();
+        BindingContext = viewModel;
+        _viewModel = viewModel;
+        _mapService = mapService;
+
+        // nu geef ik 'MapView' door zodat deze weet dat hij de 
+        _mapService.Initialize(MapView);
+
+        _mapService.OnPinClicked += (id) =>
+            {
+                Dispatcher.Dispatch(() =>
+                {
+                    _viewModel.PinClickedCommand.Execute(id);
+                });
+            };
+    }
+
+    // methoden
     protected override async void OnAppearing()
     {
         base.OnAppearing();
 
-        var location = await _viewModel.ReadyMapService();
-        await _viewModel.LoadExistingMemoriaAsync();
-
-        if(location != null)
-        {
-            MapView.MoveToRegion(MapSpan.FromCenterAndRadius(location, Distance.FromKilometers(1)));
-        }
-
-        UpdatePins();
+        await _viewModel.LoadMapAsync();
+        RenderMap();
     }
-    private void UpdatePins()
+    private void RenderMap()
     {
-        MapView.Pins.Clear();
-
-        foreach(var memoria in _viewModel.Locations)
+        if(_viewModel.CurrentLocation != null)
         {
-            MapView.Pins.Add(new Pin
-            {
-                Label = memoria.Name,
-                Location = new Location(memoria.Latitude, memoria.Longitude)
-            });
+            _mapService.MoveTo(_viewModel.CurrentLocation);
         }
-    }
+        _mapService.SetPins(_viewModel.Locations);
+    } 
 }
