@@ -9,7 +9,7 @@ namespace Mde.Project.Mobile.ViewModels
 {
     public class SettingsViewModel : ObservableObject
     {
-        // properties
+        // command
         public ICommand ChangeAvatarCommand => new Command(async () =>
         {
             await Shell.Current.GoToAsync("//settingsPage");

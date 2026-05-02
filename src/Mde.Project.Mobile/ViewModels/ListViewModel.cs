@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Mde.Project.Mobile.Domain.Locations;
+using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Mde.Project.Mobile.Pages;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,7 +11,7 @@ namespace Mde.Project.Mobile.ViewModels
 {
     public class ListViewModel : ObservableObject
     {
-        private readonly IMemoriaService _memorialService;
+        private readonly IMemoriaService _memoriaService;
 
         // fields
         private ObservableCollection<Memoria> locations = new ObservableCollection<Memoria>();
@@ -27,35 +28,31 @@ namespace Mde.Project.Mobile.ViewModels
             get { return searchTerm; }
             set
             {
-                if(value != null)
+                if(SetProperty(ref searchTerm, value))
                 {
-                    FilterMemoriaCommand.Execute(value?.Trim() ?? string.Empty);
+                    ExecuteVisuallyFilterLocationsCommand(searchTerm?.Trim() ?? string.Empty);
                 }
-                SetProperty(ref searchTerm, value);
             }
         }
+
+        // Commands
         public ICommand InitializeMemoriaCommand { get; }
-        public ICommand DetailsMemoriaCommand => new Command<Memoria>(async (memoriaDetails) =>
+        public ICommand DetailsMemoriaCommand => new Command<Guid>(async (memoriaDetailsId) =>
         {
-            ExecuteDetailsMemoriaCommand(memoriaDetails);
-            await CanExecuteDetailsMemoriaCommand(memoriaDetails);
+            ExecuteDetailsMemoriaCommand(memoriaDetailsId);
         });
-        public ICommand UpdateMemoriaCommand => new Command<Memoria>(async (memoriaDetails) =>
+        public ICommand UpdateMemoriaCommand => new Command<Guid>(async (memoriaDetailsId) =>
         {
-            if(memoriaDetails != null && memoriaDetails is Memoria)
+            if(memoriaDetailsId != Guid.Empty)
             {
-                Dictionary<string, object> sendInfo = new Dictionary<string, object>
-                {
-                    {nameof(CreateOrUpdateViewModel.SelectedMemoria), memoriaDetails }
-                };
-                await Shell.Current.GoToAsync($"{nameof(CreateOrUpdatePage)}?mode=update" , sendInfo);
+                await Shell.Current.GoToAsync($"{nameof(CreateOrUpdatePage)}?id={memoriaDetailsId}");
             }
         });
         public ICommand NavigationCommand => new Command<string>(async (destination) =>
         {
             if( destination == "add")
             {
-                await Shell.Current.GoToAsync($"{nameof(CreateOrUpdatePage)}?mode=create");
+                await Shell.Current.GoToAsync(nameof(CreateOrUpdatePage));
             }
             else if( destination == "map")
             {
@@ -66,67 +63,58 @@ namespace Mde.Project.Mobile.ViewModels
                 await Shell.Current.GoToAsync("//settingsPage");
             }
         });
-        public ICommand FilterMemoriaCommand => new Command<string>(async (name) =>
+        public ICommand DeleteMemoriaCommand => new Command<Guid>(async (specificMemoriaId) =>
         {
-            ExecuteVisuallyFilterLocationsCommand(name);
-        });
-        public ICommand DeleteMemoriaCommand => new Command<Memoria>(async (specificMemoria) =>
-        {
-            ExecuteDeleteMemoriaCommand(specificMemoria);
+            ExecuteDeleteMemoriaCommand(specificMemoriaId);
         });
 
         // constructor
         public ListViewModel(IMemoriaService memorialService)
         {
-            _memorialService = memorialService;
+            _memoriaService = memorialService;
             InitializeMemoriaCommand = new Command(ExecuteInitializeMemoriaCommand);
         }
 
         // methodes
-        private async void ExecuteInitializeMemoriaCommand()
+        private async Task RefreshMemoriaList()
         {
-            var memorias = await _memorialService.GetAllMemoriaAsync();
+            var memorias = await _memoriaService.GetAllMemoriaAsync();
             Locations.Clear();
-            foreach(var memoria in memorias)
+            foreach (var memoria in memorias)
             {
                 Locations.Add(memoria);
             }
         }
-        private async void ExecuteDetailsMemoriaCommand(Memoria memoriaDetails)
+        private async void ExecuteInitializeMemoriaCommand()
         {
-            Dictionary<string, object> sendInfo;
-
-            if (memoriaDetails != null)
-            {
-                sendInfo = new Dictionary<string, object>
-                {
-                    {"specifics", memoriaDetails }
-                };
-                await Shell.Current.GoToAsync(nameof(DetailsPage), sendInfo);
-            }
+            await RefreshMemoriaList();
         }
-        private async Task<bool> CanExecuteDetailsMemoriaCommand(Memoria memoriaDetails)
+        private async void ExecuteDetailsMemoriaCommand(Guid memoriaDetailsId)
         {
-            return memoriaDetails is Memoria && memoriaDetails is not null;
+            if(memoriaDetailsId != Guid.Empty)
+            {
+                await Shell.Current.GoToAsync($"{nameof(DetailsPage)}?id={memoriaDetailsId}");
+            }
         }
         private async void ExecuteVisuallyFilterLocationsCommand(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                Locations = new ObservableCollection<Memoria>(Locations);
+                var all = await _memoriaService.GetAllMemoriaAsync();
+                Locations = new ObservableCollection<Memoria>(all);
             }
             else
             {
-                var filtered = await _memorialService.GetMemoriaByFilterAsync(name);
+                var filtered = await _memoriaService.GetMemoriaByFilterAsync(name);
                 Locations = new ObservableCollection<Memoria>(filtered);
             }
         }
-        private async void ExecuteDeleteMemoriaCommand(Memoria specificMemoria)
+        private async void ExecuteDeleteMemoriaCommand(Guid specificMemoriaId)
         {
-            if (specificMemoria is not null)
+            if (specificMemoriaId != Guid.Empty)
             {
-                await _memorialService.DeleteMemoriaAsync(specificMemoria);
-                Locations.Remove(specificMemoria);                
+                await _memoriaService.DeleteMemoriaAsync(specificMemoriaId);
+                await RefreshMemoriaList();
             }
         }
     }
