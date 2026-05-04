@@ -1,14 +1,9 @@
-using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
 using Mde.Project.Mobile.ViewModels;
 namespace Mde.Project.Mobile.Pages;
 
 public partial class CreateOrUpdatePage : ContentPage
 {
     private readonly CreateOrUpdateViewModel _viewModel;
-
-    // fields
-    private bool _loaded;
 
     // constructor
     public CreateOrUpdatePage(CreateOrUpdateViewModel viewModel)
@@ -55,6 +50,9 @@ public partial class CreateOrUpdatePage : ContentPage
                 break;
             case "Galerij":
                 _viewModel.PickPhotoCommand.Execute(null);
+                break;
+            case "Video":
+                _viewModel.TakeVideoCommand.Execute(null);
                 break;
         }
     }

@@ -151,11 +151,15 @@ namespace Mde.Project.Mobile.ViewModels
         });
         public ICommand TakePhotoCommand => new Command(async () =>
         {
-            // await TakePhotoAsync();
+            await TakePhotoAsync();
         });
         public ICommand PickPhotoCommand => new Command(async () =>
         {
             await PickPhotoAsync();
+        });
+        public ICommand TakeVideoCommand => new Command(async () =>
+        {
+            await TakeVideoAsync();
         });
         public ICommand DeleteTemporaryMediaItemCommand => new Command<MediaItem>( (image) =>
         {
@@ -269,20 +273,6 @@ namespace Mde.Project.Mobile.ViewModels
             Latitude = currentCoordinates.Latitude;
             Longitude = currentCoordinates.Longitude;
         }
-        private async Task PickPhotoAsync()
-        {
-            var photo = await MediaPicker.Default.PickPhotoAsync();
-            if (photo == null) return;
-
-            var mediaItem = await _mediaService.SavePhotoASync(photo);
-            TemporaryItems.Add(mediaItem);
-        }
-        private void RemoveImage(MediaItem image)
-        {
-            if (image == null) return;
-
-            TemporaryItems.Remove(image);
-        }
         private async Task CreateOrUpdateMemoriaAsync()
         {
             var memoria = SelectedMemoria ?? new Memoria();
@@ -324,31 +314,40 @@ namespace Mde.Project.Mobile.ViewModels
                 }
             }
         }
-
-
-
-
-
-        /*private async Task TakePhotoAsync()
+        private void RemoveImage(MediaItem image)
         {
-            if(MediaPicker.Default.IsCaptureSupported)
-            {
-                var photo = await MediaPicker.Default.CapturePhotoAsync();
-                if (photo == null) return;
+            if (image == null) return;
 
-                var stream = await photo.OpenReadAsync();
-                Photo = ImageSource.FromStream(() => stream);
-            }
-        }*/
-        /*private async Task TakeVideoAsync()
+            TemporaryItems.Remove(image);
+        }
+        private async Task PickPhotoAsync()
         {
-            if(MediaPicker.Default.IsCaptureSupported)
-            {
-                var video = await MediaPicker.Default.CaptureVideoAsync();
-                if (video == null) return;
+            var photo = await MediaPicker.Default.PickPhotoAsync();
+            if (photo == null) return;
 
-                // gebruik pad van de video
-            }
-        }*/
+            var mediaItem = await _mediaService.SavePhotoASync(photo);
+            TemporaryItems.Add(mediaItem);
+        }
+        private async Task TakePhotoAsync()
+        {
+            if (!MediaPicker.Default.IsCaptureSupported) return;
+
+            var photo = await MediaPicker.Default.CapturePhotoAsync();
+            if (photo == null) return;
+
+            var mediaItem = await _mediaService.SavePhotoASync(photo);
+            TemporaryItems.Add(mediaItem);
+        }
+        private async Task TakeVideoAsync()
+        {
+            if (!MediaPicker.Default.IsCaptureSupported) return;
+
+            var video = await MediaPicker.Default.CaptureVideoAsync();
+            Console.WriteLine(video?.FullPath ?? "null");
+            if (video == null) return;
+
+            var mediaItem = await _mediaService.SaveVideoAsync(video);
+            TemporaryItems.Add(mediaItem);
+        }
     }
 }
