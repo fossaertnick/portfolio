@@ -18,6 +18,7 @@ namespace Mde.Project.Mobile
                 .UseMauiApp<App>()
                 .UseMauiMaps()
                 .UseMauiCommunityToolkit()
+                .UseMauiCommunityToolkitMediaElement(false)  
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -52,7 +53,7 @@ namespace Mde.Project.Mobile
 
             builder.Logging.AddDebug();
 #endif
-                Routing.RegisterRoute(nameof(ManualPage), typeof(ManualPage));
+            Routing.RegisterRoute(nameof(ManualPage), typeof(ManualPage));
             Routing.RegisterRoute(nameof(ListPage), typeof(ListPage));
             Routing.RegisterRoute(nameof(CreateOrUpdatePage), typeof(CreateOrUpdatePage));
             Routing.RegisterRoute(nameof(DetailsPage), typeof(DetailsPage));
@@ -76,11 +77,20 @@ namespace Mde.Project.Mobile
             builder.Services.AddTransient<CreateOrUpdatePage>();
             builder.Services.AddTransient<CreateOrUpdateViewModel>();
 
+            builder.Services.AddTransient<StatisticsPage>();
+            builder.Services.AddTransient<StatisticsViewModel>();
+
+            builder.Services.AddTransient<ManualPage>();
+            builder.Services.AddTransient<ManualViewModel>();
+
             builder.Services.AddSingleton<IMemoriaService, MemoriaService>();
             builder.Services.AddSingleton<IMediaService, MediaService>();
             builder.Services.AddSingleton<ILocationService, LocationService>();
+            builder.Services.AddSingleton<ISeedingService, SeedingService>();
+            builder.Services.AddSingleton<IStatisticService, StatisticService>();
+            builder.Services.AddSingleton<IManualService, ManualService>();
 
-            if(OperatingSystem.IsWindows())
+            if (OperatingSystem.IsWindows())
             {
                 builder.Services.AddSingleton<IMapService, WindowsMapService>();
             }

@@ -16,5 +16,8 @@ namespace Mde.Project.Mobile.Domain.Models
         public string FilePath { get; set; }
         public ImageSource? ImageSource { get; set; }
         public DateTime CreatedAt { get; set; }
+
+        public bool IsPhoto => Type == MediaType.Photo;
+        public bool IsVideo => Type == MediaType.Video;
     }
 }

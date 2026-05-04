@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:Mde.Project.Mobile.ViewModels"
              xmlns:images="clr-namespace:Mde.Project.Mobile.Domain.Models"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:DataType="viewModels:CreateOrUpdateViewModel"
              x:Class="Mde.Project.Mobile.Pages.CreateOrUpdatePage"
              xmlns:enum="clr-namespace:Mde.Project.Mobile.Domain.Models.enums"
@@ -67,6 +68,7 @@
                                 <!-- Foto -->
                                 <Image
                                     Source="{Binding FilePath}"
+                                    IsVisible="{Binding IsPhoto}"
                                     WidthRequest="60"
                                     HeightRequest="60"
                                     Aspect="AspectFill" >
@@ -78,6 +80,15 @@
                                             NumberOfTapsRequired="1" CommandParameter="{Binding .}"/>
                                     </Image.GestureRecognizers>
                                 </Image>
+
+                                <toolkit:MediaElement
+                                    Source="{Binding FilePath}"
+                                    IsVisible="{Binding IsVideo}"
+                                    WidthRequest="60"
+                                    HeightRequest="60"
+                                    ShouldShowPlaybackControls="False"
+                                    ShouldAutoPlay="False">
+                                </toolkit:MediaElement>
                             </HorizontalStackLayout>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

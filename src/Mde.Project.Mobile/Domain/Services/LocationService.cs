@@ -7,12 +7,6 @@ namespace Mde.Project.Mobile.Domain.Services
 {
     public class LocationService : ILocationService
     {
-
-        // constructor
-        public LocationService()
-        {
-        }
-
         // methoden
         public async Task<bool> EnsureLocationPermission()
         {
@@ -23,7 +17,6 @@ namespace Mde.Project.Mobile.Domain.Services
             }
             return status == PermissionStatus.Granted;
         }
-
         public async Task<Location?> GetCurrentLocationAsync()
         {
             try

@@ -47,7 +47,6 @@ namespace Mde.Project.Mobile.Domain.Services
                 }
             }
         }
-
         public Task SyncMediaFiles(Memoria existingMemoria, Memoria updatedMemoria)
         {
             var existingFiles = existingMemoria.MediaMaterial?.Select(m => m.FilePath).ToList() ?? new List<string>();
@@ -73,6 +72,24 @@ namespace Mde.Project.Mobile.Domain.Services
                 MemoriaId = existingMemoria.Id
             }).ToList();
             return Task.CompletedTask;
+        }
+        public async Task<MediaItem> SaveVideoAsync(FileResult video)
+        {
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(video.FileName)}";
+            var filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
+
+            using var stream = await video.OpenReadAsync();
+            using var fileStream = File.Create(filePath);
+
+            await stream.CopyToAsync(fileStream);
+
+            return new MediaItem
+            {
+                Id = Guid.NewGuid(),
+                Type = Models.enums.MediaType.Video,
+                FilePath = filePath,
+                CreatedAt = DateTime.Now,
+            };
         }
     }
 }
