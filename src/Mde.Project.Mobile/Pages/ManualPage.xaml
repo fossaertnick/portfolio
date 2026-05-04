@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:Mde.Project.Mobile.ViewModels"
+             x:DataType="viewModels:ManualViewModel"  
              x:Class="Mde.Project.Mobile.Pages.ManualPage"
              Shell.FlyoutBehavior="Disabled"
              Shell.TabBarIsVisible="False">
     <ScrollView>
-        <VerticalStackLayout>
-            <Label 
-                Text="Hier komt de uitleg over hoe deze applicatie werkt. Dit zou voornamelijk bestaan uit headers/tekst
-die in een scrollview zou komen te staan en waar er natuurlijk een manier is om de themas te filteren op specifieke woorden"
-                VerticalOptions="Center" 
-                HorizontalOptions="Center" />
-        </VerticalStackLayout>
+        <Label Text="{Binding Text}"/>
     </ScrollView>
 </ContentPage>
