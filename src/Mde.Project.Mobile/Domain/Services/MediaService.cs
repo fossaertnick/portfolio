@@ -1,9 +1,6 @@
-﻿using Mde.Project.Mobile.Domain.Locations;
-using Mde.Project.Mobile.Domain.Models;
+﻿using Mde.Project.Mobile.Core.Entities;
+using Mde.Project.Mobile.Core.Entities.Enums;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mde.Project.Mobile.Domain.Services
 {
@@ -23,7 +20,7 @@ namespace Mde.Project.Mobile.Domain.Services
             return new MediaItem
             {
                 Id = Guid.NewGuid(),
-                Type = Models.enums.MediaType.Photo,
+                Type = MediaType.Photo,
                 FilePath = filePath,
                 CreatedAt = DateTime.Now,
             };
@@ -86,7 +83,7 @@ namespace Mde.Project.Mobile.Domain.Services
             return new MediaItem
             {
                 Id = Guid.NewGuid(),
-                Type = Models.enums.MediaType.Video,
+                Type = MediaType.Video,
                 FilePath = filePath,
                 CreatedAt = DateTime.Now,
             };

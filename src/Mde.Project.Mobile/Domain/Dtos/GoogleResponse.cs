@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Mde.Project.Mobile.Domain.Models
+﻿namespace Mde.Project.Mobile.Domain.Dtos
 {
     public class GoogleResponse
     {
         // geneste klassen
-        public string status {  get; set; }
+        public string status { get; set; }
         public List<Result> results { get; set; }
 
         public class Result

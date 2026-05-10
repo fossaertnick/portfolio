@@ -1,7 +1,4 @@
-﻿using Mde.Project.Mobile.Domain.Locations;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Mde.Project.Mobile.Core.Entities;
 
 namespace Mde.Project.Mobile.Domain.Services.Interfaces
 {

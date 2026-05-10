@@ -1,101 +1,155 @@
-﻿using Mde.Project.Mobile.Domain.Models.enums;
+﻿using Mde.Project.Mobile.Core.Data;
+using Mde.Project.Mobile.Core.Entities;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Mde.Project.Mobile.Domain.Locations.Mock
 {
     public class MemoriaService : IMemoriaService
     {
-        private readonly IGeoCodingService _googleGeoCodingService;
         private readonly IMediaService _mediaService;
-        private readonly ISeedingService _seedingService;
+        private readonly IGeoCodingService _geoCodingService;
+        private readonly IDbContextFactory<AppDbContext> _dbContext;
 
         // constructor
-        public MemoriaService(ISeedingService seedingService, IGeoCodingService googleGeoCodingService, IMediaService mediaService)
+        public MemoriaService(IMediaService mediaService, IDbContextFactory<AppDbContext> dbContext, IGeoCodingService geoCodingService)
         {
-            _seedingService = seedingService;
-            _googleGeoCodingService = googleGeoCodingService;
             _mediaService = mediaService;
+            _dbContext = dbContext;
+            _geoCodingService = geoCodingService;
         }
 
         // methodes
-        public Task<Memoria> GetMemoriaByIdAsync(Guid id)
+        public async Task<Memoria> GetMemoriaByIdAsync(Guid id)
         {
-            return Task.FromResult(_seedingService.Locations.SingleOrDefault(l => l.Id == id));
+            if (id == Guid.Empty) throw new ArgumentException("Id mag niet leeg zijn");
+            try
+            {
+                using var context = await _dbContext.CreateDbContextAsync();
+                return await context.Memorias
+                    .Include(m => m.MemoriaAddress)
+                    .Include(m => m.MediaMaterial)
+                    .SingleOrDefaultAsync(l => l.Id.Equals(id));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Er liep iets mis bij het ophalen van de Memoria.", ex);
+            }
         } // I want only ONE
-        public Task<IEnumerable<Memoria>> GetAllMemoriaAsync()
+        public async Task<IEnumerable<Memoria>> GetMemoriaByFilterAsync(string searchTerm)
         {
-            return Task.FromResult(_seedingService.Locations.AsEnumerable());
-        } // I want them ALL
-        public Task<IEnumerable<Memoria>> GetMemoriaByFilterAsync(string searchTerm)
-        {
-            return Task.FromResult(_seedingService.Locations.Where(l => l.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)));
+            try
+            {
+                using var context = await _dbContext.CreateDbContextAsync();
+                return await context.Memorias
+                    .Where(l => l.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                    .Include(m => m.MemoriaAddress)
+                    .Include(m => m.MediaMaterial).ToListAsync();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Er liep iets mis bij het ophalen van de locaties.", ex);
+            }
         } // You get what you type
+        public async Task<IEnumerable<Memoria>> GetAllMemoriaAsync()
+        {
+            try
+            {
+                using var context = await _dbContext.CreateDbContextAsync();
+                return await context.Memorias.Include(m => m.MemoriaAddress).Include(m => m.MediaMaterial).ToListAsync();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Er liep iets mis bij het ophalen van de locaties.", ex);
+            }
+        } // I want them ALL
         private async Task UpdateMemoriaAsync(Memoria updateMemoria)
         {
-            var memoriaToBeUpdated = await GetMemoriaByIdAsync(updateMemoria.Id);
+            using var context = await _dbContext.CreateDbContextAsync();
 
-            if (memoriaToBeUpdated == null) throw new ArgumentException("Niet gevonden");
-            else 
+            var existing = await context.Memorias
+                    .Include(m => m.MemoriaAddress)
+                    .Include(m => m.MediaMaterial)
+                    .SingleOrDefaultAsync(l => l.Id.Equals(updateMemoria.Id));
+            if (existing == null) throw new Exception("Memoria niet gevonden");
+
+            var oldMedia = existing.MediaMaterial.ToList();
+
+            existing.Name = updateMemoria.Name;
+            existing.Description = updateMemoria.Description;
+            existing.Occation = updateMemoria.Occation;
+            existing.LastEditedOn = DateTime.Now;
+
+            existing.MemoriaAddress.Country = updateMemoria.MemoriaAddress.Country;
+            existing.MemoriaAddress.City = updateMemoria.MemoriaAddress.City;
+            existing.MemoriaAddress.Street = updateMemoria.MemoriaAddress.Street;
+            existing.MemoriaAddress.HouseNumber = updateMemoria.MemoriaAddress.HouseNumber;
+            existing.MemoriaAddress.Latitude = updateMemoria.MemoriaAddress.Latitude;
+            existing.MemoriaAddress.Longitude = updateMemoria.MemoriaAddress.Longitude;
+
+            context.MediaItems.RemoveRange(oldMedia);
+            foreach(var media in updateMemoria.MediaMaterial)
             {
-                memoriaToBeUpdated.Name = updateMemoria.Name;
-                memoriaToBeUpdated.Latitude = updateMemoria.Latitude;
-                memoriaToBeUpdated.Longitude = updateMemoria.Longitude;
-                memoriaToBeUpdated.Description = updateMemoria.Description;
-                memoriaToBeUpdated.Occation = updateMemoria.Occation;
-
-                memoriaToBeUpdated.MemoriaAddress.Country = updateMemoria.MemoriaAddress.Country;
-                memoriaToBeUpdated.MemoriaAddress.City = updateMemoria.MemoriaAddress.City;
-                memoriaToBeUpdated.MemoriaAddress.Street = updateMemoria.MemoriaAddress.Street;
-                memoriaToBeUpdated.MemoriaAddress.HouseNumber = updateMemoria.MemoriaAddress.HouseNumber;
-
-                await _mediaService.SyncMediaFiles(memoriaToBeUpdated, updateMemoria);
+                context.MediaItems.Add(new MediaItem
+                {
+                    Type = media.Type,
+                    FilePath = media.FilePath,
+                    MemoriaId = existing.Id,
+                });
             }
+            await context.SaveChangesAsync();
         } // Update
+        private async Task CreateMemoriaAsync(Memoria createMemoria)
+        {
+            if(createMemoria == null) throw new ArgumentException("Memoria mag niet null zijn");
+            try
+            {
+                using var context = await _dbContext.CreateDbContextAsync();
+                createMemoria.CreatedOn = DateTime.Now;
+                createMemoria.LastEditedOn = DateTime.Now;
+                context.Memorias.Add(createMemoria);
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Er liep iets mis bij het aanmaken van de Memoria.", ex);
+            }
+        }
         public async Task DeleteMemoriaAsync(Guid memoriaId)
         {
-            var memoriaSpecificToId = await GetMemoriaByIdAsync(memoriaId);
-            if (memoriaSpecificToId != null)
+
+            try
             {
+               using var context = await _dbContext.CreateDbContextAsync();
+                var memoriaSpecificToId = await context.Memorias
+                        .Include(m => m.MemoriaAddress)
+                        .Include(m => m.MediaMaterial)
+                        .SingleOrDefaultAsync(l => l.Id.Equals(memoriaId));
+
                 await _mediaService.DeletePhotoAsync(memoriaSpecificToId);
-                _seedingService.Locations.Remove(memoriaSpecificToId);
+                context.Memorias.Remove(memoriaSpecificToId);
+                await context.SaveChangesAsync();
             }
-            else
+            catch
             {
-                throw new ArgumentException("Er ging iets fout bij het verwijderen");
+                throw new Exception("Er liep iets mis bij het verwijderen van de Memoria.");
             }
         } // Delete
-        public async Task SaveChangesAsync(Memoria saveMemoria)
+        public async Task SaveMemoriaAsync(Memoria saveThisMemoria)
         {
-            if(saveMemoria == null) throw new ArgumentNullException(nameof(saveMemoria));
+            if (saveThisMemoria == null) throw new ArgumentNullException("Problemen met de binnenkomende data.");
+            if (saveThisMemoria.MemoriaAddress == null) throw new ArgumentNullException("Problemen met de binnenkomende data. Er is geen adres meegegeven.");
 
-            var address =
-                    $"{saveMemoria.MemoriaAddress.Street} {saveMemoria.MemoriaAddress.HouseNumber}, " +
-                    $"{saveMemoria.MemoriaAddress.City}, {saveMemoria.MemoriaAddress.Country}";
+            await _geoCodingService.ForwardGeoCodeAsync(saveThisMemoria);
 
-            var location = await _googleGeoCodingService.ForwardGeoCodeAsync(address);
-
-            if(location != null)
+            if (saveThisMemoria.Id == Guid.Empty)
             {
-                saveMemoria.Latitude = location.Latitude;
-                saveMemoria.Longitude = location.Longitude;
-            }
-
-            if(saveMemoria.Id == Guid.Empty)
-            {
-                saveMemoria.Id = Guid.NewGuid();
-                if(saveMemoria.MediaMaterial != null)
-                {
-                    foreach(var media in saveMemoria.MediaMaterial)
-                    {
-                        media.MemoriaId = saveMemoria.Id;
-                    }
-                }
-                _seedingService.Locations.Add(saveMemoria);
+                await CreateMemoriaAsync(saveThisMemoria);
             }
             else
             {
-                await UpdateMemoriaAsync(saveMemoria);
+                await UpdateMemoriaAsync(saveThisMemoria);
             }
-        } // Will we Create Or Update
+        }
     }
 }

@@ -59,6 +59,17 @@
 		<PackageReference Include="CommunityToolkit.Maui" Version="14.1.0" />
 		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="9.0.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.7" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.7" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.7" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.7">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.7" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.51" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
@@ -91,6 +102,13 @@
 	  <MauiXaml Update="Pages\StatisticsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Resources\Styles\Layout.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Mde.Project.Mobile.Core\Mde.Project.Mobile.Core.csproj" />
 	</ItemGroup>
 
 </Project>

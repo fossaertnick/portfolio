@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Mde.Project.Mobile.Core.Entities;
 using Mde.Project.Mobile.Domain.Locations;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Mde.Project.Mobile.Pages;
@@ -9,8 +10,8 @@ namespace Mde.Project.Mobile.ViewModels
 {
     public class MapViewModel : ObservableObject
     {
-        private readonly IMemoriaService _memoriaService;
         private readonly ILocationService _locationService;
+        private readonly IMemoriaService _memoriaService;
 
         // properties
         public Location? CurrentLocation { get; private set;  }
@@ -23,10 +24,10 @@ namespace Mde.Project.Mobile.ViewModels
         });
 
         // constructor
-        public MapViewModel(IMemoriaService memoriaService, ILocationService locationService)
+        public MapViewModel(ILocationService locationService, IMemoriaService memoriaService)
         {
-            _memoriaService = memoriaService;
             _locationService = locationService;
+            _memoriaService = memoriaService;
         }
 
         // methoden

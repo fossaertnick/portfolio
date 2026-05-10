@@ -1,15 +1,11 @@
-﻿using Mde.Project.Mobile.Domain.Locations;
-using Mde.Project.Mobile.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Mde.Project.Mobile.Core.Entities;
 
 namespace Mde.Project.Mobile.Domain.Services.Interfaces
 {
     public interface IGeoCodingService
     {
         // map logica
-        Task<Location?> ForwardGeoCodeAsync(string address);
+        Task ForwardGeoCodeAsync(Memoria saveMemoria);
         Task<Address?> ReverseGeoCodingAsync(Location coordinates);
     }
 }

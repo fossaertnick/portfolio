@@ -1,3 +1,6 @@
 <Solution>
-  <Project Path="Mde.Project.Mobile/Mde.Project.Mobile.csproj" />
+  <Project Path="Mde.Project.Mobile.Core/Mde.Project.Mobile.Core.csproj" Id="69f9d436-6992-4fa5-bb97-d4e601d7d0a6" />
+  <Project Path="Mde.Project.Mobile/Mde.Project.Mobile.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
 </Solution>

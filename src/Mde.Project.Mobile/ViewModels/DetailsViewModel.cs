@@ -1,15 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Mde.Project.Mobile.Domain.Locations;
-using Mde.Project.Mobile.Domain.Models;
-using Mde.Project.Mobile.Domain.Models.enums;
+using Mde.Project.Mobile.Core.Entities;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Mde.Project.Mobile.Pages;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using System.Windows.Input;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Mde.Project.Mobile.ViewModels
 {
@@ -38,7 +32,6 @@ namespace Mde.Project.Mobile.ViewModels
                 SetProperty(ref temporaryItems, value);
             }
         }
-
 
         // Commands
         public ICommand UpdateMemoriaCommand => new Command<Guid>(async (memoriaDetailsId) =>
@@ -91,7 +84,6 @@ namespace Mde.Project.Mobile.ViewModels
                     list.Add(new MediaItem
                     {
                         FilePath = media.FilePath,
-                        ImageSource = ImageSource.FromFile(media.FilePath)
                     });
                 }
             }

@@ -7,6 +7,6 @@
              Shell.FlyoutBehavior="Disabled"
              Shell.TabBarIsVisible="False">
     <ScrollView>
-        <Label Text="{Binding Text}"/>
+        <Label Text="{Binding Text}" Margin="10"/>
     </ScrollView>
 </ContentPage>

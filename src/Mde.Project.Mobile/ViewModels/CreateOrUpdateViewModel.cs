@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Mde.Project.Mobile.Domain.Locations;
-using Mde.Project.Mobile.Domain.Models;
-using Mde.Project.Mobile.Domain.Models.enums;
+using Mde.Project.Mobile.Core.Entities;
+using Mde.Project.Mobile.Core.Entities.Enums;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Mde.Project.Mobile.Pages;
 using System.Collections.ObjectModel;
@@ -11,10 +10,10 @@ namespace Mde.Project.Mobile.ViewModels
 {
     public class CreateOrUpdateViewModel : ObservableObject, IQueryAttributable
     {
-        private readonly IMemoriaService _memoriaService;
-        private readonly IGeoCodingService _geoService;
         private readonly IMediaService _mediaService;
+        private readonly IMemoriaService _memoriaService;
         private readonly ILocationService _locationService;
+        private readonly IGeoCodingService _geoCodingService;
 
         // fields
         private EditMode editMode;
@@ -167,11 +166,11 @@ namespace Mde.Project.Mobile.ViewModels
         });
 
         // constructor
-        public CreateOrUpdateViewModel(IMemoriaService memorialService, IGeoCodingService geoService, IMediaService mediaService, ILocationService locationService)
+        public CreateOrUpdateViewModel(IMediaService mediaService, IGeoCodingService geoCodingService, IMemoriaService memoriaService, ILocationService locationService)
         {
-            _geoService = geoService;
             _mediaService = mediaService;
-            _memoriaService = memorialService;
+            _geoCodingService = geoCodingService;
+            _memoriaService = memoriaService;
             _locationService = locationService;
         }
 
@@ -230,6 +229,8 @@ namespace Mde.Project.Mobile.ViewModels
                 Country = SelectedMemoria.MemoriaAddress.Country;
                 Street = SelectedMemoria.MemoriaAddress.Street;
                 HouseNumber = SelectedMemoria.MemoriaAddress.HouseNumber;
+                Longitude = SelectedMemoria.MemoriaAddress.Longitude;
+                Latitude = SelectedMemoria.MemoriaAddress.Latitude;
             }
         }
         private void ApplyMemoriaToFields(Memoria memoria)
@@ -241,8 +242,6 @@ namespace Mde.Project.Mobile.ViewModels
             Description = memoria.Description;
             Occation = memoria.Occation;
             CreatedOn = memoria.CreatedOn;
-            Longitude = memoria.Longitude;
-            Latitude = memoria.Latitude;
         }
         private void ResetFields()
         {
@@ -263,45 +262,83 @@ namespace Mde.Project.Mobile.ViewModels
             Location currentCoordinates = await _locationService.GetCurrentLocationAsync();
             if (currentCoordinates == null) return;
 
-            var adresFound = await _geoService.ReverseGeoCodingAsync(currentCoordinates);
+            var adresFound = await _geoCodingService.ReverseGeoCodingAsync(currentCoordinates);
             if (adresFound == null) return;
 
             Country = adresFound.Country;
             City = adresFound.City;
             Street = adresFound.Street;
-            HouseNumber = adresFound.HouseNumber;
             Latitude = currentCoordinates.Latitude;
             Longitude = currentCoordinates.Longitude;
         }
         private async Task CreateOrUpdateMemoriaAsync()
         {
-            var memoria = SelectedMemoria ?? new Memoria();
-
-            memoria.Name = Name;
-            memoria.MemoriaAddress = new Domain.Models.Address
+            if(CheckIncomingValues() == (true, string.Empty))
             {
-                Country = Country,
-                City = City,
-                Street = Street,
-                HouseNumber = HouseNumber,
-            };
-            memoria.Latitude = Latitude;
-            memoria.Longitude = Longitude;
-            memoria.Description = Description;
-            memoria.Occation = Occation;
-            memoria.MediaMaterial = TemporaryItems.ToList();
-            TemporaryItems.Clear();
+                Memoria memoria;
 
-            if(memoria.CreatedOn == default)
-            {
-                memoria.CreatedOn = CreatedOn;
+                if(SelectedMemoria == null)
+                {
+                    memoria = new Memoria
+                    {
+                        Name = Name,
+                        MemoriaAddress = new Address
+                        {
+                            Country = Country,
+                            City = City,
+                            Street = Street,
+                            HouseNumber = HouseNumber,
+                            Latitude = Latitude,
+                            Longitude = Longitude
+                        },
+                        Description = Description,
+                        Occation = Occation,
+                        MediaMaterial = TemporaryItems.ToList(),
+                    };
+                }
+                else
+                {
+                    memoria = new Memoria
+                    {
+                        Id = SelectedMemoria.Id,
+                        Name = Name,
+                        MemoriaAddress = new Address
+                        {
+                            Country = Country,
+                            City = City,
+                            Street = Street,
+                            HouseNumber = HouseNumber,
+                            Latitude = Latitude,
+                            Longitude = Longitude
+                        },
+                        Description = Description,
+                        Occation = Occation,
+                        CreatedOn = SelectedMemoria.CreatedOn,
+                        LastEditedOn = DateTime.Now,
+                        MediaMaterial = TemporaryItems.Select(m => new MediaItem
+                        {
+                            Id = m.Id,
+                            Type = m.Type,
+                            FilePath = m.FilePath,
+                            MemoriaId = m.MemoriaId,
+                        }).ToList()
+                    };
+                }
+                TemporaryItems.Clear();
+
+                await _memoriaService.SaveMemoriaAsync(memoria);
+
+                await Shell.Current.GoToAsync(nameof(ListPage));
             }
-
-            memoria.LastEditedOn = DateTime.UtcNow;
-
-            await _memoriaService.SaveChangesAsync(memoria);
-
-            await Shell.Current.GoToAsync(nameof(ListPage));
+            else
+            {
+                string message = CheckIncomingValues().Item2;
+                await Application.Current.MainPage.DisplayAlert(
+                    "Iets ging fout met je ingave",
+                    $"{message}",
+                    "OK"
+                );
+            }
         }
         private async Task LoadExistingImages()
         {
@@ -348,6 +385,21 @@ namespace Mde.Project.Mobile.ViewModels
 
             var mediaItem = await _mediaService.SaveVideoAsync(video);
             TemporaryItems.Add(mediaItem);
+        }
+        private (bool, string) CheckIncomingValues()
+        {
+            string message = string.Empty;
+            if (string.IsNullOrWhiteSpace(Country) || string.IsNullOrWhiteSpace(City) || string.IsNullOrWhiteSpace(Street))
+            {
+                message = "Het land, stad en straat moeten ingevuld zijn";
+                return (false, message);
+            }
+            if (string.IsNullOrWhiteSpace(Name))
+            {
+                message = "De naam van de Memoria moet ingevuld zijn";
+                return (false, message);
+            }
+            return (true, message);
         }
     }
 }

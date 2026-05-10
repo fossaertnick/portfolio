@@ -7,6 +7,7 @@
             InitializeComponent();
         }
 
+        // methoden
         private async void ManualPage_Clicked(object sender, EventArgs e)
         {
             await Shell.Current.GoToAsync(nameof(ManualPage));

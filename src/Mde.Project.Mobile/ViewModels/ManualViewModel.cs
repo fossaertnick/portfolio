@@ -1,10 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Windows.Input;
 
 namespace Mde.Project.Mobile.ViewModels

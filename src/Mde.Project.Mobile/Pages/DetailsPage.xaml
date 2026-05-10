@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:Mde.Project.Mobile.ViewModels"
-             xmlns:images="clr-namespace:Mde.Project.Mobile.Domain.Models"
+             xmlns:images="clr-namespace:Mde.Project.Mobile.Core.Entities;assembly=Mde.Project.Mobile.Core"
              x:DataType="viewModels:DetailsViewModel"
              x:Class="Mde.Project.Mobile.Pages.DetailsPage"
              x:Name="Page"
@@ -33,7 +33,7 @@
                         <HorizontalStackLayout Padding="8" Spacing="10">
                             <!-- Foto -->
                             <Image
-                                    Source="{Binding ImageSource}"
+                                    Source="{Binding FilePath}"
                                     HeightRequest="300"
                                     WidthRequest="300"
                                     Aspect="AspectFill" 
