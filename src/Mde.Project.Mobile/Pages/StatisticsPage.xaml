@@ -58,5 +58,12 @@
             </Border>
         </HorizontalStackLayout>
 
+        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+            <Label Text="Favorite country" WidthRequest="100" VerticalOptions="Center"/>
+            <Border WidthRequest="200" Padding="10,0,0,0">
+                <Label Text="{Binding FavoriteMemoriaCity}" HeightRequest="40" VerticalTextAlignment="Center"/>
+            </Border>
+        </HorizontalStackLayout>
+
     </VerticalStackLayout>
 </ContentPage>

@@ -1,4 +1,4 @@
-﻿using Mde.Project.Mobile.Domain.Locations;
+﻿using Mde.Project.Mobile.Core.Entities;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Microsoft.Maui.Controls.Maps;
 using Microsoft.Maui.Maps;
@@ -22,7 +22,7 @@ namespace Mde.Project.Mobile.Domain.Services
         }
         public void MoveTo(Location location)
         {
-            _map.MoveToRegion(MapSpan.FromCenterAndRadius(new Microsoft.Maui.Devices.Sensors.Location(location.Latitude, location.Longitude), Distance.FromKilometers(1)));
+            _map.MoveToRegion(MapSpan.FromCenterAndRadius(new Location(location.Latitude, location.Longitude), Distance.FromKilometers(1)));
         }
         public void SetPins(IEnumerable<Memoria> items)
         {
@@ -32,7 +32,7 @@ namespace Mde.Project.Mobile.Domain.Services
                 var pin = new Pin
                 {
                     Label = memoria.Name,
-                    Location = new Microsoft.Maui.Devices.Sensors.Location(memoria.Latitude, memoria.Longitude),
+                    Location = new Location(memoria.MemoriaAddress.Latitude, memoria.MemoriaAddress.Longitude),
                     BindingContext = memoria.Id,
                 };
 

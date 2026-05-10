@@ -1,10 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Mde.Project.Mobile.Domain.Locations;
+using Mde.Project.Mobile.Core.Entities;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Mde.Project.Mobile.Pages;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using System.Windows.Input;
 
 namespace Mde.Project.Mobile.ViewModels
@@ -12,7 +10,7 @@ namespace Mde.Project.Mobile.ViewModels
     public class ListViewModel : ObservableObject
     {
         private readonly IMemoriaService _memoriaService;
-
+        
         // fields
         private ObservableCollection<Memoria> locations = new ObservableCollection<Memoria>();
         private string searchTerm;
@@ -69,9 +67,9 @@ namespace Mde.Project.Mobile.ViewModels
         });
 
         // constructor
-        public ListViewModel(IMemoriaService memorialService)
+        public ListViewModel(IMemoriaService memoriaService)
         {
-            _memoriaService = memorialService;
+            _memoriaService = memoriaService;
             InitializeMemoriaCommand = new Command(ExecuteInitializeMemoriaCommand);
         }
 

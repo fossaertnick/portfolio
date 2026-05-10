@@ -1,47 +1,51 @@
-﻿using Mde.Project.Mobile.Domain.Locations;
-using Mde.Project.Mobile.Domain.Models.enums;
+﻿using Mde.Project.Mobile.Core.Data;
+using Mde.Project.Mobile.Core.Entities.Enums;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace Mde.Project.Mobile.Domain.Services
 {
     public class StatisticService : IStatisticService
     {
-        private readonly ISeedingService _seedingService;
+        private readonly IDbContextFactory<AppDbContext> _dbContext;
 
         // constructor
-        public StatisticService(ISeedingService seedingService)
+        public StatisticService(IDbContextFactory<AppDbContext> dbContext)
         {
-            _seedingService = seedingService;
+            _dbContext = dbContext;
         }
 
         // methoden
-        public int GetTotalMemorias()
+        public async Task<int> GetTotalMemorias()
         {
-            var locations = _seedingService.Locations ?? Enumerable.Empty<Memoria>();
+            using var context = await _dbContext.CreateDbContextAsync();
+            var locations = await context.Memorias.ToListAsync();
             return locations.Count();
         }
-        public int GetMemoriasByOccasionAsync(OccationType type)
+        public async Task<int> GetMemoriasByOccasionAsync(OccationType type)
         {
-            var locations = _seedingService.Locations ?? Enumerable.Empty<Memoria>();
+            using var context = await _dbContext.CreateDbContextAsync();
+            var locations = await context.Memorias.ToListAsync();
             return locations.Count(m => m.Occation.Equals(type));
         }
-        public int GetPhotoCountAsync()
+        public async Task<int> GetPhotoCountAsync()
         {
-            var locations = _seedingService.Locations ?? Enumerable.Empty<Memoria>();
+            using var context = await _dbContext.CreateDbContextAsync();
+            var locations = await context.Memorias.Include(m => m.MediaMaterial).ToListAsync();
             if (!locations.Any()) return default;
-            return locations.Sum(m => m.MediaMaterial.Count(media => media.Type == Models.enums.MediaType.Photo));
+            return locations.Sum(m => m.MediaMaterial.Count(media => media.Type == MediaType.Photo));
         }
-        public int GetVideoCountAsync()
+        public async Task<int> GetVideoCountAsync()
         {
-            var locations = _seedingService.Locations ?? Enumerable.Empty<Memoria>();
-            return locations.Sum(m => m.MediaMaterial.Count(media => media.Type == Models.enums.MediaType.Video));
+            using var context = await _dbContext.CreateDbContextAsync();
+            var locations = await context.Memorias.Include(m => m.MediaMaterial).ToListAsync();
+            return locations.Sum(m => m.MediaMaterial.Count(media => media.Type == MediaType.Video));
         }
-        public string GetFavoriteCountryAsync()
+        public async Task<string> GetFavoriteCountryAsync()
         {
-            var locations = _seedingService.Locations ?? Enumerable.Empty<Memoria>();
+            using var context = await _dbContext.CreateDbContextAsync();
+            var locations = await context.Memorias.Include(m => m.MemoriaAddress).ToListAsync();
+
             return locations.GroupBy(m => m.MemoriaAddress.Country)
                 .OrderByDescending(g => g.Count())
                 .FirstOrDefault()?.Key; 

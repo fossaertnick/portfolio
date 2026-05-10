@@ -1,9 +1,6 @@
-﻿using Mde.Project.Mobile.Domain.Models;
+﻿using Mde.Project.Mobile.Core.Entities;
+using Mde.Project.Mobile.Domain.Dtos;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Net.Http.Json;
-using System.Text;
 using System.Text.Json;
 
 namespace Mde.Project.Mobile.Domain.Locations.Mock
@@ -22,8 +19,12 @@ namespace Mde.Project.Mobile.Domain.Locations.Mock
         // methoden
 
         // FORWARD GEOCODING (finding coordiantes based on address)
-        public async Task<Location?> ForwardGeoCodeAsync(string address)
+        public async Task ForwardGeoCodeAsync(Memoria saveMemoria)
         {
+            var address =
+                $"{saveMemoria.MemoriaAddress.Street} {saveMemoria.MemoriaAddress.HouseNumber}, " +
+                $"{saveMemoria.MemoriaAddress.City}, {saveMemoria.MemoriaAddress.Country}";
+
             var url =
                 $"https://maps.googleapis.com/maps/api/geocode/json?address={Uri.EscapeDataString(address)}&key={ApiKey}";
 
@@ -31,12 +32,15 @@ namespace Mde.Project.Mobile.Domain.Locations.Mock
             var json = await _httpClient.GetStringAsync(url);
             var response = JsonSerializer.Deserialize<GoogleResponse>(json);
             var result = response?.results?.FirstOrDefault();
-            if (result == null) return null;
-
-            return new Location(
-
-            result.geometry.location.lat,
-            result.geometry.location.lng);
+            if (result != null)
+            {
+                saveMemoria.MemoriaAddress.Latitude = result.geometry.location.lat;
+                saveMemoria.MemoriaAddress.Longitude = result.geometry.location.lng;
+            }
+            else
+            {
+                throw new Exception("Geen coördinaten gevonden voor het opgegeven adres.");
+            }
         }
 
         // REVERSE GEOCODING (finding address based on coordinates)
@@ -52,9 +56,8 @@ namespace Mde.Project.Mobile.Domain.Locations.Mock
             return new Address
             {
                 Country = place?.CountryName,
-                City = place?.Locality,
-                Street = place?.Thoroughfare,
-                HouseNumber = place?.SubThoroughfare,
+                City = place?.Locality ?? place?.SubAdminArea ?? place?.AdminArea,
+                Street = place?.Thoroughfare ?? place?.FeatureName,
             };
         }
     }

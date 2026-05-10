@@ -1,7 +1,4 @@
-﻿using Mde.Project.Mobile.Domain.Locations;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Mde.Project.Mobile.Core.Entities;
 
 namespace Mde.Project.Mobile.Domain.Services.Interfaces
 {
@@ -12,6 +9,6 @@ namespace Mde.Project.Mobile.Domain.Services.Interfaces
         Task<Memoria> GetMemoriaByIdAsync(Guid id);
         Task<IEnumerable<Memoria>> GetMemoriaByFilterAsync(string searchTerm);
         Task DeleteMemoriaAsync(Guid memoriaId);
-        Task SaveChangesAsync(Memoria saveMemoria);
+        Task SaveMemoriaAsync(Memoria saveMemoria);
     }
 }

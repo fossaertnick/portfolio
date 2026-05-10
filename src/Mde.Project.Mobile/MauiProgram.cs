@@ -1,9 +1,12 @@
 ﻿using CommunityToolkit.Maui;
+using Mde.Project.Mobile.Core.Data;
+using Mde.Project.Mobile.Core.Data.Seeding;
 using Mde.Project.Mobile.Domain.Locations.Mock;
 using Mde.Project.Mobile.Domain.Services;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Mde.Project.Mobile.Pages;
 using Mde.Project.Mobile.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Handlers;
 
@@ -18,14 +21,21 @@ namespace Mde.Project.Mobile
                 .UseMauiApp<App>()
                 .UseMauiMaps()
                 .UseMauiCommunityToolkit()
-                .UseMauiCommunityToolkitMediaElement(false)  
+                .UseMauiCommunityToolkitMediaElement(false)
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
+            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "app.db");
+            builder.Services.AddDbContextFactory<AppDbContext>(options =>
+            {
+                options.UseSqlite($"Filename={dbPath}");
+            });
+
 #if DEBUG
+
 
             builder.ConfigureMauiHandlers(handlers =>
             {
@@ -46,7 +56,11 @@ namespace Mde.Project.Mobile
                 {
                     handler.PlatformView.Background = null;
                 });
-                
+                SearchBarHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+                {
+                    handler.PlatformView.Background = null;
+                });
+
 #endif
             });
 
@@ -86,7 +100,6 @@ namespace Mde.Project.Mobile
             builder.Services.AddSingleton<IMemoriaService, MemoriaService>();
             builder.Services.AddSingleton<IMediaService, MediaService>();
             builder.Services.AddSingleton<ILocationService, LocationService>();
-            builder.Services.AddSingleton<ISeedingService, SeedingService>();
             builder.Services.AddSingleton<IStatisticService, StatisticService>();
             builder.Services.AddSingleton<IManualService, ManualService>();
 
@@ -100,8 +113,26 @@ namespace Mde.Project.Mobile
             }
 
             builder.Services.AddHttpClient<IGeoCodingService, GoogleGeoCodingService>();
+            var app = builder.Build();
 
-            return builder.Build();
+            using(var scope = app.Services.CreateScope())
+            {
+                try
+                {
+                    var dbContextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<AppDbContext>>();
+                    using var dbContext = dbContextFactory.CreateDbContext();
+                    dbContext.Database.Migrate();
+                    if(!dbContext.Memorias.Any())
+                    {
+                        Seed.SeedAsync(dbContext).GetAwaiter().GetResult();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Database initialization failed: {ex}");
+                }
+            }
+            return app;
         }
     }
 }

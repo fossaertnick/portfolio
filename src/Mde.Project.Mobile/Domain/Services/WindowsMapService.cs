@@ -1,8 +1,5 @@
-﻿using Mde.Project.Mobile.Domain.Locations;
+﻿using Mde.Project.Mobile.Core.Entities;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mde.Project.Mobile.Domain.Services
 {
@@ -64,7 +61,7 @@ namespace Mde.Project.Mobile.Domain.Services
         {
             foreach(var pin in items)
             {
-                var js = $"addMarker({pin.Latitude}, {pin.Longitude}, '{pin.Name}')";
+                var js = $"addMarker({pin.MemoriaAddress.Latitude}, {pin.MemoriaAddress.Longitude}, '{pin.Name}')";
                 _webView.EvaluateJavaScriptAsync(js);
             }
         }

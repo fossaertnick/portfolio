@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Mde.Project.Mobile.Domain.Models.enums;
-using Mde.Project.Mobile.Domain.Services;
+using Mde.Project.Mobile.Core.Entities.Enums;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
 using System.Windows.Input;
 
@@ -8,7 +7,7 @@ namespace Mde.Project.Mobile.ViewModels
 {
     public class StatisticsViewModel : ObservableObject
     {
-        private readonly IStatisticService _statisticService; 
+        private readonly IStatisticService _statisticService;
 
         // fields
         private int totalMemorias;
@@ -100,14 +99,14 @@ namespace Mde.Project.Mobile.ViewModels
         // methoden
         private async Task ExecuteInitializeCommand()
         {
-            TotalMemorias =  _statisticService.GetTotalMemorias();
-            WerkMemoria =  _statisticService.GetMemoriasByOccasionAsync(OccationType.Werk);
-            ReisMemoria =  _statisticService.GetMemoriasByOccasionAsync(OccationType.Reis);
-            UitgaanMemoria =  _statisticService.GetMemoriasByOccasionAsync(OccationType.Uitgaan);
-            AndereMemoria =  _statisticService.GetMemoriasByOccasionAsync(OccationType.Ander);
-            TotalMemoriaFotos =  _statisticService.GetPhotoCountAsync();
-            TotalMemoriaVideos =  _statisticService.GetVideoCountAsync();
-            FavoriteMemoriaCity =  _statisticService.GetFavoriteCountryAsync();
+            TotalMemorias = await _statisticService.GetTotalMemorias();
+            WerkMemoria = await _statisticService.GetMemoriasByOccasionAsync(OccationType.Werk);
+            ReisMemoria = await _statisticService.GetMemoriasByOccasionAsync(OccationType.Reis);
+            UitgaanMemoria = await _statisticService.GetMemoriasByOccasionAsync(OccationType.Uitgaan);
+            AndereMemoria = await _statisticService.GetMemoriasByOccasionAsync(OccationType.Ander);
+            TotalMemoriaFotos = await _statisticService.GetPhotoCountAsync();
+            TotalMemoriaVideos = await _statisticService.GetVideoCountAsync();
+            FavoriteMemoriaCity = await _statisticService.GetFavoriteCountryAsync();
         }
     }
 }

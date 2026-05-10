@@ -2,11 +2,11 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:Mde.Project.Mobile.ViewModels"
-             xmlns:images="clr-namespace:Mde.Project.Mobile.Domain.Models"
+             xmlns:images="clr-namespace:Mde.Project.Mobile.Core.Entities;assembly=Mde.Project.Mobile.Core"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:DataType="viewModels:CreateOrUpdateViewModel"
              x:Class="Mde.Project.Mobile.Pages.CreateOrUpdatePage"
-             xmlns:enum="clr-namespace:Mde.Project.Mobile.Domain.Models.enums"
+             xmlns:enum="clr-namespace:Mde.Project.Mobile.Core.Entities.Enums;assembly=Mde.Project.Mobile.Core"
              Shell.TabBarIsVisible="False"
              Shell.FlyoutBehavior="Disabled"
              Shell.NavBarIsVisible="False">

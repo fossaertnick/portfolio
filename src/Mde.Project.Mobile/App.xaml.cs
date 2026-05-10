@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Mde.Project.Mobile.Core.Data;
+using Mde.Project.Mobile.Core.Data.Seeding;
+using Microsoft.EntityFrameworkCore;
 
 namespace Mde.Project.Mobile
 {
@@ -7,11 +9,7 @@ namespace Mde.Project.Mobile
         public App()
         {
             InitializeComponent();
-        }
-
-        protected override Window CreateWindow(IActivationState? activationState)
-        {
-            return new Window(new AppShell());
+            MainPage = new AppShell();
         }
     }
 }
