@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Mde.Project.Mobile.Core.Entities
 {
-    public class Address : Synced
+    public class Address
     {
         // properties
         public Guid Id { get; set; } = Guid.NewGuid();
