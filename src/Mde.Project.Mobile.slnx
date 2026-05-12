@@ -1,6 +1,12 @@
 <Solution>
-  <Project Path="Mde.Project.Mobile.Core/Mde.Project.Mobile.Core.csproj" Id="69f9d436-6992-4fa5-bb97-d4e601d7d0a6" />
-  <Project Path="Mde.Project.Mobile/Mde.Project.Mobile.csproj">
-    <Deploy Solution="Debug|*" />
-  </Project>
+  <Folder Name="/API/">
+    <Project Path="Mde.SourceOfTruth.Api/Mde.SourceOfTruth.Api.csproj" Id="5e953683-8e9f-4cb8-8670-70b8f286201d" />
+    <Project Path="Mde.SourceOfTruth.Core/Mde.SourceOfTruth.Core.csproj" Id="ee9139e9-58d3-4ddf-a3d7-74de56b6d6e4" />
+  </Folder>
+  <Folder Name="/Maui/">
+    <Project Path="Mde.Project.Mobile.Core/Mde.Project.Mobile.Core.csproj" Id="69f9d436-6992-4fa5-bb97-d4e601d7d0a6" />
+    <Project Path="Mde.Project.Mobile/Mde.Project.Mobile.csproj">
+      <Deploy Solution="Debug|*" />
+    </Project>
+  </Folder>
 </Solution>

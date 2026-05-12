@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Mde.Project.Mobile.Core.Entities
 {
-    public class MediaItem : Synced
+    public class MediaItem
     {
         // properties
         public Guid Id { get; set; }

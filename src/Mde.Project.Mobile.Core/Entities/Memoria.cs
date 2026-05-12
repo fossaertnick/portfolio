@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Mde.Project.Mobile.Core.Entities
 {
-    public class Memoria : Synced
+    public class Memoria
     {
         // properties
         public Guid Id { get; set; }
@@ -20,6 +20,6 @@ namespace Mde.Project.Mobile.Core.Entities
         public Guid AddressId { get; set; }
         public Address MemoriaAddress { get; set; }
 
-        public List<MediaItem> MediaMaterial { get; set; } = new List<MediaItem>();
+        public List<MediaItem?> MediaMaterial { get; set; }
     }
 }
