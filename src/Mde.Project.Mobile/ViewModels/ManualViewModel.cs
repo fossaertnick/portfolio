@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 namespace Mde.Project.Mobile.ViewModels
 {
-    public class ManualViewModel : ObservableObject
+    public class ManualViewModel : BaseViewModel
     {
         private readonly IManualService _manualService;
 
@@ -34,7 +34,15 @@ namespace Mde.Project.Mobile.ViewModels
         // methoden
         private async Task LoadManual()
         {
-            Text = await _manualService.HelpTheUserAsync();
+            try
+            {
+                IsBusy = true;
+                Text = await HandleResult(await _manualService.HelpTheUserAsync()) ?? string.Empty;
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 }

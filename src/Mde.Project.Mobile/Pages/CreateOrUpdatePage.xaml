@@ -48,7 +48,7 @@
             
                 <HorizontalStackLayout HorizontalOptions="Center" IsVisible="{Binding IsCreateMode}">
                     <Border Margin="25,25,25,0" Padding="10,0,0,0" WidthRequest="100">
-                        <DatePicker Date="{Binding CreatedOn, Mode=TwoWay}"/>
+                        <DatePicker Date="{Binding EventDate, Mode=TwoWay}"/>
                     </Border>
                 </HorizontalStackLayout>
                 <HorizontalStackLayout Spacing="10" HorizontalOptions="Center" Margin="25,25,25,0"

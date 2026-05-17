@@ -86,6 +86,7 @@ namespace Mde.SourceOfTruth.Core.Services
                 oldMemoria.Data.Name = updatingMemoria.Name;
                 oldMemoria.Data.Description = updatingMemoria.Description;
                 oldMemoria.Data.Occation = updatingMemoria.Occation;
+                oldMemoria.Data.EventDate = updatingMemoria.EventDate;
                 oldMemoria.Data.LastEditedOn = DateTime.UtcNow;
 
                 oldMemoria.Data.MemoriaAddress.Country = updatingMemoria.MemoriaAddress.Country;
@@ -95,14 +96,22 @@ namespace Mde.SourceOfTruth.Core.Services
                 oldMemoria.Data.MemoriaAddress.Latitude = updatingMemoria.MemoriaAddress.Latitude;
                 oldMemoria.Data.MemoriaAddress.Longitude = updatingMemoria.MemoriaAddress.Longitude;
 
+                var newMediaCollection = updatingMemoria.MediaMaterial ?? new List<MediaItem>();
+                var removedMedia = oldMemoria.Data.MediaMaterial
+                    .Where(oldMedia => !newMediaCollection.Any(newMedia => newMedia.FilePath == oldMedia.FilePath)).ToList();
+                foreach(var media in removedMedia)
+                {
+                    var fileName = Path.GetFileName(media.FilePath);
+                    var fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", fileName);
+                    if(File.Exists(fullPath)) File.Delete(fullPath);
+                }
+
                 _SourceDbContext.MediaItems.RemoveRange(oldMemoria.Data.MediaMaterial);
-                oldMemoria.Data.MediaMaterial.Clear();
 
                 if(updatingMemoria.MediaMaterial != null)
                 {
                     foreach(var media in updatingMemoria.MediaMaterial)
                     {
-                        media.CreatedAt = DateTime.UtcNow;
                         media.MemoriaId = oldMemoria.Data.Id;
 
                         oldMemoria.Data.MediaMaterial.Add(media);
@@ -123,8 +132,16 @@ namespace Mde.SourceOfTruth.Core.Services
             if(id == Guid.Empty) return ResultModel<Memoria>.Failure("Id parameter was leeg");
             try
             {
-                var oneMemoriaById = await _SourceDbContext.Memorias.SingleOrDefaultAsync(m => m.Id == id);
+                var oneMemoriaById = await _SourceDbContext.Memorias.Include(m => m.MediaMaterial).SingleOrDefaultAsync(m => m.Id == id);
                 if (oneMemoriaById is null) return ResultModel<Memoria>.Failure($"Something went wrong while picking up the Memoria with id: {id}");
+
+                foreach (var media in oneMemoriaById.MediaMaterial)
+                {
+                    if(string.IsNullOrWhiteSpace(media.FilePath)) continue;
+                    var fileName = Path.GetFileName(media.FilePath);
+                    var fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", fileName);
+                    if (File.Exists(fullPath)) File.Delete(fullPath);
+                }
 
                 _SourceDbContext.Remove(oneMemoriaById);
                 await _SourceDbContext.SaveChangesAsync();

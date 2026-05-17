@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Mde.Project.Mobile.Core.Entities;
+using Mde.Project.Mobile.Core.Services.Interfaces;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Mde.Project.Mobile.Pages;
 using System.Collections.ObjectModel;
@@ -7,7 +8,7 @@ using System.Windows.Input;
 
 namespace Mde.Project.Mobile.ViewModels
 {
-    public class DetailsViewModel : ObservableObject, IQueryAttributable
+    public class DetailsViewModel : BaseViewModel, IQueryAttributable
     {
         private readonly IMemoriaService _memoriaService;
 
@@ -36,14 +37,11 @@ namespace Mde.Project.Mobile.ViewModels
         // Commands
         public ICommand UpdateMemoriaCommand => new Command<Guid>(async (memoriaDetailsId) =>
         {
-            if (memoriaDetailsId != Guid.Empty)
-            {
-                await Shell.Current.GoToAsync($"{nameof(CreateOrUpdatePage)}?id={memoriaDetailsId}");
-            }
+            await ExecuteUpdateMemoriaCommand(memoriaDetailsId);
         });
         public ICommand DeleteMemoriaCommand => new Command<Guid>(async (specificMemoriaId) =>
         {
-            ExecuteDeleteMemoriaCommand(specificMemoriaId);
+            await ExecuteDeleteMemoriaCommand(specificMemoriaId);
         });
 
         // constructor
@@ -53,6 +51,52 @@ namespace Mde.Project.Mobile.ViewModels
         }
 
         // methoden
+        private async Task ExecuteUpdateMemoriaCommand(Guid memoriaId)
+        {
+            if (memoriaId == Guid.Empty)
+            {
+                await Shell.Current.DisplayAlert(
+                    "Error",
+                    "No valid memoria selected",
+                    "OK");
+
+                return;
+            }
+
+            await Shell.Current.GoToAsync($"{nameof(CreateOrUpdatePage)}?id={memoriaId}");
+        }
+        private async Task ExecuteDeleteMemoriaCommand(Guid memoriaId)
+        {
+            try
+            {
+                IsBusy = true;
+                if (memoriaId == Guid.Empty)
+                {
+                        await Shell.Current.DisplayAlert(
+                            "Error",
+                            "No valid memoria selected",
+                            "OK");
+
+                        return;
+                }
+
+                bool confirm = await Shell.Current.DisplayAlert(
+                    "Delete",
+                    "Are you sure?",
+                    "YES",
+                    "NO");
+                if (!confirm) return;
+                var result = await _memoriaService.DeleteMemoriaAsync(memoriaId);
+                var deleted = await HandleResult(result);
+                if (!deleted) return;
+
+                await Shell.Current.GoToAsync(nameof(ListPage));
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
         async void IQueryAttributable.ApplyQueryAttributes(IDictionary<string, object> query)
         {
             await HandleNavigation(query);
@@ -61,41 +105,44 @@ namespace Mde.Project.Mobile.ViewModels
         {
             try
             {
-                if (query.TryGetValue("id", out var value) && Guid.TryParse(value?.ToString(), out var id))
-                {
-                    SelectedLocation = await _memoriaService.GetMemoriaByIdAsync(id);
+                IsBusy = true;
+                if (!query.TryGetValue("id", out var value)) return;
 
-                    LoadExistingImages();
+                if(!Guid.TryParse(value?.ToString(), out var id))
+                {
+                    await Shell.Current.DisplayAlert(
+                        "Error",
+                        "No valid memoria-id received.",
+                        "OK");
+
+                    return;
                 }
+
+                var result = await _memoriaService.GetMemoriaByIdAsync(id);
+                var memoria = await HandleResult(result);
+                if (memoria == null) return;
+
+                SelectedLocation = memoria;
+                LoadExistingImages();
             }
-            catch (Exception ex)
+            finally
             {
-                Console.WriteLine(ex.Message);
+                IsBusy = false;
             }
         }
         private void LoadExistingImages()
         {
             var list = new List<MediaItem>();
+            if (SelectedLocation?.MediaMaterial == null) return;
 
-            if (SelectedLocation?.MediaMaterial != null)
+            foreach (var media in SelectedLocation.MediaMaterial)
             {
-                foreach (var media in SelectedLocation.MediaMaterial)
+                list.Add(new MediaItem
                 {
-                    list.Add(new MediaItem
-                    {
-                        FilePath = media.FilePath,
-                    });
-                }
+                    FilePath = media.FilePath,
+                });
             }
             TemporaryItems = new ObservableCollection<MediaItem>(list);
-        }
-        private async Task ExecuteDeleteMemoriaCommand(Guid specificMemoriaId)
-        {
-            if (specificMemoriaId != Guid.Empty)
-            {
-                await _memoriaService.DeleteMemoriaAsync(specificMemoriaId);
-                await Shell.Current.GoToAsync(nameof(ListPage));
-            }
         }
     }
 }

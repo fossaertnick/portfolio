@@ -11,7 +11,7 @@ namespace Mde.SourceOfTruth.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class MemoriaController : Controller
+    public class MemoriaController : ControllerBase
     {
         private readonly IMemoriaService _memoriaService;
 
@@ -23,21 +23,34 @@ namespace Mde.SourceOfTruth.Api.Controllers
 
         // ActionResult (GET)
         [HttpGet]
-        public async Task<ActionResult<MemoriaListResponseDto>> GetAllMemorias()
+        public async Task<ActionResult<MemoriaDetailResponseDto>> GetAllMemorias()
         {
             ResultModel<IEnumerable<Memoria>> result = await _memoriaService.GetAllMemoriasAsync();
             if(!result.IsSucces) return BadRequest(result.Errors);
 
-            IEnumerable<MemoriaListResponseDto> memoriaResponses = result.Data.Select(m => new MemoriaListResponseDto
+            IEnumerable<MemoriaDetailResponseDto> memoriaResponses = result.Data.Select(m => new MemoriaDetailResponseDto
             {
                 Id = m.Id,
                 Name = m.Name,
                 Occation = m.Occation,
                 Description = m.Description,
-                Country = m.MemoriaAddress.Country,
-                City = m.MemoriaAddress.City,
-                MediaCount = m.MediaMaterial.Count(),
+                EventDate = m.EventDate,
+                CreatedOn = m.CreatedOn,
                 LastEditedOn = m.LastEditedOn,
+                Address = new AddressResponseDto
+                {
+                    Country = m.MemoriaAddress.Country,
+                    City = m.MemoriaAddress.City,
+                    Street = m.MemoriaAddress.Street,
+                    HouseNumber = m.MemoriaAddress.HouseNumber,
+                    Latitude = m.MemoriaAddress.Latitude,
+                    Longitude = m.MemoriaAddress.Longitude,
+                },
+                MediaMaterial = m.MediaMaterial.Select(media => new MediaItemResponseDto
+                {
+                    FilePath = media.FilePath,
+                    MediaType = media.Type,
+                }).ToList()
             });
             return Ok(memoriaResponses);
         }
@@ -53,6 +66,7 @@ namespace Mde.SourceOfTruth.Api.Controllers
                 Name = result.Data.Name,
                 Occation = result.Data.Occation,
                 Description= result.Data.Description,
+                EventDate = result.Data.EventDate,
                 CreatedOn = result.Data.CreatedOn,
                 LastEditedOn= result.Data.LastEditedOn,
                 Address = new AddressResponseDto
@@ -66,7 +80,6 @@ namespace Mde.SourceOfTruth.Api.Controllers
                 },
                 MediaMaterial = result.Data.MediaMaterial.Select(media => new MediaItemResponseDto
                 {
-                    Id = media.Id,
                     FilePath = media.FilePath,
                     MediaType = media.Type,
                 }).ToList()
@@ -78,29 +91,42 @@ namespace Mde.SourceOfTruth.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<MemoriaDetailResponseDto>> CreateMemoria(MemoriaRequestDto memoriaRequest)
         {
-            Memoria newMemoria = mapToMakeEntity(memoriaRequest);
+            Memoria newMemoria = MapToMakeEntity(memoriaRequest);
 
             ResultModel<Memoria> createdResult = await _memoriaService.CreateMemoriaAsync(newMemoria);
             if (!createdResult.IsSucces || createdResult.Data == null) return BadRequest(createdResult.Errors);
 
-            MemoriaDetailResponseDto memoriaResponseDto = mapToShowReponse(createdResult.Data);
+            MemoriaDetailResponseDto memoriaResponseDto = MapToShowReponse(createdResult.Data);
 
             return CreatedAtAction(nameof(GetMemoriaById), new { id = memoriaResponseDto.Id}, memoriaResponseDto);
+        }
+        [HttpPost("upload")]
+        public async Task<ActionResult<string>> UploadMediaItems(IFormFile file)
+        {
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            var folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img");
+            Directory.CreateDirectory(folder);
+            var fullPath = Path.Combine(folder, fileName);
+            using var stream = System.IO.File.Create(fullPath);
+            await file.CopyToAsync(stream);
+            var url = $"https://06dfrpsm-44338.brs.devtunnels.ms/img/{fileName}";
+
+            return Ok(url);
         }
 
         // ActionResult (PUT)
         [HttpPut("{id}")]
         public async Task<ActionResult<MemoriaDetailResponseDto>> UpdateMemoria(Guid id, MemoriaRequestDto memoriaRequestDto)
         {
-            Memoria updatingMemoria = mapToMakeEntity(memoriaRequestDto);
+            Memoria updatingMemoria = MapToMakeEntity(memoriaRequestDto);
             updatingMemoria.Id = id;
 
             ResultModel<Memoria> updatedResult = await _memoriaService.UpdateMemoriaAsync(updatingMemoria);
             if(!updatedResult.IsSucces || updatedResult.Data == null) return BadRequest(updatedResult.Errors);
 
-            MemoriaDetailResponseDto memoriaResponseDto = mapToShowReponse(updatedResult.Data);
+            MemoriaDetailResponseDto memoriaResponseDto = MapToShowReponse(updatedResult.Data);
 
-            return CreatedAtAction(nameof(GetMemoriaById), new { id = memoriaResponseDto.Id }, memoriaResponseDto);
+            return Ok(memoriaResponseDto);
         }
 
         // ActionResult (DELETE)
@@ -108,13 +134,13 @@ namespace Mde.SourceOfTruth.Api.Controllers
         public async Task<ActionResult> DeleteMemoria(Guid id)
         {
             ResultModel<Memoria> deletedResult = await _memoriaService.DeleteMemoriaAsync(id);
-            if (!deletedResult.IsSucces || deletedResult.Data == null) return NotFound(deletedResult.Errors);
+            if (!deletedResult.IsSucces) return NotFound(deletedResult.Errors);
 
             return NoContent();
         }
 
         // aparte methoden
-        private MemoriaDetailResponseDto mapToShowReponse(Memoria result)
+        private MemoriaDetailResponseDto MapToShowReponse(Memoria result)
         {
             MemoriaDetailResponseDto memoriaResponseDto = new MemoriaDetailResponseDto
             {
@@ -122,6 +148,7 @@ namespace Mde.SourceOfTruth.Api.Controllers
                 Name = result.Name,
                 Occation = result.Occation,
                 Description = result.Description,
+                EventDate = result.EventDate,
                 CreatedOn = result.CreatedOn,
                 LastEditedOn = result.LastEditedOn,
                 Address = new AddressResponseDto
@@ -135,20 +162,20 @@ namespace Mde.SourceOfTruth.Api.Controllers
                 },
                 MediaMaterial = result.MediaMaterial.Select(media => new MediaItemResponseDto
                 {
-                    Id = media.Id,
                     FilePath = media.FilePath,
                     MediaType = media.Type,
                 }).ToList()
             };
             return memoriaResponseDto;
         }
-        private Memoria mapToMakeEntity(MemoriaRequestDto memoriaRequest)
+        private Memoria MapToMakeEntity(MemoriaRequestDto memoriaRequest)
         {
             Memoria newMemoria = new Memoria
             {
                 Name = memoriaRequest.Name,
                 Occation = memoriaRequest.Occation,
                 Description = memoriaRequest.Description,
+                EventDate = memoriaRequest.EventDate,
                 MemoriaAddress = new Address
                 {
                     Country = memoriaRequest.Address.Country,
@@ -174,3 +201,4 @@ namespace Mde.SourceOfTruth.Api.Controllers
         }
     }
 }
+

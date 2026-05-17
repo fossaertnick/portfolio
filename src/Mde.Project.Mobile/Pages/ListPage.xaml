@@ -72,7 +72,14 @@
                                            Grid.Row="1"
                                            FontSize="12"
                                            TextColor="Gray" 
-                                           Text="{Binding CreatedOn}"/>
+                                           Text="{Binding EventDate}"/>
+                                        
+                                <Label Grid.Column="1"
+                                       HorizontalTextAlignment="End"
+                                       VerticalTextAlignment="Center"
+                                           Text="{Binding MediaCount}"
+                                           FontSize="16"
+                                           FontAttributes="Bold" />
 
                             </Grid>
 

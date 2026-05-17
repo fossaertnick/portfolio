@@ -1,14 +1,16 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Mde.Project.Mobile.Core.Entities;
 using Mde.Project.Mobile.Core.Entities.Enums;
+using Mde.Project.Mobile.Core.Services.Interfaces;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Mde.Project.Mobile.Pages;
 using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
 namespace Mde.Project.Mobile.ViewModels
 {
-    public class CreateOrUpdateViewModel : ObservableObject, IQueryAttributable
+    public class CreateOrUpdateViewModel : BaseViewModel, IQueryAttributable
     {
         private readonly IMediaService _mediaService;
         private readonly IMemoriaService _memoriaService;
@@ -26,7 +28,7 @@ namespace Mde.Project.Mobile.ViewModels
         private string country;
         private string street;
         private string houseNumber;
-        private DateTime createdOn = DateTime.Now;
+        private DateTime eventDate = DateTime.Now;
         private Memoria selectedMemoria;
         private ImageSource photo;
 
@@ -97,10 +99,10 @@ namespace Mde.Project.Mobile.ViewModels
             get { return houseNumber; }
             set => SetProperty(ref houseNumber, value);
         }
-        public DateTime CreatedOn
+        public DateTime EventDate
         {
-            get { return createdOn; }
-            set => SetProperty(ref createdOn, value);
+            get { return eventDate; }
+            set => SetProperty(ref eventDate, value);
         }
         public Memoria SelectedMemoria
         {
@@ -120,25 +122,7 @@ namespace Mde.Project.Mobile.ViewModels
         // commands
         public ICommand CancelCommand => new Command<string>(async (situation) =>
         {
-            if (situation is string && situation == "cancel")
-            {
-                foreach(var media in TemporaryItems.ToList())
-                {
-                    if(!string.IsNullOrWhiteSpace(media.FilePath) && File.Exists(media.FilePath))
-                    {
-                        try
-                        {
-                            File.Delete(media.FilePath);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Fout bij verwijderen bestand: {ex.Message}");
-                        }
-                    }
-                }
-                TemporaryItems.Clear();
-                await Shell.Current.GoToAsync(nameof(ListPage));
-            }
+            await ExecuteCancelCommand(situation);
         });
         public ICommand CreateCommand => new Command(async () =>
         {
@@ -146,7 +130,7 @@ namespace Mde.Project.Mobile.ViewModels
         });
         public ICommand ClickForLocationCommand => new Command(async () =>
         {
-            GiveUserHisCurrentLocation();
+            await GiveUserHisCurrentLocation();
         });
         public ICommand TakePhotoCommand => new Command(async () =>
         {
@@ -160,9 +144,9 @@ namespace Mde.Project.Mobile.ViewModels
         {
             await TakeVideoAsync();
         });
-        public ICommand DeleteTemporaryMediaItemCommand => new Command<MediaItem>( (image) =>
+        public ICommand DeleteTemporaryMediaItemCommand => new Command<MediaItem>(async (image) =>
         {
-            RemoveImage(image);
+            await RemoveImage(image);
         });
 
         // constructor
@@ -183,6 +167,7 @@ namespace Mde.Project.Mobile.ViewModels
         {
             try
             {
+                IsBusy = true;
                 if (query.TryGetValue("id", out var value) && Guid.TryParse(value?.ToString(), out var id))
                 {
                     await InitUpdate(id);
@@ -192,9 +177,9 @@ namespace Mde.Project.Mobile.ViewModels
                     InitCreate();
                 }
             }
-            catch (Exception ex)
+            finally
             {
-                Console.WriteLine(ex.Message);
+                IsBusy = false;
             }
         }
         private void InitCreate()
@@ -206,13 +191,15 @@ namespace Mde.Project.Mobile.ViewModels
         private async Task InitUpdate(Guid id)
         {
             EditMode = EditMode.Update;
-            SelectedMemoria = await _memoriaService.GetMemoriaByIdAsync(id);
+            var result = await _memoriaService.GetMemoriaByIdAsync(id);
+            var memoria = await HandleResult(result);
+            if (memoria == null) return;
 
+            SelectedMemoria = memoria;
             ApplyMemoriaToFields(SelectedMemoria);
-
             LoadAdres();
             await LoadExistingImages();
-        }
+        } 
         private void LoadAdres()
         {
             if(SelectedMemoria.MemoriaAddress == null)
@@ -241,7 +228,7 @@ namespace Mde.Project.Mobile.ViewModels
             Name = memoria.Name;
             Description = memoria.Description;
             Occation = memoria.Occation;
-            CreatedOn = memoria.CreatedOn;
+            EventDate = memoria.EventDate;
         }
         private void ResetFields()
         {
@@ -253,35 +240,62 @@ namespace Mde.Project.Mobile.ViewModels
             Country = string.Empty;
             Street = string.Empty;
             HouseNumber = string.Empty;
-            CreatedOn = DateTime.Now;
+            EventDate = DateTime.Now;
             Latitude = 0;
             Longitude = 0;
         }
-        private async void GiveUserHisCurrentLocation()
+        private async Task GiveUserHisCurrentLocation()
         {
-            Location currentCoordinates = await _locationService.GetCurrentLocationAsync();
-            if (currentCoordinates == null) return;
+            try
+            {
+                IsBusy = true;
+                var permissionResult = await _locationService.EnsureLocationPermission();
+                var hasPermission = await HandleResult(permissionResult);
+                if(hasPermission != true) return;
 
-            var adresFound = await _geoCodingService.ReverseGeoCodingAsync(currentCoordinates);
-            if (adresFound == null) return;
+                var locationResult = await _locationService.GetCurrentLocationAsync();
+                var currentCoordinates = await HandleResult(locationResult);
+                if(currentCoordinates ==  null) return;
 
-            Country = adresFound.Country;
-            City = adresFound.City;
-            Street = adresFound.Street;
-            Latitude = currentCoordinates.Latitude;
-            Longitude = currentCoordinates.Longitude;
-        }
+                var addressResult = await _geoCodingService.ReverseGeoCodingAsync(currentCoordinates);
+                var addressFound = await HandleResult(addressResult);
+                if(addressFound == null) return;
+
+                Country = addressFound.Country;
+                City = addressFound.City;
+                Street = addressFound.Street;
+                Latitude = currentCoordinates.Latitude;
+                Longitude = currentCoordinates.Longitude;
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+
+        } 
         private async Task CreateOrUpdateMemoriaAsync()
         {
-            if(CheckIncomingValues() == (true, string.Empty))
+            try
             {
-                Memoria memoria;
+                IsBusy = true;
+                var validation = CheckIncomingValues();
+                if(!validation.Item1)
+                {
+                    await Shell.Current.DisplayAlert(
+                        "Error",
+                        validation.Item2,
+                        "OK");
 
+                    return;
+                }
+
+                Memoria memoria;
                 if(SelectedMemoria == null)
                 {
                     memoria = new Memoria
                     {
                         Name = Name,
+                        EventDate = EventDate,
                         MemoriaAddress = new Address
                         {
                             Country = Country,
@@ -302,6 +316,8 @@ namespace Mde.Project.Mobile.ViewModels
                     {
                         Id = SelectedMemoria.Id,
                         Name = Name,
+                        Description = Description,
+                        Occation = Occation,
                         MemoriaAddress = new Address
                         {
                             Country = Country,
@@ -311,35 +327,31 @@ namespace Mde.Project.Mobile.ViewModels
                             Latitude = Latitude,
                             Longitude = Longitude
                         },
-                        Description = Description,
-                        Occation = Occation,
-                        CreatedOn = SelectedMemoria.CreatedOn,
-                        LastEditedOn = DateTime.Now,
                         MediaMaterial = TemporaryItems.Select(m => new MediaItem
                         {
-                            Id = m.Id,
                             Type = m.Type,
                             FilePath = m.FilePath,
                             MemoriaId = m.MemoriaId,
                         }).ToList()
                     };
                 }
+
+                var geoResult = await _geoCodingService.ForwardGeoCodeAsync(memoria);
+                var geoSuccess = await HandleResult(geoResult);
+                if (geoSuccess != true) return;
+
+                var saveResult = await _memoriaService.SaveMemoriaAsync(memoria);
+                var saveSuccess = await HandleResult(saveResult);
+                if(saveSuccess != true) return;
+
                 TemporaryItems.Clear();
-
-                await _memoriaService.SaveMemoriaAsync(memoria);
-
                 await Shell.Current.GoToAsync(nameof(ListPage));
             }
-            else
+            finally
             {
-                string message = CheckIncomingValues().Item2;
-                await Application.Current.MainPage.DisplayAlert(
-                    "Iets ging fout met je ingave",
-                    $"{message}",
-                    "OK"
-                );
+                IsBusy = false;
             }
-        }
+        } 
         private async Task LoadExistingImages()
         {
             TemporaryItems.Clear();
@@ -351,40 +363,100 @@ namespace Mde.Project.Mobile.ViewModels
                 }
             }
         }
-        private void RemoveImage(MediaItem image)
+        private async Task RemoveImage(MediaItem image)
         {
-            if (image == null) return;
+            try
+            {
+                IsBusy = true;
+                if (image == null) return;
 
-            TemporaryItems.Remove(image);
+                TemporaryItems.Remove(image);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
         private async Task PickPhotoAsync()
         {
-            var photo = await MediaPicker.Default.PickPhotoAsync();
-            if (photo == null) return;
+            try
+            {
+                IsBusy = true;
+                var photo = await MediaPicker.Default.PickPhotoAsync();
+                if (photo == null) return;
 
-            var mediaItem = await _mediaService.SavePhotoASync(photo);
-            TemporaryItems.Add(mediaItem);
-        }
+                var result = _mediaService.PrepareMediaItem(photo);
+                var mediaItem = await HandleResult(result);
+                if(mediaItem == null) return;
+
+                TemporaryItems.Add(mediaItem);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        } 
         private async Task TakePhotoAsync()
         {
-            if (!MediaPicker.Default.IsCaptureSupported) return;
+            try
+            {
+                IsBusy = true;
+                if (!MediaPicker.Default.IsCaptureSupported) return;
 
-            var photo = await MediaPicker.Default.CapturePhotoAsync();
-            if (photo == null) return;
+                var photo = await MediaPicker.Default.CapturePhotoAsync();
+                if (photo == null) return;
 
-            var mediaItem = await _mediaService.SavePhotoASync(photo);
-            TemporaryItems.Add(mediaItem);
+                var result = _mediaService.PrepareMediaItem(photo);
+                var mediaItem = await HandleResult(result);
+                if(mediaItem == null) return;
+
+                TemporaryItems.Add(mediaItem);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
         private async Task TakeVideoAsync()
         {
-            if (!MediaPicker.Default.IsCaptureSupported) return;
+            try
+            {
+                IsBusy = true;
+                if (!MediaPicker.Default.IsCaptureSupported) return;
 
-            var video = await MediaPicker.Default.CaptureVideoAsync();
-            Console.WriteLine(video?.FullPath ?? "null");
-            if (video == null) return;
+                var video = await MediaPicker.Default.CaptureVideoAsync();
+                if (video == null) return;
 
-            var mediaItem = await _mediaService.SaveVideoAsync(video);
-            TemporaryItems.Add(mediaItem);
+                var result = await _mediaService.SaveVideoAsync(video);
+                var mediaItem = await HandleResult(result);
+                if(mediaItem == null) return;
+
+                TemporaryItems.Add(mediaItem);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+        private async Task ExecuteCancelCommand(string situation)
+        {
+            if (situation is string && situation == "cancel")
+            {
+                try
+                {
+                    IsBusy = true;
+                    var result = await _mediaService.DeleteMediaItemsCollectionAsync(TemporaryItems);
+                    var succes = await HandleResult(result);
+                    if (succes != true) return;
+
+                    TemporaryItems.Clear();
+                    await Shell.Current.GoToAsync(nameof(ListPage));
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
+            }
         }
         private (bool, string) CheckIncomingValues()
         {
