@@ -1,20 +1,18 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Mde.Project.Mobile.Domain.Locations;
-using Mde.Project.Mobile.Domain.Services.Interfaces;
+using Mde.Project.Mobile.Core.Entities;
+using Mde.Project.Mobile.Core.Services.Interfaces;
 using Mde.Project.Mobile.Pages;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using System.Windows.Input;
 
 namespace Mde.Project.Mobile.ViewModels
 {
-    public class ListViewModel : ObservableObject
+    public class ListViewModel : BaseViewModel
     {
         private readonly IMemoriaService _memoriaService;
 
         // fields
-        private ObservableCollection<Memoria> locations = new ObservableCollection<Memoria>();
+        private ObservableCollection<Memoria> locations;
         private string searchTerm;
 
         // properties
@@ -37,84 +35,155 @@ namespace Mde.Project.Mobile.ViewModels
 
         // Commands
         public ICommand InitializeMemoriaCommand { get; }
-        public ICommand DetailsMemoriaCommand => new Command<Guid>(async (memoriaDetailsId) =>
+        public ICommand DetailsMemoriaCommand => new Command<Guid>(async (memoriaId) =>
         {
-            ExecuteDetailsMemoriaCommand(memoriaDetailsId);
+            await ExecuteDetailsMemoriaCommand(memoriaId);
         });
-        public ICommand UpdateMemoriaCommand => new Command<Guid>(async (memoriaDetailsId) =>
+        public ICommand UpdateMemoriaCommand => new Command<Guid>(async (memoriaId) =>
         {
-            if(memoriaDetailsId != Guid.Empty)
-            {
-                await Shell.Current.GoToAsync($"{nameof(CreateOrUpdatePage)}?id={memoriaDetailsId}");
-            }
+            await ExecuteUpdateMemoriaCommand(memoriaId);
         });
         public ICommand NavigationCommand => new Command<string>(async (destination) =>
         {
-            if( destination == "add")
-            {
-                await Shell.Current.GoToAsync(nameof(CreateOrUpdatePage));
-            }
-            else if( destination == "map")
-            {
-                await Shell.Current.GoToAsync(nameof(MapPage));
-            }
-            else
-            {
-                await Shell.Current.GoToAsync("//settingsPage");
-            }
+            await ExecuteNavigationCommand(destination);
         });
-        public ICommand DeleteMemoriaCommand => new Command<Guid>(async (specificMemoriaId) =>
+        public ICommand DeleteMemoriaCommand => new Command<Guid>(async (memoriaId) =>
         {
-            ExecuteDeleteMemoriaCommand(specificMemoriaId);
+            await ExecuteDeleteMemoriaCommand(memoriaId);
         });
 
         // constructor
-        public ListViewModel(IMemoriaService memorialService)
+        public ListViewModel(IMemoriaService memoriaService)
         {
-            _memoriaService = memorialService;
-            InitializeMemoriaCommand = new Command(ExecuteInitializeMemoriaCommand);
+            _memoriaService = memoriaService;
+            Locations = new ObservableCollection<Memoria>();
+            InitializeMemoriaCommand = new Command(async () => await ExecuteInitializeMemoriaCommand());
         }
 
         // methodes
         private async Task RefreshMemoriaList()
         {
-            var memorias = await _memoriaService.GetAllMemoriaAsync();
+            var result = await _memoriaService.GetAllMemoriaAsync();
+            var memorias = await HandleResult(result);
+            if (memorias == null) return;
+
             Locations.Clear();
             foreach (var memoria in memorias)
             {
                 Locations.Add(memoria);
             }
         }
-        private async void ExecuteInitializeMemoriaCommand()
+        private async Task ExecuteInitializeMemoriaCommand()
         {
-            await RefreshMemoriaList();
-        }
-        private async void ExecuteDetailsMemoriaCommand(Guid memoriaDetailsId)
-        {
-            if(memoriaDetailsId != Guid.Empty)
+            try
             {
-                await Shell.Current.GoToAsync($"{nameof(DetailsPage)}?id={memoriaDetailsId}");
-            }
-        }
-        private async void ExecuteVisuallyFilterLocationsCommand(string name)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                var all = await _memoriaService.GetAllMemoriaAsync();
-                Locations = new ObservableCollection<Memoria>(all);
-            }
-            else
-            {
-                var filtered = await _memoriaService.GetMemoriaByFilterAsync(name);
-                Locations = new ObservableCollection<Memoria>(filtered);
-            }
-        }
-        private async void ExecuteDeleteMemoriaCommand(Guid specificMemoriaId)
-        {
-            if (specificMemoriaId != Guid.Empty)
-            {
-                await _memoriaService.DeleteMemoriaAsync(specificMemoriaId);
+                IsBusy = true;
                 await RefreshMemoriaList();
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+        private async Task ExecuteNavigationCommand(string destination)
+        {
+            switch (destination)
+            {
+                case "add":
+                    await Shell.Current.GoToAsync(nameof(CreateOrUpdatePage));
+                    break;
+                case "map":
+                    await Shell.Current.GoToAsync(nameof(MapPage));
+                    break;
+                default:
+                    await Shell.Current.GoToAsync("//settingsPage");
+                    break;
+            }
+        }
+        private async Task ExecuteDetailsMemoriaCommand(Guid memoriaId)
+        {
+            if (memoriaId == Guid.Empty)
+            {
+                await Shell.Current.DisplayAlert(
+                    "Error",
+                    "No valid memoria selected",
+                    "OK");
+
+                return;
+            }
+            
+            await Shell.Current.GoToAsync($"{nameof(DetailsPage)}?id={memoriaId}");
+        }
+        private async Task ExecuteUpdateMemoriaCommand(Guid memoriaId)
+        {
+            if (memoriaId == Guid.Empty)
+            {
+                await Shell.Current.DisplayAlert(
+                    "Error",
+                    "No valid memoria selected",
+                    "OK");
+
+                return;
+            }
+
+            await Shell.Current.GoToAsync($"{nameof(CreateOrUpdatePage)}?id={memoriaId}");
+        }
+        private async Task ExecuteVisuallyFilterLocationsCommand(string name)
+        {
+            try
+            {
+                IsBusy = true;
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    await RefreshMemoriaList();
+                    return;
+                }
+
+                var result = await _memoriaService.GetMemoriaByFilterAsync(name);
+                var filtered = await HandleResult(result);
+                if (filtered == null) return;
+
+                Locations.Clear();
+                foreach(var memoria in filtered)
+                {
+                    Locations.Add(memoria);
+                }
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+        private async Task ExecuteDeleteMemoriaCommand(Guid memoriaId)
+        {
+            try
+            {
+                IsBusy = true;
+                if (memoriaId == Guid.Empty)
+                {
+                    await Shell.Current.DisplayAlert(
+                        "Error",
+                        "No valid memoria selected",
+                        "OK");
+
+                    return;
+                }
+
+                bool confirm = await Shell.Current.DisplayAlert(
+                    "Delete",
+                    "Are you sure?",
+                    "YES",
+                    "NO");
+                if (!confirm) return;
+                var result = await _memoriaService.DeleteMemoriaAsync(memoriaId);
+                var deleted = await HandleResult(result);
+                if (!deleted) return;
+
+                await RefreshMemoriaList();
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
     }

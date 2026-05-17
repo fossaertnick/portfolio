@@ -7,50 +7,36 @@
              x:Class="Mde.Project.Mobile.Pages.MainPage"
              Shell.FlyoutBehavior="Disabled"
              Shell.TabBarIsVisible="False">
-    <Grid>
+    
+    <Grid HorizontalOptions="Center">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
             
         <Button 
             Command="{Binding NavigationCommand}"
+            Style="{x:StaticResource RoundButton}"
             CommandParameter="add"
             Text="ADD"
-            FontSize="90"
-            WidthRequest="250"
-            HeightRequest="250"
-            CornerRadius="125"
-            Grid.Row="0"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            HorizontalOptions="Center"
-            VerticalOptions="Center"/>
+            Grid.ColumnSpan="2"/>
 
-        <Button 
-            Command="{Binding NavigationCommand}"
-            CommandParameter="list"
-            Text="List"
-            WidthRequest="200"
-            HeightRequest="20"
-            Grid.Row="1"
-            Grid.Column="0"
-            HorizontalOptions="Center"
-            Margin="5,0,0,0"/>
-            
-        <Button 
-            Command="{Binding NavigationCommand}"
-            CommandParameter="//settingsPage"
-            ImageSource="dotnet_bot.png"
-            HorizontalOptions="Center"
-            WidthRequest="200"
-            HeightRequest="20"
-            Grid.Row="1"
-            Grid.Column="1"
-            Margin="0,0,5,0"/>
+        <HorizontalStackLayout Grid.Row="1" Spacing="10">
+            <Button 
+                Command="{Binding NavigationCommand}"
+                Style="{x:StaticResource FullButtons}"
+                CommandParameter="list"
+                Text="List"/>
+
+            <Button 
+                Command="{Binding NavigationCommand}"
+                Style="{x:StaticResource FullButtons}"
+                CommandParameter="//settingsPage"
+                ImageSource="dotnet_bot.png"/>
+        </HorizontalStackLayout>
+        
     </Grid>
 </ContentPage>

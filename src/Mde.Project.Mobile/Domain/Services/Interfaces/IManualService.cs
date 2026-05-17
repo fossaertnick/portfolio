@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Mde.Project.Mobile.Core.Entities.Models;
 
 namespace Mde.Project.Mobile.Domain.Services.Interfaces
 {
     public interface IManualService
     {
         // methoden
-        Task<string> HelpTheUserAsync();
+        Task<ResultModel<string>> HelpTheUserAsync();
     }
 }

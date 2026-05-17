@@ -1,8 +1,6 @@
-﻿using Mde.Project.Mobile.Domain.Locations;
+﻿using Mde.Project.Mobile.Core.Entities;
+using Mde.Project.Mobile.Core.Entities.Models;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mde.Project.Mobile.Domain.Services
 {
@@ -13,15 +11,28 @@ namespace Mde.Project.Mobile.Domain.Services
         public event Action<Guid> OnPinClicked;
 
         // methoden
-        public void ClearPins()
+        public async Task<ResultModel<bool>> ClearPins()
         {
-            _webView.EvaluateJavaScriptAsync("clearMarkers()");
-        }
-        public void Initialize(object mapControl)
-        {
-            _webView = (WebView)mapControl;
+            try
+            {
+                if (_webView == null) return ResultModel<bool>.Failure("WebView was null", "Map was not initialized.");
+                await _webView.EvaluateJavaScriptAsync("clearMarkers()");
 
-            var html = @"
+                return ResultModel<bool>.Success(true);
+            }
+            catch(Exception ex)
+            {
+                return ResultModel<bool>.Failure(ex.ToString(), "Something went wrong with the deleting of the markers.");
+            }
+        }
+        public async Task<ResultModel<bool>> Initialize(object mapControl)
+        {
+            try
+            {
+                if (mapControl is not WebView webview) return ResultModel<bool>.Failure("map control was not a webView", "Map could not be initialized.");
+                _webView = (WebView)mapControl;
+
+                var html = @"
                 <html>
                 <head>
                     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
@@ -52,20 +63,54 @@ namespace Mde.Project.Mobile.Domain.Services
                     </script>
                 </body>
                 </html>";
+                _webView.Source = new HtmlWebViewSource { Html = html };
 
-            _webView.Source = new HtmlWebViewSource { Html = html };
-        }
-        public void MoveTo(Location location)
-        {
-            var js = $"setLocation({location.Latitude}, {location.Longitude})";
-            _webView?.EvaluateJavaScriptAsync(js);
-        }
-        public void SetPins(IEnumerable<Memoria> items)
-        {
-            foreach(var pin in items)
+                return ResultModel<bool>.Success(true);
+            }
+            catch (Exception ex)
             {
-                var js = $"addMarker({pin.Latitude}, {pin.Longitude}, '{pin.Name}')";
-                _webView.EvaluateJavaScriptAsync(js);
+                return ResultModel<bool>.Failure(ex.ToString(), "Something went wrong with the initializing of the map.");
+            }
+
+
+        }
+        public async Task<ResultModel<bool>> MoveTo(Location location)
+        {
+            try
+            {
+                if (_webView == null) return ResultModel<bool>.Failure("WebView was null", "Map was not initialized.");
+                var js = $"setLocation({location.Latitude}, {location.Longitude})";
+                await _webView?.EvaluateJavaScriptAsync(js);
+                
+                return ResultModel<bool>.Success(true);
+            }
+            catch (Exception ex)
+            {
+                return ResultModel<bool>.Failure(ex.ToString(), "Something went wrong with the moving of the map.");
+            }
+        }
+        public async Task<ResultModel<bool>> SetPins(IEnumerable<Memoria> items)
+        {
+            try
+            {
+                if (_webView == null) return ResultModel<bool>.Failure("WebView was null", "Map was not initialized.");
+                if (items == null) return ResultModel<bool>.Failure("Items collection was null", "No locations received.");
+
+                await _webView.EvaluateJavaScriptAsync("clearMarkers()");
+                foreach (var pin in items)
+                {
+                    if (pin.MemoriaAddress == null) { Console.WriteLine($"Memoria {pin.Id} had no address"); continue; }
+
+                    var safeTitle = pin.Name.Replace("'", "\\");
+                    var js = $"addMarker({pin.MemoriaAddress.Latitude}, {pin.MemoriaAddress.Longitude}, '{pin.Name}')";
+                    await _webView.EvaluateJavaScriptAsync(js);
+                }
+
+                return ResultModel<bool>.Success(true);
+            }
+            catch (Exception ex)
+            {
+                return ResultModel<bool>.Failure(ex.ToString(), "Something went wrong while putting the markers.");
             }
         }
     }

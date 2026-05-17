@@ -1,27 +1,28 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Mde.Project.Mobile.Domain.Models.enums;
-using Mde.Project.Mobile.Domain.Services;
-using Mde.Project.Mobile.Domain.Services.Interfaces;
+using Mde.Project.Mobile.Core.Entities.Enums;
+using Mde.Project.Mobile.Core.Entities.Models;
+using Mde.Project.Mobile.Core.Services.Interfaces;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.Windows.Input;
 
 namespace Mde.Project.Mobile.ViewModels
 {
-    public class StatisticsViewModel : ObservableObject
+    public class StatisticsViewModel : BaseViewModel
     {
-        private readonly IStatisticService _statisticService; 
+        private readonly IStatisticService _statisticService;
 
         // fields
-        private int totalMemorias;
-        private int werkMemoria;
-        private int reisMemoria;
-        private int uitgaanMemoria;
-        private int andereMemoria;
-        private int totalMemoriaFotos;
-        private int totalMemoriaVideos;
+        private string totalMemorias;
+        private string werkMemoria;
+        private string reisMemoria;
+        private string uitgaanMemoria;
+        private string andereMemoria;
+        private string totalMemoriaFotos;
+        private string totalMemoriaVideos;
         private string favoriteMemoriaCity;
 
         // properties
-        public int TotalMemorias
+        public string TotalMemorias
         {
             get { return totalMemorias; }
             set
@@ -29,7 +30,7 @@ namespace Mde.Project.Mobile.ViewModels
                 SetProperty(ref totalMemorias, value);
             }
         }
-        public int WerkMemoria
+        public string WerkMemoria
         {
             get { return werkMemoria; }
             set
@@ -37,7 +38,7 @@ namespace Mde.Project.Mobile.ViewModels
                 SetProperty(ref werkMemoria, value);
             }
         }
-        public int ReisMemoria
+        public string ReisMemoria
         {
             get { return reisMemoria; }
             set
@@ -45,7 +46,7 @@ namespace Mde.Project.Mobile.ViewModels
                 SetProperty(ref reisMemoria, value);
             }
         }
-        public int UitgaanMemoria
+        public string UitgaanMemoria
         {
             get { return uitgaanMemoria; }
             set
@@ -53,7 +54,7 @@ namespace Mde.Project.Mobile.ViewModels
                 SetProperty(ref uitgaanMemoria, value);
             }
         }
-        public int AndereMemoria
+        public string AndereMemoria
         {
             get { return andereMemoria; }
             set
@@ -61,7 +62,7 @@ namespace Mde.Project.Mobile.ViewModels
                 SetProperty(ref andereMemoria, value);
             }
         }
-        public int TotalMemoriaFotos
+        public string TotalMemoriaFotos
         {
             get { return totalMemoriaFotos; }
             set
@@ -69,7 +70,7 @@ namespace Mde.Project.Mobile.ViewModels
                 SetProperty(ref totalMemoriaFotos, value);
             }
         }
-        public int TotalMemoriaVideos
+        public string TotalMemoriaVideos
         {
             get { return totalMemoriaVideos; }
             set
@@ -100,14 +101,22 @@ namespace Mde.Project.Mobile.ViewModels
         // methoden
         private async Task ExecuteInitializeCommand()
         {
-            TotalMemorias =  _statisticService.GetTotalMemorias();
-            WerkMemoria =  _statisticService.GetMemoriasByOccasionAsync(OccationType.Werk);
-            ReisMemoria =  _statisticService.GetMemoriasByOccasionAsync(OccationType.Reis);
-            UitgaanMemoria =  _statisticService.GetMemoriasByOccasionAsync(OccationType.Uitgaan);
-            AndereMemoria =  _statisticService.GetMemoriasByOccasionAsync(OccationType.Ander);
-            TotalMemoriaFotos =  _statisticService.GetPhotoCountAsync();
-            TotalMemoriaVideos =  _statisticService.GetVideoCountAsync();
-            FavoriteMemoriaCity =  _statisticService.GetFavoriteCountryAsync();
+            try
+            {
+                IsBusy = true;
+                TotalMemorias = await HandleResult( await _statisticService.GetTotalMemorias()) ?? "X";
+                WerkMemoria = await HandleResult(await _statisticService.GetMemoriasByOccasionAsync(OccationType.Werk)) ?? "X";
+                ReisMemoria = await HandleResult(await _statisticService.GetMemoriasByOccasionAsync(OccationType.Reis)) ?? "X";
+                UitgaanMemoria = await HandleResult(await _statisticService.GetMemoriasByOccasionAsync(OccationType.Uitgaan)) ?? "X";
+                AndereMemoria = await HandleResult(await _statisticService.GetMemoriasByOccasionAsync(OccationType.Ander)) ?? "X";
+                TotalMemoriaFotos = await HandleResult(await _statisticService.GetPhotoCountAsync()) ?? "X";
+                TotalMemoriaVideos = await HandleResult(await _statisticService.GetVideoCountAsync()) ?? "X";
+                FavoriteMemoriaCity = await HandleResult(await _statisticService.GetFavoriteCountryAsync()) ?? "X";
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 }

@@ -1,95 +1,120 @@
-﻿using Mde.Project.Mobile.Domain.Locations;
-using Mde.Project.Mobile.Domain.Models;
+﻿using Mde.Project.Mobile.Core.Entities;
+using Mde.Project.Mobile.Core.Entities.Enums;
+using Mde.Project.Mobile.Core.Entities.Models;
+using Mde.Project.Mobile.Core.Services.Interfaces;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mde.Project.Mobile.Domain.Services
 {
     public class MediaService : IMediaService
     {
         // methoden
-        public async Task<MediaItem> SavePhotoASync(FileResult photo)
+        public ResultModel<MediaItem> PrepareMediaItem(FileResult fileResult)
         {
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(photo.FileName)}";
-            var filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
-
-            using var stream = await photo.OpenReadAsync();
-            using var fileStream = File.Create(filePath);
-
-            await stream.CopyToAsync(fileStream);
-
-            return new MediaItem
+            try
             {
-                Id = Guid.NewGuid(),
-                Type = Models.enums.MediaType.Photo,
-                FilePath = filePath,
-                CreatedAt = DateTime.Now,
-            };
-        }
-        public async Task DeletePhotoAsync(Memoria memoriaSpecificToId)
-        {
-            if (memoriaSpecificToId?.MediaMaterial == null) return;
+                if (fileResult == null) return ResultModel<MediaItem>.Failure("photo input was null");
 
-            foreach (var media in memoriaSpecificToId.MediaMaterial)
+                return ResultModel<MediaItem>.Success(new MediaItem
+                {
+                    Type = MediaType.Photo,
+                    FilePath = fileResult.FullPath
+                }); 
+            }
+            catch(Exception ex)
             {
-                try
-                {
-                    if (!string.IsNullOrWhiteSpace(media.FilePath) && File.Exists(media.FilePath))
-                    {
-                        File.Delete(media.FilePath);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Fout bij verwijderen bestand: {ex.Message}");
-                }
+                return ResultModel<MediaItem>.Failure(ex.ToString());
             }
         }
-        public Task SyncMediaFiles(Memoria existingMemoria, Memoria updatedMemoria)
+        public async Task<ResultModel<MediaItem>> SaveVideoAsync(FileResult video)
         {
-            var existingFiles = existingMemoria.MediaMaterial?.Select(m => m.FilePath).ToList() ?? new List<string>();
-
-            var newFiles = updatedMemoria.MediaMaterial?.Select(m => m.FilePath).ToList() ?? new List<string>();
-
-            var filesToDelete = existingFiles.Where(oldFile => !newFiles.Contains(oldFile));
-
-            foreach (var file in filesToDelete)
+            try
             {
-                if (File.Exists(file))
+                if (video == null) return ResultModel<MediaItem>.Failure("Video input was null", "No valid video received.");
+
+                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(video.FileName)}";
+                var filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
+
+                using var stream = await video.OpenReadAsync();
+                using var fileStream = File.Create(filePath);
+
+                await stream.CopyToAsync(fileStream);
+
+                var mediaItem = new MediaItem
                 {
-                    File.Delete(file);
-                }
+                    Type = MediaType.Video,
+                    FilePath = filePath,
+                };
+
+                return ResultModel<MediaItem>.Success(mediaItem, "Video succesfully saved.");
             }
-
-            existingMemoria.MediaMaterial = updatedMemoria.MediaMaterial?.Select(m => new MediaItem
+            catch (Exception ex)
             {
-                Id = m.Id,
-                Type = m.Type,
-                FilePath = m.FilePath,
-                CreatedAt = m.CreatedAt,
-                MemoriaId = existingMemoria.Id
-            }).ToList();
-            return Task.CompletedTask;
+                return ResultModel<MediaItem>.Failure(ex.ToString(), "Something went wrong while saving the video.");
+            }
         }
-        public async Task<MediaItem> SaveVideoAsync(FileResult video)
+        public async Task<ResultModel<bool>> DeleteMediaItemsCollectionAsync(IEnumerable<MediaItem> mediaItems)
         {
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(video.FileName)}";
-            var filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
-
-            using var stream = await video.OpenReadAsync();
-            using var fileStream = File.Create(filePath);
-
-            await stream.CopyToAsync(fileStream);
-
-            return new MediaItem
+            try
             {
-                Id = Guid.NewGuid(),
-                Type = Models.enums.MediaType.Video,
-                FilePath = filePath,
-                CreatedAt = DateTime.Now,
-            };
+                if (mediaItems == null || !mediaItems.Any()) return ResultModel<bool>.Failure("Mediaitems was empty", "No mediaitems found.");
+
+                foreach(var media in mediaItems)
+                {
+                    if (string.IsNullOrWhiteSpace(media.FilePath)) continue;
+
+                    if(File.Exists(media.FilePath)) File.Delete(media.FilePath);
+                }
+                    
+                return ResultModel<bool>.Success(true, "Media succefully deleted.");
+            }
+            catch(Exception ex)
+            {
+                return ResultModel<bool>.Failure(ex.ToString(), "Something went wrong while deleting the requested media.");
+            }
+        }
+        public async Task<ResultModel<bool>> DeleteMediaItemAsync(MediaItem mediaItem)
+        {
+            try
+            {
+                if (mediaItem == null) return ResultModel<bool>.Failure("MediaItem was null", "No mediaItem was received.");
+
+                if (string.IsNullOrWhiteSpace(mediaItem.FilePath)) return ResultModel<bool>.Failure("Filepath was empty", "No valid mediapath found.");
+
+                if(File.Exists(mediaItem.FilePath)) File.Delete(mediaItem.FilePath);
+
+                return ResultModel<bool>.Success(true, "MediaItem was succesfully deleted.");
+            }
+            catch(Exception ex)
+            {
+                return ResultModel<bool>.Failure(ex.ToString(), "Something went wrong while deleting the media item.");
+            }
+        }
+        public async Task<ResultModel<bool>> SyncMediaFiles(Memoria existingMemoria, Memoria updatedMemoria)
+        {
+            try
+            {
+                var existingFiles = existingMemoria.MediaMaterial?.Select(m => m.FilePath).ToList() ?? new List<string>();
+                var newFiles = updatedMemoria.MediaMaterial?.Select(m => m.FilePath).ToList() ?? new List<string>();
+                var filesToDelete = existingFiles.Where(oldFile => !newFiles.Contains(oldFile));
+                foreach (var file in filesToDelete)
+                {
+                    if (File.Exists(file)) File.Delete(file);
+                }
+                existingMemoria.MediaMaterial = updatedMemoria.MediaMaterial?.Select(m => new MediaItem
+                {
+                    Id = m.Id,
+                    Type = m.Type,
+                    FilePath = m.FilePath,
+                    MemoriaId = existingMemoria.Id
+                }).ToList();
+
+                return ResultModel<bool>.Success(true, "Media was succesfully synced.");
+            }
+            catch(Exception ex)
+            {
+                return ResultModel<bool>.Failure(ex.ToString(), "Something went wrong while sychronising the mediafiles.");
+            }
         }
     }
 }

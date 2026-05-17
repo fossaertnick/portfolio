@@ -1,7 +1,5 @@
-﻿using Mde.Project.Mobile.Domain.Locations;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Mde.Project.Mobile.Core.Entities;
+using Mde.Project.Mobile.Core.Entities.Models;
 
 namespace Mde.Project.Mobile.Domain.Services.Interfaces
 {
@@ -10,9 +8,9 @@ namespace Mde.Project.Mobile.Domain.Services.Interfaces
         public event Action<Guid> OnPinClicked;
 
         // methoden
-        void Initialize(object mapControl);
-        void MoveTo(Location location);
-        void SetPins(IEnumerable<Memoria> items);
-        void ClearPins();
+        Task<ResultModel<bool>> Initialize(object mapControl);
+        Task<ResultModel<bool>> MoveTo(Location location);
+        Task<ResultModel<bool>> SetPins(IEnumerable<Memoria> items);
+        Task<ResultModel<bool>> ClearPins();
     }
 }

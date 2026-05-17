@@ -1,4 +1,5 @@
-﻿using Mde.Project.Mobile.Domain.Locations;
+﻿using Mde.Project.Mobile.Core.Entities;
+using Mde.Project.Mobile.Core.Entities.Models;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Microsoft.Maui.Controls.Maps;
 using Microsoft.Maui.Maps;
@@ -12,39 +13,82 @@ namespace Mde.Project.Mobile.Domain.Services
         public event Action<Guid> OnPinClicked;
 
         // methoden
-        public void ClearPins()
+        public async Task<ResultModel<bool>> ClearPins()
         {
-            _map.Pins.Clear();
-        }
-        public void Initialize(object mapControl)
-        {
-            _map = (Map)mapControl;
-        }
-        public void MoveTo(Location location)
-        {
-            _map.MoveToRegion(MapSpan.FromCenterAndRadius(new Microsoft.Maui.Devices.Sensors.Location(location.Latitude, location.Longitude), Distance.FromKilometers(1)));
-        }
-        public void SetPins(IEnumerable<Memoria> items)
-        {
-            _map.Pins.Clear();
-            foreach(var memoria in items)
+            try
             {
-                var pin = new Pin
-                {
-                    Label = memoria.Name,
-                    Location = new Microsoft.Maui.Devices.Sensors.Location(memoria.Latitude, memoria.Longitude),
-                    BindingContext = memoria.Id,
-                };
+                if (_map == null) return ResultModel<bool>.Failure("Map was null", "Map was not initialized.");
+                _map.Pins.Clear();
 
-                pin.MarkerClicked += (s, e) =>
+                return ResultModel<bool>.Success(true);
+            }
+            catch(Exception ex)
+            {
+                return ResultModel<bool>.Failure(ex.ToString(), "Something went wrong while deleting the pins.");
+            }
+        }
+        public async Task<ResultModel<bool>> Initialize(object mapControl)
+        {
+            try
+            {
+                if (mapControl is not Map map) return ResultModel<bool>.Failure("Map control was not of type Map", "The map could not be initialized.");
+                _map = map;
+
+                return ResultModel<bool>.Success(true);
+            }
+            catch(Exception ex)
+            {
+                return ResultModel<bool>.Failure(ex.ToString(), "Something went wrong while initializing the map.");
+            }
+        }
+        public async Task<ResultModel<bool>> MoveTo(Location location)
+        {
+            try
+            {
+                if (_map == null) return ResultModel<bool>.Failure("Map was null.", "Map was not initialized.");
+                _map.MoveToRegion(MapSpan.FromCenterAndRadius(new Location(location.Latitude, location.Longitude), Distance.FromKilometers(1)));
+
+                return ResultModel<bool>.Success(true);
+            }
+            catch(Exception ex)
+            {
+                return ResultModel<bool>.Failure(ex.ToString(), "Something went wrong while moving the map.");
+            }
+        }
+        public async Task<ResultModel<bool>> SetPins(IEnumerable<Memoria> items)
+        {
+            try
+            {
+                if (_map == null) return ResultModel<bool>.Failure("Map was null.", "Map was not initialized.");
+                if (items == null) return ResultModel<bool>.Failure("Items collection was null", "No locations received.");
+                _map.Pins.Clear();
+                foreach(var memoria in items)
                 {
-                    if(pin.BindingContext is Guid id)
+                    if (memoria.MemoriaAddress == null) { Console.WriteLine($"Memoria {memoria.Id} had no address."); continue; }
+
+                    var pin = new Pin
                     {
-                        OnPinClicked?.Invoke(memoria.Id);                       
-                    }
-                };
+                        Label = memoria.Name,
+                        Location = new Location(memoria.MemoriaAddress.Latitude, memoria.MemoriaAddress.Longitude),
+                        BindingContext = memoria.Id,
+                    };
 
-                _map.Pins.Add(pin);
+                    pin.MarkerClicked += (s, e) =>
+                    {
+                        if(pin.BindingContext is Guid id)
+                        {
+                            OnPinClicked?.Invoke(memoria.Id);                       
+                        }
+                    };
+
+                    _map.Pins.Add(pin);
+                }
+
+                return ResultModel<bool>.Success(true);
+            }
+            catch (Exception ex)
+            {
+                return ResultModel<bool>.Failure(ex.ToString(), "Something went wrong with the placing of the pins.");
             }
         }
     }
