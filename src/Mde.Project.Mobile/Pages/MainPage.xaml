@@ -34,8 +34,11 @@
             <Button 
                 Command="{Binding NavigationCommand}"
                 Style="{x:StaticResource FullButtons}"
-                CommandParameter="//settingsPage"
-                ImageSource="dotnet_bot.png"/>
+                CommandParameter="//settingsPage">
+                <Button.ImageSource>
+                    <FontImageSource Glyph="&#xe994;" FontFamily="appIcons" Size="20"/>
+                </Button.ImageSource>
+            </Button>
         </HorizontalStackLayout>
         
     </Grid>

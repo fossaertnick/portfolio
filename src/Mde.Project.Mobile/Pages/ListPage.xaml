@@ -31,19 +31,31 @@
             <CollectionView x:Name="MemoriaList" ItemsSource="{Binding Locations}"
                             Grid.Row="1" Margin="{x:StaticResource DefaultMargin}">
             <CollectionView.EmptyView>
-                <Label Text="Er zijn geen memorias om weer te geven"/>
+                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="15">
+                    <Label FontFamily="appIcons" Text="&#xea0f;" FontSize="100" TextColor="DarkRed" HorizontalOptions="Center" />
+                    <Label Text="Er zijn geen memorias om weer te geven"/>
+                </VerticalStackLayout>
             </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="locations:Memoria">
                     <SwipeView>
                         <SwipeView.RightItems>
                             <SwipeItems >
-                                <SwipeItem x:Name="DeleteButton" Clicked="DeleteButton_Clicked" BindingContext="{Binding Id}"
-                                           Text="Delete" BackgroundColor="Red"/>
-                                <SwipeItem Command="{Binding BindingContext.UpdateMemoriaCommand, Source={x:Reference page}}" 
-                                           CommandParameter="{Binding Id}" Text="Update" BackgroundColor="Orange"/>
-                                <SwipeItem Command="{Binding BindingContext.DetailsMemoriaCommand, Source={x:Reference page}}" 
-                                           CommandParameter="{Binding Id}" Text="Details" BackgroundColor="Gray"/>
+                                <SwipeItem x:Name="DeleteButton" Clicked="DeleteButton_Clicked" BindingContext="{Binding Id}" BackgroundColor="Red">
+                                    <SwipeItem.IconImageSource>
+                                        <FontImageSource FontFamily="appIcons" Glyph="&#xe9ad;" Size="10" Color="Black"/>
+                                    </SwipeItem.IconImageSource>
+                                </SwipeItem>
+                                <SwipeItem Command="{Binding BindingContext.UpdateMemoriaCommand, Source={x:Reference page}}" CommandParameter="{Binding Id}" BackgroundColor="Orange">
+                                    <SwipeItem.IconImageSource>
+                                        <FontImageSource FontFamily="appIcons" Glyph="&#xea9b;" Size="10" Color="Black"/>
+                                    </SwipeItem.IconImageSource>
+                                </SwipeItem>
+                                <SwipeItem Command="{Binding BindingContext.DetailsMemoriaCommand, Source={x:Reference page}}" CommandParameter="{Binding Id}" BackgroundColor="Gray">
+                                    <SwipeItem.IconImageSource>
+                                        <FontImageSource FontFamily="appIcons" Glyph="&#xe987;" Size="10" Color="Black"/>
+                                    </SwipeItem.IconImageSource>
+                                </SwipeItem>
                             </SwipeItems>
                         </SwipeView.RightItems>
                         <Border StrokeThickness="1"
@@ -97,10 +109,13 @@
                 Text="Add"/>
 
             <Button 
-                ImageSource="dotnet_bot.png"
                 Command="{Binding NavigationCommand}"
                 Style="{x:StaticResource FullButtons}"
-                CommandParameter="//settingsPage"/>
+                CommandParameter="//settingsPage">
+                <Button.ImageSource>
+                    <FontImageSource Glyph="&#xe994;" FontFamily="appIcons" Size="20"/>
+                </Button.ImageSource>
+            </Button>
         </HorizontalStackLayout>
     </Grid>
 </ContentPage>
