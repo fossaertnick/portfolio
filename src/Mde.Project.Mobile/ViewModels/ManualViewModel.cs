@@ -1,5 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Mde.Project.Mobile.Core.Entities.Models;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
+using System.Collections.ObjectModel;
+using System.Security.AccessControl;
 using System.Windows.Input;
 
 namespace Mde.Project.Mobile.ViewModels
@@ -9,15 +12,15 @@ namespace Mde.Project.Mobile.ViewModels
         private readonly IManualService _manualService;
 
         // fields
-        private string text;
+        private ObservableCollection<ManualSection> sections = new ObservableCollection<ManualSection>();
 
         // properties
-        public string Text
+        public ObservableCollection<ManualSection> Sections
         {
-            get { return text; }
+            get { return sections; }
             set
             {
-                SetProperty(ref text, value);
+                SetProperty(ref sections, value);
             }
         }
 
@@ -37,11 +40,27 @@ namespace Mde.Project.Mobile.ViewModels
             try
             {
                 IsBusy = true;
-                Text = await HandleResult(await _manualService.HelpTheUserAsync()) ?? string.Empty;
+                string markDown = await HandleResult(await _manualService.HelpTheUserAsync()) ?? string.Empty;
+
+                ParseMarkdown(markDown);
             }
             finally
             {
                 IsBusy = false;
+            }
+        }
+        private void ParseMarkdown(string markdown)
+        {
+            Sections.Clear();
+            string[] blocks = markdown.Split("## ", StringSplitOptions.RemoveEmptyEntries);
+            foreach(string block in blocks)
+            {
+                string[] lines = block.Split('\n', 2);
+                Sections.Add(new ManualSection
+                {
+                    Title = lines[0].Trim(),
+                    Content = lines.Length > 1 ? lines[1].Trim() : string.Empty,
+                });
             }
         }
     }
