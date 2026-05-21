@@ -20,10 +20,12 @@ namespace Mde.Project.Mobile
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
-                .UseMauiMaps()
                 .UseMauiCommunityToolkit()
-                .UseMauiCommunityToolkitMediaElement(false)
-                .ConfigureFonts(fonts =>
+                .UseMauiCommunityToolkitMediaElement(false);
+#if ANDROID
+            builder.UseMauiMaps();
+#endif
+            builder.ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
@@ -111,6 +113,8 @@ namespace Mde.Project.Mobile
             builder.Services.AddScoped<IManualService, ManualService>();
             builder.Services.AddScoped<ISourceOfTruthService, SourceOfTruthService>();
             builder.Services.AddScoped<ILocalMemoriaCache, LocalMemoriaCache>();
+
+            builder.Services.AddSingleton<AppCloser>();
 
             if (OperatingSystem.IsWindows())
             {
