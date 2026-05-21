@@ -18,7 +18,7 @@
 		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>Mde.Project.Mobile</ApplicationTitle>
+		<ApplicationTitle>Memoriá</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.mde.project.mobile</ApplicationId>
@@ -42,7 +42,7 @@
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#255933" ForegroundScale="0.65" BaseSize="128,128" />
 		
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.png" Color="#FFFFFF" BaseSize="128,128"/>
+		<MauiSplashScreen Include="Resources\Splash\splash.png" Color="#255933" BaseSize="500,500" />
 		
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -78,6 +78,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Conventies\Converters.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\CreateOrUpdatePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

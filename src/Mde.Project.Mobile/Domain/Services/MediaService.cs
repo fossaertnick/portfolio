@@ -1,7 +1,6 @@
 ﻿using Mde.Project.Mobile.Core.Entities;
 using Mde.Project.Mobile.Core.Entities.Enums;
 using Mde.Project.Mobile.Core.Entities.Models;
-using Mde.Project.Mobile.Core.Services.Interfaces;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
 
 namespace Mde.Project.Mobile.Domain.Services
@@ -57,8 +56,6 @@ namespace Mde.Project.Mobile.Domain.Services
         {
             try
             {
-                if (mediaItems == null || !mediaItems.Any()) return ResultModel<bool>.Failure("Mediaitems was empty", "No mediaitems found.");
-
                 foreach(var media in mediaItems)
                 {
                     if (string.IsNullOrWhiteSpace(media.FilePath)) continue;

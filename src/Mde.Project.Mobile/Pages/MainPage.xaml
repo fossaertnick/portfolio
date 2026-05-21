@@ -8,15 +8,12 @@
              Shell.FlyoutBehavior="Disabled"
              Shell.TabBarIsVisible="False">
     
-    <Grid HorizontalOptions="Center">
+    <Grid Padding="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-            
+
         <Button 
             Command="{Binding NavigationCommand}"
             Style="{x:StaticResource RoundButton}"
@@ -24,14 +21,16 @@
             Text="ADD"
             Grid.ColumnSpan="2"/>
 
-        <HorizontalStackLayout Grid.Row="1" Spacing="10">
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="5">
             <Button 
+                Grid.Column="0"
                 Command="{Binding NavigationCommand}"
                 Style="{x:StaticResource FullButtons}"
                 CommandParameter="list"
                 Text="List"/>
 
             <Button 
+                Grid.Column="1"
                 Command="{Binding NavigationCommand}"
                 Style="{x:StaticResource FullButtons}"
                 CommandParameter="//settingsPage">
@@ -39,7 +38,7 @@
                     <FontImageSource Glyph="&#xe994;" FontFamily="appIcons" Size="20"/>
                 </Button.ImageSource>
             </Button>
-        </HorizontalStackLayout>
+        </Grid>
         
     </Grid>
 </ContentPage>
