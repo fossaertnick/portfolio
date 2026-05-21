@@ -357,6 +357,30 @@ namespace Mde.SourceOfTruth.Core.Data.Seeding
                     FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/athens.jpg",
                     CreatedAt = new DateTime(2025, 01, 29),
                     MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000006"),
+                },
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222223"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/koeken.jpg",
+                    CreatedAt = new DateTime(2025, 01, 03),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000008"),
+                },
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222224"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/guatemala.jpg",
+                    CreatedAt = new DateTime(2025, 01, 17),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000011"),
+                },
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222225"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/home.jpg",
+                    CreatedAt = new DateTime(2025, 01, 27),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
                 }
             };
 
