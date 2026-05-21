@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Mde.Project.Mobile.Core.Entities;
 using Mde.Project.Mobile.Core.Services.Interfaces;
 using Mde.Project.Mobile.Pages;
@@ -7,13 +8,14 @@ using System.Windows.Input;
 
 namespace Mde.Project.Mobile.ViewModels
 {
-    public class ListViewModel : BaseViewModel
+    public partial class ListViewModel : BaseViewModel
     {
         private readonly IMemoriaService _memoriaService;
 
         // fields
         private ObservableCollection<Memoria> locations;
         private string searchTerm;
+        private CancellationTokenSource? _searchWay;
 
         // properties
         public ObservableCollection<Memoria> Locations
@@ -28,7 +30,7 @@ namespace Mde.Project.Mobile.ViewModels
             {
                 if(SetProperty(ref searchTerm, value))
                 {
-                    ExecuteVisuallyFilterLocationsCommand(searchTerm?.Trim() ?? string.Empty);
+                    _ = BounceSearchAsync(searchTerm?.Trim() ?? string.Empty);
                 }
             }
         }
@@ -51,6 +53,7 @@ namespace Mde.Project.Mobile.ViewModels
         {
             await ExecuteDeleteMemoriaCommand(memoriaId);
         });
+        
 
         // constructor
         public ListViewModel(IMemoriaService memoriaService)
@@ -73,15 +76,18 @@ namespace Mde.Project.Mobile.ViewModels
                 Locations.Add(memoria);
             }
         }
+        [RelayCommand]
         private async Task ExecuteInitializeMemoriaCommand()
         {
             try
             {
                 IsBusy = true;
+                IsLoading = true;
                 await RefreshMemoriaList();
             }
             finally
             {
+                IsLoading = false;
                 IsBusy = false;
             }
         }
@@ -104,7 +110,7 @@ namespace Mde.Project.Mobile.ViewModels
         {
             if (memoriaId == Guid.Empty)
             {
-                await Shell.Current.DisplayAlert(
+                await Shell.Current.DisplayAlertAsync(
                     "Error",
                     "No valid memoria selected",
                     "OK");
@@ -118,7 +124,7 @@ namespace Mde.Project.Mobile.ViewModels
         {
             if (memoriaId == Guid.Empty)
             {
-                await Shell.Current.DisplayAlert(
+                await Shell.Current.DisplayAlertAsync(
                     "Error",
                     "No valid memoria selected",
                     "OK");
@@ -161,7 +167,7 @@ namespace Mde.Project.Mobile.ViewModels
                 IsBusy = true;
                 if (memoriaId == Guid.Empty)
                 {
-                    await Shell.Current.DisplayAlert(
+                    await Shell.Current.DisplayAlertAsync(
                         "Error",
                         "No valid memoria selected",
                         "OK");
@@ -169,7 +175,7 @@ namespace Mde.Project.Mobile.ViewModels
                     return;
                 }
 
-                bool confirm = await Shell.Current.DisplayAlert(
+                bool confirm = await Shell.Current.DisplayAlertAsync(
                     "Delete",
                     "Are you sure?",
                     "YES",
@@ -184,6 +190,21 @@ namespace Mde.Project.Mobile.ViewModels
             finally
             {
                 IsBusy = false;
+            }
+        }
+        private async Task BounceSearchAsync(string search)
+        {
+            _searchWay?.Cancel();
+            _searchWay = new CancellationTokenSource();
+            try
+            {
+                await Task.Delay(300, _searchWay.Token);
+
+                await ExecuteVisuallyFilterLocationsCommand(search);
+            }
+            catch (TaskCanceledException)
+            {
+
             }
         }
     }

@@ -2,22 +2,23 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:Mde.Project.Mobile.ViewModels"
+             xmlns:converties="clr-namespace:Mde.Project.Mobile.Conventies"
              x:DataType="viewModels:StatisticsViewModel"  
              x:Class="Mde.Project.Mobile.Pages.StatisticsPage"
              Shell.FlyoutBehavior="Flyout">
 
-        <VerticalStackLayout
-        Padding="25"
+    <VerticalStackLayout
+        Padding="25,0,25,25"
         Spacing="25">
 
             <!-- Titel -->
-            <Label
+        <Label
             Text="Statistics"
             FontSize="34"
             FontAttributes="Bold"
             HorizontalOptions="Center"/>
 
-            <!-- Totaal Memorias -->
+        <!-- Totaal Memorias -->
             <Border
             StrokeShape="RoundRectangle 15"
             Padding="20">
@@ -26,11 +27,11 @@
                 ColumnDefinitions="Auto,*">
 
                     <Label
-                    Text="Memorias"
+                    Text="Memorias:"
                     FontSize="18"
                     VerticalOptions="Center"/>
 
-                    <Label
+                <Label
                     Grid.Column="1"
                     Text="{Binding TotalMemorias}"
                     HorizontalOptions="End"
@@ -61,8 +62,8 @@
                         Padding="15">
 
                         <VerticalStackLayout>
-                            <Label Text="Word"/>
-                            <Label
+                            <Label Text="Work:"/>
+                        <Label
                             Text="{Binding WerkMemoria}"
                             FontSize="24"
                             HorizontalTextAlignment="Center"/>
@@ -75,8 +76,8 @@
                         Padding="15">
 
                         <VerticalStackLayout>
-                            <Label Text="Travel"/>
-                            <Label
+                            <Label Text="Travel:"/>
+                        <Label
                             Text="{Binding ReisMemoria}"
                             FontSize="24"
                             HorizontalTextAlignment="Center"/>
@@ -89,8 +90,8 @@
                         Padding="15">
 
                         <VerticalStackLayout>
-                            <Label Text="Home"/>
-                            <Label
+                            <Label Text="Home:"/>
+                        <Label
                             Text="{Binding UitgaanMemoria}"
                             FontSize="24"
                             HorizontalTextAlignment="Center"/>
@@ -103,8 +104,8 @@
                         Padding="15">
 
                         <VerticalStackLayout>
-                            <Label Text="Other"/>
-                            <Label
+                            <Label Text="Other:"/>
+                        <Label
                             Text="{Binding AndereMemoria}"
                             FontSize="24"
                             HorizontalTextAlignment="Center"/>
@@ -135,18 +136,18 @@
 
                         <Label
                         Grid.Row="0"
-                        Text="Foto's"/>
+                        Text="Photo's:"/>
 
-                        <Label
+                    <Label
                         Grid.Row="0"
                         Grid.Column="1"
                         Text="{Binding TotalMemoriaFotos}"/>
 
                         <Label
                         Grid.Row="1"
-                        Text="Video's"/>
-
-                        <Label
+                        Text="Video's:"/>
+                        
+                    <Label
                         Grid.Row="1"
                         Grid.Column="1"
                         Text="{Binding TotalMemoriaVideos}"/>
@@ -167,13 +168,14 @@
                 Spacing="8">
 
                     <Label
-                    Text="Favoriete bestemming"
+                    Text="Favorite destination:"
                     FontSize="20"
                     FontAttributes="Bold"/>
 
-                    <Label
+                <Label
                     Text="{Binding FavoriteMemoriaCity}"
-                    FontSize="26"/>
+                    FontSize="26"
+                    HorizontalTextAlignment="Center"/>
 
                 </VerticalStackLayout>
 

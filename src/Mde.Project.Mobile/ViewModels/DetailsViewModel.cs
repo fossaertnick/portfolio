@@ -1,7 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Mde.Project.Mobile.Core.Entities;
+﻿using Mde.Project.Mobile.Core.Entities;
 using Mde.Project.Mobile.Core.Services.Interfaces;
-using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Mde.Project.Mobile.Pages;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -48,6 +46,7 @@ namespace Mde.Project.Mobile.ViewModels
         public DetailsViewModel(IMemoriaService memoriaService)
         {
             _memoriaService = memoriaService;
+            TemporaryItems = new ObservableCollection<MediaItem>();
         }
 
         // methoden
@@ -110,7 +109,7 @@ namespace Mde.Project.Mobile.ViewModels
 
                 if(!Guid.TryParse(value?.ToString(), out var id))
                 {
-                    await Shell.Current.DisplayAlert(
+                    await Shell.Current.DisplayAlertAsync(
                         "Error",
                         "No valid memoria-id received.",
                         "OK");
@@ -132,17 +131,16 @@ namespace Mde.Project.Mobile.ViewModels
         }
         private void LoadExistingImages()
         {
-            var list = new List<MediaItem>();
+            TemporaryItems.Clear();
             if (SelectedLocation?.MediaMaterial == null) return;
 
             foreach (var media in SelectedLocation.MediaMaterial)
             {
-                list.Add(new MediaItem
+                TemporaryItems.Add(new MediaItem
                 {
                     FilePath = media.FilePath,
                 });
             }
-            TemporaryItems = new ObservableCollection<MediaItem>(list);
         }
     }
 }
