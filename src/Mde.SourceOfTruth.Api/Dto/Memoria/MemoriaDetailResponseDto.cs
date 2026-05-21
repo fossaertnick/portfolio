@@ -10,6 +10,7 @@ namespace Mde.SourceOfTruth.Api.Dto.Memoria
         public string Name { get; set; }
         public OccationType Occation { get; set; }
         public string? Description { get; set; }
+        public DateTime EventDate { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime LastEditedOn { get; set; }
         public AddressResponseDto Address { get; set; }

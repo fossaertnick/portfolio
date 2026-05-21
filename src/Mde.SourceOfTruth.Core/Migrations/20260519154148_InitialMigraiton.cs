@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Mde.SourceOfTruth.Core.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigration : Migration
+    public partial class InitialMigraiton : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,6 +19,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EventDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastEditedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Occation = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -76,24 +77,24 @@ namespace Mde.SourceOfTruth.Core.Migrations
 
             migrationBuilder.InsertData(
                 table: "Memorias",
-                columns: new[] { "Id", "CreatedOn", "Description", "LastEditedOn", "Name", "Occation" },
+                columns: new[] { "Id", "CreatedOn", "Description", "EventDate", "LastEditedOn", "Name", "Occation" },
                 values: new object[,]
                 {
-                    { new Guid("00000000-0000-0000-0000-000000000001"), new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "Iconische toren en symbool van Parijs.", new DateTime(2025, 1, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Eiffel Tower", "Reis" },
-                    { new Guid("00000000-0000-0000-0000-000000000002"), new DateTime(2025, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "Oud Romeins amfitheater.", new DateTime(2025, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "Colosseum", "Reis" },
-                    { new Guid("00000000-0000-0000-0000-000000000003"), new DateTime(2025, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), "Historische stadspoort in Berlijn.", new DateTime(2025, 1, 21, 0, 0, 0, 0, DateTimeKind.Unspecified), "Brandenburg Gate", "Werk" },
-                    { new Guid("00000000-0000-0000-0000-000000000004"), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Beroemde basiliek ontworpen door Gaudí.", new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Sagrada Familia", "Reis" },
-                    { new Guid("00000000-0000-0000-0000-000000000005"), new DateTime(2025, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Bekende klokkentoren van Londen.", new DateTime(2025, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Big Ben", "Ander" },
-                    { new Guid("00000000-0000-0000-0000-000000000006"), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Oude citadel met historische tempels.", new DateTime(2025, 1, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Acropolis", "Uitgaan" },
-                    { new Guid("00000000-0000-0000-0000-000000000007"), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Vrijheidsbeeld in New York.", new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Statue of Liberty", "Uitgaan" },
-                    { new Guid("00000000-0000-0000-0000-000000000008"), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Groot Christusbeeld op de Corcovado.", new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Christ the Redeemer", "Werk" },
-                    { new Guid("00000000-0000-0000-0000-000000000009"), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Wit marmeren mausoleum.", new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Taj Mahal", "Reis" },
-                    { new Guid("00000000-0000-0000-0000-000000000010"), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Iconisch operagebouw.", new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Sydney Opera House", "Ander" },
-                    { new Guid("00000000-0000-0000-0000-000000000011"), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Bekende vulkaan en berg.", new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Mount Fuji", "Werk" },
-                    { new Guid("00000000-0000-0000-0000-000000000012"), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Indrukwekkende watervallen.", new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Niagara Falls", "Reis" },
-                    { new Guid("00000000-0000-0000-0000-000000000013"), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Diepe kloof gevormd door de Colorado rivier.", new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Grand Canyon", "Ander" },
-                    { new Guid("00000000-0000-0000-0000-000000000014"), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hoogste gebouw ter wereld.", new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Burj Khalifa", "Uitgaan" },
-                    { new Guid("00000000-0000-0000-0000-000000000015"), new DateTime(2025, 2, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "Historische verdedigingsmuur.", new DateTime(2025, 2, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Great Wall", "Ander" }
+                    { new Guid("00000000-0000-0000-0000-000000000001"), new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "Iconische toren en symbool van Parijs.", new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 1, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Eiffel Tower", "Travel" },
+                    { new Guid("00000000-0000-0000-0000-000000000002"), new DateTime(2025, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "Oud Romeins amfitheater.", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "Colosseum", "Travel" },
+                    { new Guid("00000000-0000-0000-0000-000000000003"), new DateTime(2025, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), "Historische stadspoort in Berlijn.", new DateTime(2025, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 1, 21, 0, 0, 0, 0, DateTimeKind.Unspecified), "Brandenburg Gate", "Work" },
+                    { new Guid("00000000-0000-0000-0000-000000000004"), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Beroemde basiliek ontworpen door Gaudí.", new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Sagrada Familia", "Travel" },
+                    { new Guid("00000000-0000-0000-0000-000000000005"), new DateTime(2025, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Bekende klokkentoren van Londen.", new DateTime(2025, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Big Ben", "Other" },
+                    { new Guid("00000000-0000-0000-0000-000000000006"), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Oude citadel met historische tempels.", new DateTime(2025, 1, 21, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 1, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Acropolis", "Friends" },
+                    { new Guid("00000000-0000-0000-0000-000000000007"), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Vrijheidsbeeld in New York.", new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Statue of Liberty", "Friends" },
+                    { new Guid("00000000-0000-0000-0000-000000000008"), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Groot Christusbeeld op de Corcovado.", new DateTime(2025, 1, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Christ the Redeemer", "Work" },
+                    { new Guid("00000000-0000-0000-0000-000000000009"), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Wit marmeren mausoleum.", new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Taj Mahal", "Travel" },
+                    { new Guid("00000000-0000-0000-0000-000000000010"), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Iconisch operagebouw.", new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Sydney Opera House", "Other" },
+                    { new Guid("00000000-0000-0000-0000-000000000011"), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Bekende vulkaan en berg.", new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Mount Fuji", "Work" },
+                    { new Guid("00000000-0000-0000-0000-000000000012"), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Indrukwekkende watervallen.", new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Niagara Falls", "Travel" },
+                    { new Guid("00000000-0000-0000-0000-000000000013"), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Diepe kloof gevormd door de Colorado rivier.", new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Grand Canyon", "Other" },
+                    { new Guid("00000000-0000-0000-0000-000000000014"), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hoogste gebouw ter wereld.", new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Burj Khalifa", "Friends" },
+                    { new Guid("00000000-0000-0000-0000-000000000015"), new DateTime(2025, 2, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "Historische verdedigingsmuur.", new DateTime(2025, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 2, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Great Wall", "Other" }
                 });
 
             migrationBuilder.InsertData(
@@ -123,9 +124,9 @@ namespace Mde.SourceOfTruth.Core.Migrations
                 columns: new[] { "Id", "CreatedAt", "FilePath", "MemoriaId", "Type" },
                 values: new object[,]
                 {
-                    { new Guid("22222222-2222-2222-2222-222222222220"), new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "france.jpg", new Guid("00000000-0000-0000-0000-000000000001"), "Photo" },
-                    { new Guid("22222222-2222-2222-2222-222222222221"), new DateTime(2025, 1, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "frankrijk.jpg", new Guid("00000000-0000-0000-0000-000000000001"), "Photo" },
-                    { new Guid("22222222-2222-2222-2222-222222222222"), new DateTime(2025, 1, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "athens.jpg", new Guid("00000000-0000-0000-0000-000000000006"), "Photo" }
+                    { new Guid("22222222-2222-2222-2222-222222222220"), new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "https://06dfrpsm-44338.brs.devtunnels.ms/img/france.jpg", new Guid("00000000-0000-0000-0000-000000000001"), "Photo" },
+                    { new Guid("22222222-2222-2222-2222-222222222221"), new DateTime(2025, 1, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "https://06dfrpsm-44338.brs.devtunnels.ms/img/frankrijk.jpg", new Guid("00000000-0000-0000-0000-000000000001"), "Photo" },
+                    { new Guid("22222222-2222-2222-2222-222222222222"), new DateTime(2025, 1, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "https://06dfrpsm-44338.brs.devtunnels.ms/img/athens.jpg", new Guid("00000000-0000-0000-0000-000000000006"), "Photo" }
                 });
 
             migrationBuilder.CreateIndex(

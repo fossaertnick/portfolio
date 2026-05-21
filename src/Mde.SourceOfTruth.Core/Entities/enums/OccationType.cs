@@ -2,9 +2,9 @@
 {
     public enum OccationType
     {
-        Reis,
-        Werk,
-        Uitgaan,
-        Ander
+        Travel,
+        Work,
+        Friends,
+        Other
     }
 }

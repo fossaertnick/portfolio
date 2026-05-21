@@ -11,6 +11,7 @@ namespace Mde.SourceOfTruth.Core.Entities
         // properties
         public Guid Id { get; set; }
         public required string Name { get; set; }
+        public DateTime EventDate { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime LastEditedOn { get; set; }
         public required OccationType Occation { get; set; }

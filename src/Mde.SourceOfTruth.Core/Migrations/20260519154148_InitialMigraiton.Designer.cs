@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Mde.SourceOfTruth.Core.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260512134533_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20260519154148_InitialMigraiton")]
+    partial class InitialMigraiton
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -261,7 +261,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                         {
                             Id = new Guid("22222222-2222-2222-2222-222222222220"),
                             CreatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilePath = "france.jpg",
+                            FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/france.jpg",
                             MemoriaId = new Guid("00000000-0000-0000-0000-000000000001"),
                             Type = "Photo"
                         },
@@ -269,7 +269,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                         {
                             Id = new Guid("22222222-2222-2222-2222-222222222221"),
                             CreatedAt = new DateTime(2025, 1, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilePath = "frankrijk.jpg",
+                            FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/frankrijk.jpg",
                             MemoriaId = new Guid("00000000-0000-0000-0000-000000000001"),
                             Type = "Photo"
                         },
@@ -277,7 +277,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                         {
                             Id = new Guid("22222222-2222-2222-2222-222222222222"),
                             CreatedAt = new DateTime(2025, 1, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilePath = "athens.jpg",
+                            FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/athens.jpg",
                             MemoriaId = new Guid("00000000-0000-0000-0000-000000000006"),
                             Type = "Photo"
                         });
@@ -294,6 +294,9 @@ namespace Mde.SourceOfTruth.Core.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EventDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("LastEditedOn")
                         .HasColumnType("datetime2");
@@ -316,135 +319,150 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
                             CreatedOn = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Iconische toren en symbool van Parijs.",
+                            EventDate = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Eiffel Tower",
-                            Occation = "Reis"
+                            Occation = "Travel"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000002"),
                             CreatedOn = new DateTime(2025, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Oud Romeins amfitheater.",
+                            EventDate = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Colosseum",
-                            Occation = "Reis"
+                            Occation = "Travel"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000003"),
                             CreatedOn = new DateTime(2025, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Historische stadspoort in Berlijn.",
+                            EventDate = new DateTime(2025, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Brandenburg Gate",
-                            Occation = "Werk"
+                            Occation = "Work"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000004"),
                             CreatedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Beroemde basiliek ontworpen door Gaudí.",
+                            EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Sagrada Familia",
-                            Occation = "Reis"
+                            Occation = "Travel"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000005"),
                             CreatedOn = new DateTime(2025, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Bekende klokkentoren van Londen.",
+                            EventDate = new DateTime(2025, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Big Ben",
-                            Occation = "Ander"
+                            Occation = "Other"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000006"),
                             CreatedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Oude citadel met historische tempels.",
+                            EventDate = new DateTime(2025, 1, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Acropolis",
-                            Occation = "Uitgaan"
+                            Occation = "Friends"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000007"),
                             CreatedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Vrijheidsbeeld in New York.",
+                            EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Statue of Liberty",
-                            Occation = "Uitgaan"
+                            Occation = "Friends"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000008"),
                             CreatedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Groot Christusbeeld op de Corcovado.",
+                            EventDate = new DateTime(2025, 1, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Christ the Redeemer",
-                            Occation = "Werk"
+                            Occation = "Work"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000009"),
                             CreatedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Wit marmeren mausoleum.",
+                            EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Taj Mahal",
-                            Occation = "Reis"
+                            Occation = "Travel"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000010"),
                             CreatedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Iconisch operagebouw.",
+                            EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Sydney Opera House",
-                            Occation = "Ander"
+                            Occation = "Other"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000011"),
                             CreatedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Bekende vulkaan en berg.",
+                            EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Mount Fuji",
-                            Occation = "Werk"
+                            Occation = "Work"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000012"),
                             CreatedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Indrukwekkende watervallen.",
+                            EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Niagara Falls",
-                            Occation = "Reis"
+                            Occation = "Travel"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000013"),
                             CreatedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Diepe kloof gevormd door de Colorado rivier.",
+                            EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Grand Canyon",
-                            Occation = "Ander"
+                            Occation = "Other"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000014"),
                             CreatedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Hoogste gebouw ter wereld.",
+                            EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Burj Khalifa",
-                            Occation = "Uitgaan"
+                            Occation = "Friends"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000015"),
                             CreatedOn = new DateTime(2025, 2, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Historische verdedigingsmuur.",
+                            EventDate = new DateTime(2025, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 2, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Great Wall",
-                            Occation = "Ander"
+                            Occation = "Other"
                         });
                 });
 

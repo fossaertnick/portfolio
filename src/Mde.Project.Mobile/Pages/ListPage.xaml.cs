@@ -1,4 +1,3 @@
-using Mde.Project.Mobile.Domain.Locations;
 using Mde.Project.Mobile.ViewModels;
 
 namespace Mde.Project.Mobile.Pages;

@@ -17,135 +17,150 @@ namespace Mde.SourceOfTruth.Core.Data.Seeding
                 {
                     Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
                     Name = "Eiffel Tower",
+                    EventDate = new DateTime(2025, 01, 03),
                     CreatedOn = new DateTime(2025, 01, 03),
                     LastEditedOn = new DateTime(2025, 01, 13),
-                    Occation = OccationType.Reis,
+                    Occation = OccationType.Travel,
                     Description = "Iconische toren en symbool van Parijs.",
                 },
                 new Memoria
                 {
                     Id = Guid.Parse("00000000-0000-0000-0000-000000000002"),
                     Name = "Colosseum",
+                    EventDate = new DateTime(2025, 01, 01),
                     CreatedOn = new DateTime(2025, 01, 11),
                     LastEditedOn = new DateTime(2025, 01, 11),
-                    Occation = OccationType.Reis,
+                    Occation = OccationType.Travel,
                     Description = "Oud Romeins amfitheater.",
                 },
                 new Memoria
                 {
                     Id = Guid.Parse("00000000-0000-0000-0000-000000000003"),
                     Name = "Brandenburg Gate",
+                    EventDate = new DateTime(2025, 01, 19),
                     CreatedOn = new DateTime(2025, 01, 19),
                     LastEditedOn = new DateTime(2025, 01, 21),
-                    Occation = OccationType.Werk,
+                    Occation = OccationType.Work,
                     Description = "Historische stadspoort in Berlijn.",
                 },
                 new Memoria
                 {
                     Id = Guid.Parse("00000000-0000-0000-0000-000000000004"),
                     Name = "Sagrada Familia",
+                    EventDate = new DateTime(2025, 01, 27),
                     CreatedOn = new DateTime(2025, 01, 27),
                     LastEditedOn = new DateTime(2025, 01, 27),
-                    Occation = OccationType.Reis,
+                    Occation = OccationType.Travel,
                     Description = "Beroemde basiliek ontworpen door Gaudí.",
                 },
                 new Memoria
                 {
                     Id = Guid.Parse("00000000-0000-0000-0000-000000000005"),
                     Name = "Big Ben",
+                    EventDate = new DateTime(2025, 02, 04),
                     CreatedOn = new DateTime(2025, 02, 04),
                     LastEditedOn = new DateTime(2025, 02, 04),
-                    Occation = OccationType.Ander,
+                    Occation = OccationType.Other,
                     Description = "Bekende klokkentoren van Londen.",
                 },
                 new Memoria
                 {
                     Id = Guid.Parse("00000000-0000-0000-0000-000000000006"),
                     Name = "Acropolis",
+                    EventDate = new DateTime(2025, 01, 21),
                     CreatedOn = new DateTime(2025, 01, 27),
                     LastEditedOn = new DateTime(2025, 01, 29),
-                    Occation = OccationType.Uitgaan,
+                    Occation = OccationType.Friends,
                     Description = "Oude citadel met historische tempels.",
                 },
                 new Memoria
                 {
                     Id = Guid.Parse("00000000-0000-0000-0000-000000000007"),
                     Name = "Statue of Liberty",
+                    EventDate = new DateTime(2025, 01, 27),
                     CreatedOn = new DateTime(2025, 01, 27),
                     LastEditedOn = new DateTime(2025, 01, 27),
-                    Occation = OccationType.Uitgaan,
+                    Occation = OccationType.Friends,
                     Description = "Vrijheidsbeeld in New York.",
                 },
                 new Memoria
                 {
                     Id = Guid.Parse("00000000-0000-0000-0000-000000000008"),
                     Name = "Christ the Redeemer",
+                    EventDate = new DateTime(2025, 01, 17),
                     CreatedOn = new DateTime(2025, 01, 27),
                     LastEditedOn = new DateTime(2025, 01, 27),
-                    Occation = OccationType.Werk,
+                    Occation = OccationType.Work,
                     Description = "Groot Christusbeeld op de Corcovado.",
                 },
                 new Memoria
                 {
                     Id = Guid.Parse("00000000-0000-0000-0000-000000000009"),
                     Name = "Taj Mahal",
+                    EventDate = new DateTime(2025, 01, 27),
                     CreatedOn = new DateTime(2025, 01, 27),
                     LastEditedOn = new DateTime(2025, 01, 27),
-                    Occation = OccationType.Reis,
+                    Occation = OccationType.Travel,
                     Description = "Wit marmeren mausoleum.",
                 },
                 new Memoria
                 {
                     Id = Guid.Parse("00000000-0000-0000-0000-000000000010"),
                     Name = "Sydney Opera House",
+                    EventDate = new DateTime(2025, 01, 27),
                     CreatedOn = new DateTime(2025, 01, 27),
                     LastEditedOn = new DateTime(2025, 01, 27),
-                    Occation = OccationType.Ander,
+                    Occation = OccationType.Other,
                     Description = "Iconisch operagebouw.",
                 },
                 new Memoria
                 {
                     Id = Guid.Parse("00000000-0000-0000-0000-000000000011"),
                     Name = "Mount Fuji",
+                    EventDate = new DateTime(2025, 01, 27),
                     CreatedOn = new DateTime(2025, 01, 27),
                     LastEditedOn = new DateTime(2025, 01, 27),
-                    Occation = OccationType.Werk,
+                    Occation = OccationType.Work,
                     Description = "Bekende vulkaan en berg.",
                 },
                 new Memoria
                 {
                     Id = Guid.Parse("00000000-0000-0000-0000-000000000012"),
                     Name = "Niagara Falls",
+                    EventDate = new DateTime(2025, 01, 27),
                     CreatedOn = new DateTime(2025, 01, 27),
                     LastEditedOn = new DateTime(2025, 01, 27),
-                    Occation = OccationType.Reis,
+                    Occation = OccationType.Travel,
                     Description = "Indrukwekkende watervallen.",
                 },
                 new Memoria
                 {
                     Id = Guid.Parse("00000000-0000-0000-0000-000000000013"),
                     Name = "Grand Canyon",
+                    EventDate = new DateTime(2025, 01, 27),
                     CreatedOn = new DateTime(2025, 01, 27),
                     LastEditedOn = new DateTime(2025, 01, 27),
-                    Occation = OccationType.Ander,
+                    Occation = OccationType.Other,
                     Description = "Diepe kloof gevormd door de Colorado rivier.",
                 },
                 new Memoria
                 {
                     Id = Guid.Parse("00000000-0000-0000-0000-000000000014"),
                     Name = "Burj Khalifa",
+                    EventDate = new DateTime(2025, 01, 27),
                     CreatedOn = new DateTime(2025, 01, 27),
                     LastEditedOn = new DateTime(2025, 01, 27),
-                    Occation = OccationType.Uitgaan,
+                    Occation = OccationType.Friends,
                     Description = "Hoogste gebouw ter wereld.",
                 },
                 new Memoria 
                 {
                     Id = Guid.Parse("00000000-0000-0000-0000-000000000015"),
                     Name = "Great Wall",
+                    EventDate = new DateTime(2025, 01, 30),
                     CreatedOn = new DateTime(2025, 02, 12),
                     LastEditedOn = new DateTime(2025, 02, 13),
-                    Occation = OccationType.Ander,
+                    Occation = OccationType.Other,
                     Description = "Historische verdedigingsmuur.",
                 }
             };
@@ -323,7 +338,7 @@ namespace Mde.SourceOfTruth.Core.Data.Seeding
                 {
                     Id = Guid.Parse("22222222-2222-2222-2222-222222222220"),
                     Type = MediaType.Photo,
-                    FilePath = "france.jpg",
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/france.jpg",
                     CreatedAt = new DateTime(2025, 01, 03),
                     MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
                 },
@@ -331,7 +346,7 @@ namespace Mde.SourceOfTruth.Core.Data.Seeding
                 {
                     Id = Guid.Parse("22222222-2222-2222-2222-222222222221"),
                     Type = MediaType.Photo,
-                    FilePath = "frankrijk.jpg",
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/frankrijk.jpg",
                     CreatedAt = new DateTime(2025, 01, 13),
                     MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
                 },
@@ -339,9 +354,33 @@ namespace Mde.SourceOfTruth.Core.Data.Seeding
                 {
                     Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
                     Type = MediaType.Photo,
-                    FilePath = "athens.jpg",
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/athens.jpg",
                     CreatedAt = new DateTime(2025, 01, 29),
                     MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000006"),
+                },
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222223"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/koeken.jpg",
+                    CreatedAt = new DateTime(2025, 01, 03),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000008"),
+                },
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222224"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/guatemala.jpg",
+                    CreatedAt = new DateTime(2025, 01, 17),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000011"),
+                },
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222225"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/home.jpg",
+                    CreatedAt = new DateTime(2025, 01, 27),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
                 }
             };
 

@@ -2,68 +2,184 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:Mde.Project.Mobile.ViewModels"
+             xmlns:converties="clr-namespace:Mde.Project.Mobile.Conventies"
              x:DataType="viewModels:StatisticsViewModel"  
              x:Class="Mde.Project.Mobile.Pages.StatisticsPage"
              Shell.FlyoutBehavior="Flyout">
-    
-    <VerticalStackLayout Spacing="15" Padding="20">
 
-        <Label Text="Statistieken" FontSize="35" HorizontalOptions="End" Margin="0,0,30,0"/>
+    <VerticalStackLayout
+        Padding="25,0,25,25"
+        Spacing="25">
 
-        <HorizontalStackLayout Spacing="10" Margin="0,35,0,0" HorizontalOptions="Center">
-            <Label Text="# Memorias" WidthRequest="100" VerticalOptions="Center"/>
-            <Border WidthRequest="200" Padding="10,0,0,0">
-                <Label Text="{Binding TotalMemorias}" HeightRequest="40" VerticalTextAlignment="Center"/>
+            <!-- Titel -->
+        <Label
+            Text="Statistics"
+            FontSize="34"
+            FontAttributes="Bold"
+            HorizontalOptions="Center"/>
+
+        <!-- Totaal Memorias -->
+            <Border
+            StrokeShape="RoundRectangle 15"
+            Padding="20">
+
+                <Grid
+                ColumnDefinitions="Auto,*">
+
+                    <Label
+                    Text="Memorias:"
+                    FontSize="18"
+                    VerticalOptions="Center"/>
+
+                <Label
+                    Grid.Column="1"
+                    Text="{Binding TotalMemorias}"
+                    HorizontalOptions="End"
+                    FontSize="26"
+                    FontAttributes="Bold"/>
+
+                </Grid>
+
             </Border>
-        </HorizontalStackLayout>
-
-        <HorizontalStackLayout Spacing="10" HorizontalOptions="End" Margin="0,0,30,0">
-            <Label Text="# werk:" WidthRequest="100" VerticalOptions="Center"/>
-            <Border WidthRequest="75" Padding="10,0,0,0">
-                <Label Text="{Binding WerkMemoria}" HeightRequest="25" VerticalTextAlignment="Center"/>
-            </Border>
-        </HorizontalStackLayout>
-        <HorizontalStackLayout Spacing="10" HorizontalOptions="End" Margin="0,0,30,0">
-            <Label Text="# reis:" WidthRequest="100" VerticalOptions="Center"/>
-            <Border WidthRequest="75" Padding="10,0,0,0">
-                <Label Text="{Binding ReisMemoria}" HeightRequest="25" VerticalTextAlignment="Center"/>
-            </Border>
-        </HorizontalStackLayout>
-        <HorizontalStackLayout Spacing="10" HorizontalOptions="End" Margin="0,0,30,0">
-            <Label Text="# uitgaan:" WidthRequest="100" VerticalOptions="Center"/>
-            <Border WidthRequest="75" Padding="10,0,0,0">
-                <Label Text="{Binding UitgaanMemoria}" HeightRequest="25" VerticalTextAlignment="Center"/>
-            </Border>
-        </HorizontalStackLayout>
-        <HorizontalStackLayout Spacing="10" HorizontalOptions="End" Margin="0,0,30,0">
-            <Label Text="# andere:" WidthRequest="100" VerticalOptions="Center"/>
-            <Border WidthRequest="75" Padding="10,0,0,0">
-                <Label Text="{Binding AndereMemoria}" HeightRequest="25" VerticalTextAlignment="Center"/>
-            </Border>
-        </HorizontalStackLayout>
 
 
+            <!-- Categorieën -->
+            <VerticalStackLayout Spacing="10">
 
-        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-            <Label Text="Fotos" WidthRequest="100" VerticalOptions="Center"/>
-            <Border WidthRequest="200" Padding="10,0,0,0">
-                <Label Text="{Binding TotalMemoriaFotos}" HeightRequest="40" VerticalTextAlignment="Center"/>
+                <Label
+                Text="Categorieën"
+                FontAttributes="Bold"
+                FontSize="20"/>
+
+                <Grid
+                ColumnDefinitions="*,*"
+                RowDefinitions="Auto, Auto"
+                ColumnSpacing="12"
+                RowSpacing="12">
+
+                    <Border Grid.Row="0" Grid.Column="0"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="15">
+
+                        <VerticalStackLayout>
+                            <Label Text="Work:"/>
+                        <Label
+                            Text="{Binding WerkMemoria}"
+                            FontSize="24"
+                            HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+
+                    </Border>
+
+                    <Border Grid.Row="0" Grid.Column="1"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="15">
+
+                        <VerticalStackLayout>
+                            <Label Text="Travel:"/>
+                        <Label
+                            Text="{Binding ReisMemoria}"
+                            FontSize="24"
+                            HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="0"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="15">
+
+                        <VerticalStackLayout>
+                            <Label Text="Home:"/>
+                        <Label
+                            Text="{Binding UitgaanMemoria}"
+                            FontSize="24"
+                            HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="1"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="15">
+
+                        <VerticalStackLayout>
+                            <Label Text="Other:"/>
+                        <Label
+                            Text="{Binding AndereMemoria}"
+                            FontSize="24"
+                            HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+
+                    </Border>
+
+                </Grid>
+
+            </VerticalStackLayout>
+
+
+            <!-- Media -->
+            <Border
+            StrokeShape="RoundRectangle 15"
+            Padding="20">
+
+                <VerticalStackLayout Spacing="15">
+
+                    <Label
+                    Text="Media"
+                    FontSize="20"
+                    FontAttributes="Bold"/>
+
+                    <Grid
+                    ColumnDefinitions="*,Auto"
+                    RowDefinitions="Auto,Auto">
+
+                        <Label
+                        Grid.Row="0"
+                        Text="Photo's:"/>
+
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Text="{Binding TotalMemoriaFotos}"/>
+
+                        <Label
+                        Grid.Row="1"
+                        Text="Video's:"/>
+                        
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Text="{Binding TotalMemoriaVideos}"/>
+
+                    </Grid>
+
+                </VerticalStackLayout>
+
             </Border>
-        </HorizontalStackLayout>
 
-        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-            <Label Text="Videos" WidthRequest="100" VerticalOptions="Center"/>
-            <Border WidthRequest="200" Padding="10,0,0,0">
-                <Label Text="{Binding TotalMemoriaVideos}" HeightRequest="40" VerticalTextAlignment="Center"/>
+
+            <!-- Favoriete locatie -->
+            <Border
+            StrokeShape="RoundRectangle 15"
+            Padding="20">
+
+                <VerticalStackLayout
+                Spacing="8">
+
+                    <Label
+                    Text="Favorite destination:"
+                    FontSize="20"
+                    FontAttributes="Bold"/>
+
+                <Label
+                    Text="{Binding FavoriteMemoriaCity}"
+                    FontSize="26"
+                    HorizontalTextAlignment="Center"/>
+
+                </VerticalStackLayout>
+
             </Border>
-        </HorizontalStackLayout>
 
-        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-            <Label Text="Favorite country" WidthRequest="100" VerticalOptions="Center"/>
-            <Border WidthRequest="200" Padding="10,0,0,0">
-                <Label Text="{Binding FavoriteMemoriaCity}" HeightRequest="40" VerticalTextAlignment="Center"/>
-            </Border>
-        </HorizontalStackLayout>
-
-    </VerticalStackLayout>
+        </VerticalStackLayout>
 </ContentPage>

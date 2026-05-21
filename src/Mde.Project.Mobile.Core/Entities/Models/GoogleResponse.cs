@@ -1,4 +1,8 @@
-﻿namespace Mde.Project.Mobile.Domain.Dtos
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Mde.Project.Mobile.Core.Entities.Models
 {
     public class GoogleResponse
     {

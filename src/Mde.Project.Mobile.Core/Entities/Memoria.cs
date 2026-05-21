@@ -11,6 +11,7 @@ namespace Mde.Project.Mobile.Core.Entities
         // properties
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public DateTime EventDate { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime LastEditedOn { get; set; }
         public OccationType Occation { get; set; }

@@ -47,24 +47,33 @@
                 <Button Text="Where am I now?" Margin="25,25,25,0" Command="{Binding ClickForLocationCommand}"/>
             
                 <HorizontalStackLayout HorizontalOptions="Center" IsVisible="{Binding IsCreateMode}">
-                    <Border Margin="25,25,25,0" Padding="10,0,0,0" WidthRequest="100">
-                        <DatePicker Date="{Binding CreatedOn, Mode=TwoWay}"/>
+                    <Border Margin="25,25,25,0" HorizontalOptions="Fill">
+                        <DatePicker Date="{Binding EventDate, Mode=TwoWay}"/>
+                    </Border>
+                    <Border Margin="25,25,25,0" HorizontalOptions="Fill">
+                        <TimePicker Time="{Binding EventTime, Mode=TwoWay}"/>
                     </Border>
                 </HorizontalStackLayout>
                 <HorizontalStackLayout Spacing="10" HorizontalOptions="Center" Margin="25,25,25,0"
                                    RadioButtonGroup.GroupName="Occation" 
                                    RadioButtonGroup.SelectedValue="{Binding Occation, Mode=TwoWay}">
-                    <RadioButton Content="reis" Value="{x:Static enum:OccationType.Reis}"/>
-                    <RadioButton Content="werk" Value="{x:Static enum:OccationType.Werk}"/>
-                    <RadioButton Content="uitgaan" Value="{x:Static enum:OccationType.Uitgaan}"/>
-                    <RadioButton Content="andere" Value="{x:Static enum:OccationType.Ander}"/>
+                    <RadioButton Content="travel" Value="{x:Static enum:OccationType.Travel}"/>
+                    <RadioButton Content="work" Value="{x:Static enum:OccationType.Work}"/>
+                    <RadioButton Content="friends" Value="{x:Static enum:OccationType.Friends}"/>
+                    <RadioButton Content="other" Value="{x:Static enum:OccationType.Other}"/>
                 </HorizontalStackLayout>
-                <Button x:Name="MediaChoice" Text="Kies media hier" Clicked="MediaChoice_Clicked" Margin="25,25,25,0"/>
+                <Button x:Name="MediaChoice" Text="Choose proof of fun here." Clicked="MediaChoice_Clicked" Margin="25,25,25,0"/>
 
-                <CollectionView ItemsSource="{Binding TemporaryItems}" ItemsLayout="HorizontalList">
+                <CollectionView ItemsSource="{Binding TemporaryItems}" ItemsLayout="HorizontalList" Margin="0,25,0,0" HorizontalOptions="Center">
+                    <CollectionView.EmptyView>
+                        <HorizontalStackLayout VerticalOptions="Center" Spacing="15" HorizontalOptions="Center">
+                            <Label FontFamily="appIcons" Text="&#xea0f;" FontSize="25" TextColor="DarkRed" />
+                            <Label Text="There are no images to show."/>
+                        </HorizontalStackLayout>
+                    </CollectionView.EmptyView>
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="images:MediaItem">
-                            <HorizontalStackLayout Padding="8" Spacing="10">
+                            <HorizontalStackLayout VerticalOptions="Center" HorizontalOptions="Center">
                                 <!-- Foto -->
                                 <Image
                                     Source="{Binding FilePath}"
@@ -95,7 +104,7 @@
                 </CollectionView>
             
                 <Border Margin="25,25,25,0" Padding="10,0,0,0" HeightRequest="150">
-                <Editor Text="{Binding Description}" Placeholder="beschrijving" Keyboard="Plain"/>
+                <Editor Text="{Binding Description}" Placeholder="Description..." Keyboard="Plain"/>
             </Border>
 
         </VerticalStackLayout>

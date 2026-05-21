@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:locations="clr-namespace:Mde.Project.Mobile.Core.Entities;assembly=Mde.Project.Mobile.Core"
+             xmlns:converties="clr-namespace:Mde.Project.Mobile.Conventies"
              xmlns:viewModels="clr-namespace:Mde.Project.Mobile.ViewModels"
              x:DataType="viewModels:ListViewModel"
              x:Class="Mde.Project.Mobile.Pages.ListPage"
@@ -9,41 +10,58 @@
              Shell.TabBarIsVisible="False"
              Shell.FlyoutBehavior="Disabled"
              Shell.NavBarIsVisible="False">
-    
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
 
-        <HorizontalStackLayout Grid.Row="0" Grid.ColumnSpan="2" Spacing="10">
-            <Border Style="{x:StaticResource SearchBorders}">
-                <SearchBar Placeholder="Filter..." Text="{Binding SearchTerm}" Keyboard="Text"/>
-            </Border>
+        <Grid Padding="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-            <Button Command="{Binding NavigationCommand}" Style="{x:StaticResource FullButtons}" CommandParameter="map" Text="Map"/>
-        </HorizontalStackLayout>
+        <Grid Grid.Row="0" ColumnDefinitions="2*,*" ColumnSpacing="5">
+                <Border Grid.Column="0" Style="{x:StaticResource SearchBorders}" StrokeShape="10">
+                    <SearchBar Placeholder="Filter..." Text="{Binding SearchTerm}" Keyboard="Text" />
+                </Border>
 
-            <CollectionView x:Name="MemoriaList" ItemsSource="{Binding Locations}"
-                            Grid.Row="1" Margin="{x:StaticResource DefaultMargin}">
-            <CollectionView.EmptyView>
-                <Label Text="Er zijn geen memorias om weer te geven"/>
+            <Button Grid.Column="1" Command="{Binding NavigationCommand}" Style="{x:StaticResource FullButtons}" 
+                    CommandParameter="map" Text="Map" />
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <VerticalStackLayout IsVisible="{Binding IsLoading}" HorizontalOptions="Center" VerticalOptions="Center" Spacing="15">
+                <ActivityIndicator IsRunning="{Binding IsLoading}" WidthRequest="50" HeightRequest="50"/>
+                <Label IsVisible="{Binding IsLoading}" Text="Memorias laden..."/>
+            </VerticalStackLayout>
+                
+            <CollectionView x:Name="MemoriaList" ItemsSource="{Binding Locations}" Margin="{x:StaticResource DefaultMargin}">
+
+                <CollectionView.EmptyView IsVisible="{Binding IsLoading, Converter={StaticResource LoadingConvertion}}">
+                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="15">
+                    <Label FontFamily="appIcons" Text="&#xea0f;" FontSize="100" TextColor="DarkRed" HorizontalOptions="Center" />
+                    <Label Text="Er zijn geen memorias om weer te geven"/>
+                </VerticalStackLayout>
             </CollectionView.EmptyView>
+                
                 <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="locations:Memoria">
                     <SwipeView>
                         <SwipeView.RightItems>
                             <SwipeItems >
-                                <SwipeItem x:Name="DeleteButton" Clicked="DeleteButton_Clicked" BindingContext="{Binding Id}"
-                                           Text="Delete" BackgroundColor="Red"/>
-                                <SwipeItem Command="{Binding BindingContext.UpdateMemoriaCommand, Source={x:Reference page}}" 
-                                           CommandParameter="{Binding Id}" Text="Update" BackgroundColor="Orange"/>
-                                <SwipeItem Command="{Binding BindingContext.DetailsMemoriaCommand, Source={x:Reference page}}" 
-                                           CommandParameter="{Binding Id}" Text="Details" BackgroundColor="Gray"/>
+                                <SwipeItem x:Name="DeleteButton" Clicked="DeleteButton_Clicked" BindingContext="{Binding Id}" BackgroundColor="Red">
+                                    <SwipeItem.IconImageSource>
+                                        <FontImageSource FontFamily="appIcons" Glyph="&#xe9ad;" Size="10" Color="Black"/>
+                                    </SwipeItem.IconImageSource>
+                                </SwipeItem>
+                                <SwipeItem Command="{Binding BindingContext.UpdateMemoriaCommand, Source={x:Reference page}}" CommandParameter="{Binding Id}" BackgroundColor="Orange">
+                                    <SwipeItem.IconImageSource>
+                                        <FontImageSource FontFamily="appIcons" Glyph="&#xea9b;" Size="10" Color="Black"/>
+                                    </SwipeItem.IconImageSource>
+                                </SwipeItem>
+                                <SwipeItem Command="{Binding BindingContext.DetailsMemoriaCommand, Source={x:Reference page}}" CommandParameter="{Binding Id}" BackgroundColor="Gray">
+                                    <SwipeItem.IconImageSource>
+                                        <FontImageSource FontFamily="appIcons" Glyph="&#xe987;" Size="10" Color="Black"/>
+                                    </SwipeItem.IconImageSource>
+                                </SwipeItem>
                             </SwipeItems>
                         </SwipeView.RightItems>
                         <Border StrokeThickness="1"
@@ -72,7 +90,7 @@
                                            Grid.Row="1"
                                            FontSize="12"
                                            TextColor="Gray" 
-                                           Text="{Binding CreatedOn}"/>
+                                           Text="{Binding EventDate}"/>
 
                             </Grid>
 
@@ -82,18 +100,26 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <HorizontalStackLayout Grid.Row="2" Spacing="10">
+        </Grid>
+
+
+        <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="5">
             <Button 
+                Grid.Column="0"
                 Command="{Binding NavigationCommand}"
                 Style="{x:StaticResource FullButtons}"
                 CommandParameter="add"
                 Text="Add"/>
 
             <Button 
-                ImageSource="dotnet_bot.png"
+                Grid.Column="1"
                 Command="{Binding NavigationCommand}"
                 Style="{x:StaticResource FullButtons}"
-                CommandParameter="//settingsPage"/>
-        </HorizontalStackLayout>
+                CommandParameter="//settingsPage">
+                <Button.ImageSource>
+                    <FontImageSource Glyph="&#xe994;" FontFamily="appIcons" Size="20"/>
+                </Button.ImageSource>
+            </Button>
+        </Grid>
     </Grid>
 </ContentPage>
