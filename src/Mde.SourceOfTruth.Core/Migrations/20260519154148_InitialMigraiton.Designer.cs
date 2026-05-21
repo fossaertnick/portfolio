@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Mde.SourceOfTruth.Core.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260515184332_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20260519154148_InitialMigraiton")]
+    partial class InitialMigraiton
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -322,7 +322,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             EventDate = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Eiffel Tower",
-                            Occation = "Reis"
+                            Occation = "Travel"
                         },
                         new
                         {
@@ -332,7 +332,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             EventDate = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Colosseum",
-                            Occation = "Reis"
+                            Occation = "Travel"
                         },
                         new
                         {
@@ -342,7 +342,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             EventDate = new DateTime(2025, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Brandenburg Gate",
-                            Occation = "Werk"
+                            Occation = "Work"
                         },
                         new
                         {
@@ -352,7 +352,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Sagrada Familia",
-                            Occation = "Reis"
+                            Occation = "Travel"
                         },
                         new
                         {
@@ -362,7 +362,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             EventDate = new DateTime(2025, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Big Ben",
-                            Occation = "Ander"
+                            Occation = "Other"
                         },
                         new
                         {
@@ -372,7 +372,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             EventDate = new DateTime(2025, 1, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Acropolis",
-                            Occation = "Uitgaan"
+                            Occation = "Friends"
                         },
                         new
                         {
@@ -382,7 +382,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Statue of Liberty",
-                            Occation = "Uitgaan"
+                            Occation = "Friends"
                         },
                         new
                         {
@@ -392,7 +392,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             EventDate = new DateTime(2025, 1, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Christ the Redeemer",
-                            Occation = "Werk"
+                            Occation = "Work"
                         },
                         new
                         {
@@ -402,7 +402,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Taj Mahal",
-                            Occation = "Reis"
+                            Occation = "Travel"
                         },
                         new
                         {
@@ -412,7 +412,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Sydney Opera House",
-                            Occation = "Ander"
+                            Occation = "Other"
                         },
                         new
                         {
@@ -422,7 +422,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Mount Fuji",
-                            Occation = "Werk"
+                            Occation = "Work"
                         },
                         new
                         {
@@ -432,7 +432,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Niagara Falls",
-                            Occation = "Reis"
+                            Occation = "Travel"
                         },
                         new
                         {
@@ -442,7 +442,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Grand Canyon",
-                            Occation = "Ander"
+                            Occation = "Other"
                         },
                         new
                         {
@@ -452,7 +452,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Burj Khalifa",
-                            Occation = "Uitgaan"
+                            Occation = "Friends"
                         },
                         new
                         {
@@ -462,7 +462,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             EventDate = new DateTime(2025, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 2, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Great Wall",
-                            Occation = "Ander"
+                            Occation = "Other"
                         });
                 });
 

@@ -29,6 +29,7 @@ namespace Mde.Project.Mobile.ViewModels
         private string street;
         private string houseNumber;
         private DateTime eventDate = DateTime.Now;
+        private TimeSpan eventTime = DateTime.Now.TimeOfDay;
         private Memoria selectedMemoria;
         private ImageSource photo;
 
@@ -103,6 +104,15 @@ namespace Mde.Project.Mobile.ViewModels
         {
             get { return eventDate; }
             set => SetProperty(ref eventDate, value);
+        }
+        public TimeSpan EventTime
+        {
+            get { return eventTime; }
+            set => SetProperty(ref eventTime, value);
+        }
+        public DateTime FullEventDate
+        {
+            get { return EventDate.Date + eventTime; }
         }
         public Memoria SelectedMemoria
         {
@@ -228,7 +238,6 @@ namespace Mde.Project.Mobile.ViewModels
             Name = memoria.Name;
             Description = memoria.Description;
             Occation = memoria.Occation;
-            EventDate = memoria.EventDate;
         }
         private void ResetFields()
         {
@@ -241,6 +250,7 @@ namespace Mde.Project.Mobile.ViewModels
             Street = string.Empty;
             HouseNumber = string.Empty;
             EventDate = DateTime.Now;
+            eventTime = DateTime.Now.TimeOfDay;
             Latitude = 0;
             Longitude = 0;
         }
@@ -281,7 +291,7 @@ namespace Mde.Project.Mobile.ViewModels
                 var validation = CheckIncomingValues();
                 if(!validation.Item1)
                 {
-                    await Shell.Current.DisplayAlert(
+                    await Shell.Current.DisplayAlertAsync(
                         "Error",
                         validation.Item2,
                         "OK");
@@ -295,7 +305,7 @@ namespace Mde.Project.Mobile.ViewModels
                     memoria = new Memoria
                     {
                         Name = Name,
-                        EventDate = EventDate,
+                        EventDate = FullEventDate,
                         MemoriaAddress = new Address
                         {
                             Country = Country,
@@ -318,6 +328,7 @@ namespace Mde.Project.Mobile.ViewModels
                         Name = Name,
                         Description = Description,
                         Occation = Occation,
+                        EventDate = selectedMemoria.EventDate,
                         MemoriaAddress = new Address
                         {
                             Country = Country,
@@ -335,6 +346,7 @@ namespace Mde.Project.Mobile.ViewModels
                         }).ToList()
                     };
                 }
+                TemporaryItems.Clear();
 
                 var geoResult = await _geoCodingService.ForwardGeoCodeAsync(memoria);
                 var geoSuccess = await HandleResult(geoResult);
@@ -344,7 +356,6 @@ namespace Mde.Project.Mobile.ViewModels
                 var saveSuccess = await HandleResult(saveResult);
                 if(saveSuccess != true) return;
 
-                TemporaryItems.Clear();
                 await Shell.Current.GoToAsync(nameof(ListPage));
             }
             finally

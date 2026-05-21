@@ -1,8 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Mde.Project.Mobile.Core.Entities.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mde.Project.Mobile.ViewModels
 {
@@ -11,6 +8,7 @@ namespace Mde.Project.Mobile.ViewModels
         // fields
         private bool isBusy;
         private string errorMessage;
+        private bool isLoading = true;
 
         // properties
         public bool IsBusy
@@ -29,6 +27,14 @@ namespace Mde.Project.Mobile.ViewModels
                 SetProperty(ref errorMessage, value);
             }
         }
+        public bool IsLoading
+        {
+            get { return isLoading; }
+            set
+            {
+                SetProperty(ref isLoading, value);
+            }
+        }
 
         // methoden
         protected async Task<T?> HandleResult<T>(ResultModel<T> result)
@@ -39,7 +45,7 @@ namespace Mde.Project.Mobile.ViewModels
             foreach (var error in result.Errors) System.Diagnostics.Debug.WriteLine(error);
             if (!string.IsNullOrWhiteSpace(result.UserMessage))
             {
-                await Shell.Current.DisplayAlert(
+                await Shell.Current.DisplayAlertAsync(
                     "Error",
                     result.UserMessage,
                     "OK");

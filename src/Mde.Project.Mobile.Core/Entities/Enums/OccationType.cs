@@ -6,9 +6,9 @@ namespace Mde.Project.Mobile.Core.Entities.Enums
 {
     public enum OccationType
     {
-        Reis,
-        Werk,
-        Uitgaan,
-        Ander
+        Travel,
+        Work,
+        Friends,
+        Other
     }
 }

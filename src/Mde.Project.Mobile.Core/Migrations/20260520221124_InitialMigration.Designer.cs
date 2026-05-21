@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Mde.Project.Mobile.Core.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260517131135_InitialMigration")]
+    [Migration("20260520221124_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />

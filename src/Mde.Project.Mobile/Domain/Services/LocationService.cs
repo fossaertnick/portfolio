@@ -29,7 +29,7 @@ namespace Mde.Project.Mobile.Domain.Services
                 var permissionResult = await EnsureLocationPermission();
                 if (!permissionResult.IsSucces) return ResultModel<Location>.Failure(permissionResult.Errors.FirstOrDefault() ?? "Permission denied", permissionResult.UserMessage, permissionResult.StatusCode);
                 
-                var request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
+                var request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(5));
                 var location = await Geolocation.Default.GetLocationAsync(request);
                 if (location == null) return ResultModel<Location>.Failure("Location result was null", "Your location could not be found.");
 

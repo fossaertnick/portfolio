@@ -105,10 +105,10 @@ namespace Mde.Project.Mobile.ViewModels
             {
                 IsBusy = true;
                 TotalMemorias = await HandleResult( await _statisticService.GetTotalMemorias()) ?? "X";
-                WerkMemoria = await HandleResult(await _statisticService.GetMemoriasByOccasionAsync(OccationType.Werk)) ?? "X";
-                ReisMemoria = await HandleResult(await _statisticService.GetMemoriasByOccasionAsync(OccationType.Reis)) ?? "X";
-                UitgaanMemoria = await HandleResult(await _statisticService.GetMemoriasByOccasionAsync(OccationType.Uitgaan)) ?? "X";
-                AndereMemoria = await HandleResult(await _statisticService.GetMemoriasByOccasionAsync(OccationType.Ander)) ?? "X";
+                WerkMemoria = await HandleResult(await _statisticService.GetMemoriasByOccasionAsync(OccationType.Work)) ?? "X";
+                ReisMemoria = await HandleResult(await _statisticService.GetMemoriasByOccasionAsync(OccationType.Travel)) ?? "X";
+                UitgaanMemoria = await HandleResult(await _statisticService.GetMemoriasByOccasionAsync(OccationType.Friends)) ?? "X";
+                AndereMemoria = await HandleResult(await _statisticService.GetMemoriasByOccasionAsync(OccationType.Other)) ?? "X";
                 TotalMemoriaFotos = await HandleResult(await _statisticService.GetPhotoCountAsync()) ?? "X";
                 TotalMemoriaVideos = await HandleResult(await _statisticService.GetVideoCountAsync()) ?? "X";
                 FavoriteMemoriaCity = await HandleResult(await _statisticService.GetFavoriteCountryAsync()) ?? "X";

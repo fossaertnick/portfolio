@@ -1,12 +1,39 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:manual="clr-namespace:Mde.Project.Mobile.Core.Entities.Models;assembly=Mde.Project.Mobile.Core"
              xmlns:viewModels="clr-namespace:Mde.Project.Mobile.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:DataType="viewModels:ManualViewModel"  
              x:Class="Mde.Project.Mobile.Pages.ManualPage"
              Shell.FlyoutBehavior="Disabled"
              Shell.TabBarIsVisible="False">
-    <ScrollView>
-        <Label Text="{Binding Text}" Margin="10"/>
-    </ScrollView>
+    
+    <CollectionView Margin="15" ItemsSource="{Binding Sections}">
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="manual:ManualSection">
+                <Border Margin="0,0,0,10" Stroke="#DDDDDD" StrokeThickness="1" BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10"/>
+                    </Border.StrokeShape>
+                    <toolkit:Expander>
+                        <toolkit:Expander.Header>
+                            <Grid Padding="16">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Label FontAttributes="Bold" FontSize="18" Text="{Binding Title}"/>
+                                <Label Grid.Column="1" Text="⌄" FontSize="20"/>
+                            </Grid>
+                        </toolkit:Expander.Header>
+                        <VerticalStackLayout Padding="16">
+                            <Label FontSize="15" LineBreakMode="WordWrap" Text="{Binding Content}"/>
+                        </VerticalStackLayout>
+                    </toolkit:Expander>
+                </Border>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+        
+    </CollectionView>
 </ContentPage>

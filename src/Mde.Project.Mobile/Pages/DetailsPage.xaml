@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:Mde.Project.Mobile.ViewModels"
+             xmlns:converties="clr-namespace:Mde.Project.Mobile.Conventies"
              xmlns:images="clr-namespace:Mde.Project.Mobile.Core.Entities;assembly=Mde.Project.Mobile.Core"
              x:DataType="viewModels:DetailsViewModel"
              x:Class="Mde.Project.Mobile.Pages.DetailsPage"
@@ -9,44 +10,89 @@
              Shell.TabBarIsVisible="False"
              Shell.FlyoutBehavior="Disabled">
 
-    <ScrollView>
-        <VerticalStackLayout Spacing="20" Padding="20">
-            <Label Text="{Binding SelectedLocation.Name}" FontSize="24" FontAttributes="Bold"/>
+    <Grid Padding="10">
 
-            <VerticalStackLayout Spacing="4">
-                <Label Text="{Binding SelectedLocation.MemoriaAddress.City}"/>
-                <Label Text="{Binding SelectedLocation.MemoriaAddress.Country}"/>
-                <Label Text="{Binding SelectedLocation.MemoriaAddress.Street}"/>
-                <Label Text="{Binding SelectedLocation.MemoriaAddress.HouseNumber}"/>
+        <VerticalStackLayout IsVisible="{Binding IsLoading}" HorizontalOptions="Center" VerticalOptions="Center" Spacing="15">
+            <ActivityIndicator IsRunning="{Binding IsLoading}" HeightRequest="50" WidthRequest="50"/>
+            <Label IsVisible="{Binding IsLoading}" Text="Loading Memoria..."/>
+        </VerticalStackLayout>
+
+        <Grid Margin="5">
+            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+                <VerticalStackLayout Grid.Row="0" Spacing="10">
+            <Label Text="{Binding SelectedLocation.Name}" FontSize="36" FontAttributes="Bold"/>
+
+                <Grid ColumnDefinitions="*,*">
+                    <VerticalStackLayout>
+                        <Label Text="Event" FontAttributes="Bold"/>
+                        <Label Text="{Binding SelectedLocation.EventDate, StringFormat='{0:dd/MM/yyyy HH:mm}'}"/>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="1">
+                        <Label Text="Type" FontAttributes="Bold"/>
+                        <Label Text="{Binding SelectedLocation.Occation}"/>
+                    </VerticalStackLayout>
+                </Grid>
+
+                <Border Padding="10" StrokeShape="RoundRectangle 10">
+                    <Label>
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="{Binding SelectedLocation.MemoriaAddress.Street}"/>
+                                <Span Text=" "/>
+                                <Span Text="{Binding SelectedLocation.MemoriaAddress.HouseNumber}"/>
+                                <Span Text=", "/>
+                                <Span Text="{Binding SelectedLocation.MemoriaAddress.City}"/>
+                                <Span Text=", "/>
+                                <Span Text="{Binding SelectedLocation.MemoriaAddress.Country}"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </Border>
+                    <Label Text="{Binding SelectedLocation.Description}" MaxLines="3" LineBreakMode="TailTruncation"/>
+                    <Label Text="Photos" FontAttributes="Bold"/>
             </VerticalStackLayout>
 
-            <Label Text="{Binding SelectedLocation.Description}" LineBreakMode="WordWrap"/>
-            <Label Text="Photos" FontAttributes="Bold"/>
-
-
-            <CollectionView ItemsSource="{Binding TemporaryItems}" ItemsLayout="HorizontalList" HeightRequest="300">
-                <CollectionView.EmptyView>
-                    <Label Text="This Memoria contains no images" HorizontalOptions="Center" VerticalOptions="Center"/>
+            <CollectionView Grid.Row="1" ItemsSource="{Binding TemporaryItems}" ItemsLayout="HorizontalList">
+                <CollectionView.EmptyView  IsVisible="{Binding IsLoading, Converter={StaticResource LoadingConvertion}}">
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label FontFamily="appIcons" Text="&#xea0f;" FontSize="70" TextColor="DarkRed" HorizontalOptions="Center"/>
+                        <Label Text="There are no images to show."/>
+                    </VerticalStackLayout>
                 </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="images:MediaItem">
-                        <HorizontalStackLayout Padding="8" Spacing="10">
+                        <HorizontalStackLayout Padding="8" Spacing="15">
                             <!-- Foto -->
                             <Image
                                     Source="{Binding FilePath}"
                                     HeightRequest="300"
                                     WidthRequest="300"
-                                    Aspect="AspectFill" 
-                                Margin="5">
+                                    Aspect="AspectFill" >
                             </Image>
                         </HorizontalStackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <Button Text="Update" Command="{Binding UpdateMemoriaCommand}" CommandParameter="{Binding SelectedLocation.Id}"/>
-            <Button x:Name="DeleteMemoriaButton" Clicked="DeleteMemoriaButton_Clicked" Text="Delete" 
-                    BackgroundColor="Red" TextColor="White" BindingContext="{Binding SelectedLocation.Id}"/>
-        </VerticalStackLayout>
-    </ScrollView>
+            <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="5">
+
+                <Button Text="Update" Command="{Binding UpdateMemoriaCommand}" BackgroundColor="Orange"
+                        Style="{x:StaticResource FullButtons}" 
+                        CommandParameter="{Binding SelectedLocation.Id}"
+                        Grid.Column="0"/>
+            
+                <Button x:Name="DeleteMemoriaButton" Clicked="DeleteMemoriaButton_Clicked" Text="Delete" 
+                    BackgroundColor="Red" Style="{x:StaticResource FullButtons}" 
+                        BindingContext="{Binding SelectedLocation.Id}"
+                        Grid.Column="1"/>
+            </Grid>
+        </Grid>
+
+    </Grid>
 </ContentPage>
