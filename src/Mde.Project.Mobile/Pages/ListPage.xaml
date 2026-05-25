@@ -18,14 +18,14 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" ColumnDefinitions="2*,*" ColumnSpacing="5">
-            <Border Grid.Column="0" Style="{x:StaticResource SearchBorders}" HeightRequest="{x:StaticResource ButtonHeight}" 
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="5">
+            <Border Grid.ColumnSpan="{Binding SearchColumnSpan}" Grid.Column="0" Style="{x:StaticResource SearchBorders}" HeightRequest="{x:StaticResource ButtonHeight}" 
                     BackgroundColor="{DynamicResource Secondary}" Stroke="{DynamicResource Primary}">
                 <SearchBar Placeholder="Filter..." Text="{Binding SearchTerm}" Keyboard="Text" TextColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource SecondaryDarkText}}"/>
                 </Border>
 
             <Button Grid.Column="1" Command="{Binding NavigationCommand}" Style="{x:StaticResource FullButtons}" 
-                    CommandParameter="map" Text="Map" />
+                    CommandParameter="map" Text="Map" IsVisible="{Binding ShowMapButton}" />
         </Grid>
 
         <Grid Grid.Row="1">

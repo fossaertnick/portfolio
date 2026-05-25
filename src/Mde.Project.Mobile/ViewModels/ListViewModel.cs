@@ -34,6 +34,9 @@ namespace Mde.Project.Mobile.ViewModels
                 }
             }
         }
+        public bool ShowMapButton => DeviceInfo.Current.Platform == DevicePlatform.Android;
+        public int SearchColumnSpan => ShowMapButton ? 1 : 2;
+
 
         // Commands
         public ICommand InitializeMemoriaCommand { get; }
