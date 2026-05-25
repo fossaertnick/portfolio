@@ -286,6 +286,7 @@ namespace Mde.Project.Mobile.ViewModels
                 Country = addressFound.Country;
                 City = addressFound.City;
                 Street = addressFound.Street;
+                HouseNumber = addressFound.HouseNumber ?? string.Empty;
                 Latitude = currentCoordinates.Latitude;
                 Longitude = currentCoordinates.Longitude;
             }

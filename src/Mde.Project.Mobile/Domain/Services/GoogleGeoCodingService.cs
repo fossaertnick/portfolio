@@ -2,6 +2,7 @@
 using Mde.Project.Mobile.Core.Entities;
 using Mde.Project.Mobile.Core.Entities.Models;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
+using System.Globalization;
 using System.Text.Json;
 
 namespace Mde.Project.Mobile.Domain.Locations.Mock
@@ -52,10 +53,43 @@ namespace Mde.Project.Mobile.Domain.Locations.Mock
             {
                 if (coordinates == null) return ResultModel<Address>.Failure("Coordinates were null", "No valid coordinates received.");
 
-                var placemarks = await Geocoding.Default.GetPlacemarksAsync(coordinates.Latitude, coordinates.Longitude);
+
+                var lat = coordinates.Latitude.ToString(CultureInfo.InvariantCulture);
+                var lng = coordinates.Longitude.ToString(CultureInfo.InvariantCulture);
+                var url = $"https://maps.googleapis.com/maps/api/geocode/json?latlng={lat},{lng}&key={Constants.GeoCodeaApiKey}";
+                var json = await _httpClient.GetStringAsync(url);
+                var response = JsonSerializer.Deserialize<GoogleResponse>(json);
+                var result = response?.results?.FirstOrDefault();
+                if (result == null) return ResultModel<Address>.Failure("No address found.", "");
+
+                var address = new Address
+                {
+                    Country = result.address_components?
+                        .FirstOrDefault(x => x.types.Contains("country"))?.long_name,
+
+                    City =
+                        result.address_components?
+                            .FirstOrDefault(x => x.types.Contains("locality"))?.long_name
+                        ?? result.address_components?
+                            .FirstOrDefault(x => x.types.Contains("postal_town"))?.long_name
+                        ?? result.address_components?
+                            .FirstOrDefault(x => x.types.Contains("administrative_area_level_2"))?.long_name
+                        ?? result.address_components?
+                            .FirstOrDefault(x => x.types.Contains("administrative_area_level_1"))?.long_name,
+
+                    Street = result.address_components?
+                        .FirstOrDefault(x => x.types.Contains("route"))?.long_name,
+
+                    HouseNumber = result.address_components?
+                        .FirstOrDefault(x => x.types.Contains("street_number"))?.long_name,
+                };
+
+                return ResultModel<Address>.Success(address);
+
+                /*var placemarks = await Geocoding.Default.GetPlacemarksAsync(coordinates.Latitude, coordinates.Longitude);
                 var place = placemarks?.FirstOrDefault();
                 if (place == null) return ResultModel<Address>.Failure("No placemark found", "No address found for this location.");
-
+                
                 var address = new Address
                 {
                     Country = place.CountryName,
@@ -64,12 +98,13 @@ namespace Mde.Project.Mobile.Domain.Locations.Mock
                     HouseNumber = place.SubThoroughfare ?? string.Empty,
                 };
 
-                return ResultModel<Address>.Success(address);
+                return ResultModel<Address>.Success(address);*/
             }
             catch(Exception ex)
             {
                 return ResultModel<Address>.Failure(ex.ToString(), "Something went wrong while picking up the address.");
             }
         }
+
     }
 }
