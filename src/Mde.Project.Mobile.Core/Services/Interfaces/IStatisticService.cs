@@ -9,10 +9,6 @@ namespace Mde.Project.Mobile.Core.Services.Interfaces
     public interface IStatisticService
     {
         // methoden
-        Task<ResultModel<string>> GetTotalMemorias();
-        Task<ResultModel<string>> GetMemoriasByOccasionAsync(OccationType type);
-        Task<ResultModel<string>> GetPhotoCountAsync();
-        Task<ResultModel<string>> GetVideoCountAsync();
-        Task<ResultModel<string>> GetFavoriteCountryAsync();
+        Task<ResultModel<StatisticsModel>> GetStatisticsAsync();
     }
 }

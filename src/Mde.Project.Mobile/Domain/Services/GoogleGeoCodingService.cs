@@ -61,6 +61,7 @@ namespace Mde.Project.Mobile.Domain.Locations.Mock
                     Country = place.CountryName,
                     City = place.Locality ?? place.SubAdminArea ?? place.AdminArea,
                     Street = place.Thoroughfare ?? place.FeatureName,
+                    HouseNumber = place.SubThoroughfare ?? string.Empty,
                 };
 
                 return ResultModel<Address>.Success(address);

@@ -15,22 +15,9 @@ public partial class SettingsPage : ContentPage
     }
 
     // methoden
-    private async void AvatarButton_Clicked(object sender, EventArgs e)
+    protected async override void OnAppearing()
     {
-        bool bevestiging = await DisplayAlertAsync(
-                "Bevestigen",
-                "Weet je zeker dat je je avatar wilt veranderen?",
-                "Ja",
-                "Nee"
-        );
-
-        if (bevestiging)
-        {
-            _viewModel.ChangeAvatarCommand.Execute(null);
-        }
-        else
-        {
-            return;
-        }
+        base.OnAppearing();
+        await _viewModel.Refresh();
     }
 }

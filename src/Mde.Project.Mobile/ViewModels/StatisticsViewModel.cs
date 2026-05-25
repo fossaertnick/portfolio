@@ -19,7 +19,7 @@ namespace Mde.Project.Mobile.ViewModels
         private string andereMemoria;
         private string totalMemoriaFotos;
         private string totalMemoriaVideos;
-        private string favoriteMemoriaCity;
+        private string favoriteMemoriaCountry;
 
         // properties
         public string TotalMemorias
@@ -78,12 +78,12 @@ namespace Mde.Project.Mobile.ViewModels
                 SetProperty(ref totalMemoriaVideos, value);
             }
         }
-        public string FavoriteMemoriaCity
+        public string FavoriteMemoriaCountry
         {
-            get { return favoriteMemoriaCity; }
+            get { return favoriteMemoriaCountry; }
             set
             {
-                SetProperty(ref favoriteMemoriaCity, value);
+                SetProperty(ref favoriteMemoriaCountry, value);
             }
         }
 
@@ -104,14 +104,17 @@ namespace Mde.Project.Mobile.ViewModels
             try
             {
                 IsBusy = true;
-                TotalMemorias = await HandleResult( await _statisticService.GetTotalMemorias()) ?? "X";
-                WerkMemoria = await HandleResult(await _statisticService.GetMemoriasByOccasionAsync(OccationType.Work)) ?? "X";
-                ReisMemoria = await HandleResult(await _statisticService.GetMemoriasByOccasionAsync(OccationType.Travel)) ?? "X";
-                UitgaanMemoria = await HandleResult(await _statisticService.GetMemoriasByOccasionAsync(OccationType.Friends)) ?? "X";
-                AndereMemoria = await HandleResult(await _statisticService.GetMemoriasByOccasionAsync(OccationType.Other)) ?? "X";
-                TotalMemoriaFotos = await HandleResult(await _statisticService.GetPhotoCountAsync()) ?? "X";
-                TotalMemoriaVideos = await HandleResult(await _statisticService.GetVideoCountAsync()) ?? "X";
-                FavoriteMemoriaCity = await HandleResult(await _statisticService.GetFavoriteCountryAsync()) ?? "X";
+                var result = await HandleResult(await _statisticService.GetStatisticsAsync());
+                if (result == null) return;
+
+                TotalMemorias = result.TotalMemorias;
+                WerkMemoria = result.WerkMemoria;
+                ReisMemoria = result.ReisMemoria;
+                UitgaanMemoria = result.UitgaanMemoria;
+                AndereMemoria = result.AndereMemoria;
+                TotalMemoriaFotos = result.TotalMemoriaFotos;
+                TotalMemoriaVideos = result.TotalMemoriaVideo;
+                FavoriteMemoriaCountry = result.FavoriteMemoriaCountry;
             }
             finally
             {

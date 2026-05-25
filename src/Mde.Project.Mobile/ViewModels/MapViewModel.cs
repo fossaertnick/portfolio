@@ -5,6 +5,7 @@ using Mde.Project.Mobile.Domain.Locations;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Mde.Project.Mobile.Pages;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace Mde.Project.Mobile.ViewModels
@@ -13,6 +14,7 @@ namespace Mde.Project.Mobile.ViewModels
     {
         private readonly ILocationService _locationService;
         private readonly IMemoriaService _memoriaService;
+        private readonly IGeoCodingService _geoCoding;
 
         // fields
         private Location? currentLocation;
@@ -35,10 +37,11 @@ namespace Mde.Project.Mobile.ViewModels
         });
 
         // constructor
-        public MapViewModel(ILocationService locationService, IMemoriaService memoriaService)
+        public MapViewModel(ILocationService locationService, IMemoriaService memoriaService, IGeoCodingService geoCoding)
         {
             _locationService = locationService;
             _memoriaService = memoriaService;
+            _geoCoding = geoCoding;
         }
 
         // methoden
@@ -91,6 +94,28 @@ namespace Mde.Project.Mobile.ViewModels
             finally
             {
                 IsBusy = false;
+            }
+        }
+        public async Task MapClickedCreateMemoria(Location coordinates)
+        {
+            try
+            {
+                var result = await _geoCoding.ReverseGeoCodingAsync(coordinates);
+                if (!result.IsSucces) return;
+
+                await Shell.Current.GoToAsync(nameof(CreateOrUpdatePage), new Dictionary<string, object>
+                {
+                    ["Country"] = result.Data.Country,
+                    ["City"] = result.Data.City,
+                    ["Street"] = result.Data.Street,
+                    ["HouseNumber"] = result.Data.HouseNumber ?? string.Empty,
+                    ["Latitude"] = coordinates.Latitude,
+                    ["Longitude"] = coordinates.Longitude
+                });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error during map click handling: {ex.Message}");
             }
         }
     }

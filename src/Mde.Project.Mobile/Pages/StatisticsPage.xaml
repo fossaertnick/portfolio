@@ -173,7 +173,7 @@
                     FontAttributes="Bold"/>
 
                 <Label
-                    Text="{Binding FavoriteMemoriaCity}"
+                    Text="{Binding FavoriteMemoriaCountry}"
                     FontSize="26"
                     HorizontalTextAlignment="Center"/>
 

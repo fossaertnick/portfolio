@@ -14,33 +14,15 @@ public partial class CreateOrUpdatePage : ContentPage
     }
 
     // methoden
-    private async void CancelButton_Clicked(object sender, EventArgs e)
-    {
-        bool bevestiging = await DisplayAlertAsync(
-            "Bevestigen",
-            "Weet je zeker dat je wilt annuleren?",
-            "Ja",
-            "Nee"
-        );
-
-        if (bevestiging)
-        {
-		    _viewModel.CancelCommand.Execute("cancel");
-        }
-        else
-        {
-            return;
-        }
-    }
     private async void MediaChoice_Clicked(object sender, EventArgs e)
     {
         string action = await Application.Current.MainPage.DisplayActionSheet
                 (
-                    "Kies optie",
-                    "Annuleer",
+                    "Choose option",
+                    "Cancel",
                     null,
                     "Camera",
-                    "Galerij"
+                    "Library"
                 );
 
         switch (action)
@@ -48,7 +30,7 @@ public partial class CreateOrUpdatePage : ContentPage
             case "Camera":
                 _viewModel.TakePhotoCommand.Execute(null);
                 break;
-            case "Galerij":
+            case "Library":
                 _viewModel.PickPhotoCommand.Execute(null);
                 break;
             case "Video":

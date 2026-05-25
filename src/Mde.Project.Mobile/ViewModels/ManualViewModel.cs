@@ -9,7 +9,7 @@ namespace Mde.Project.Mobile.ViewModels
 {
     public class ManualViewModel : BaseViewModel
     {
-        private readonly IManualService _manualService;
+        private readonly IRawToUserService _manualService;
 
         // fields
         private ObservableCollection<ManualSection> sections = new ObservableCollection<ManualSection>();
@@ -28,7 +28,7 @@ namespace Mde.Project.Mobile.ViewModels
         public ICommand InitializeCommand { get; }
 
         // constructor
-        public ManualViewModel(IManualService manualService)
+        public ManualViewModel(IRawToUserService manualService)
         {
             _manualService = manualService;
             InitializeCommand = new Command(async () => await LoadManual());

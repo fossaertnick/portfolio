@@ -19,7 +19,7 @@
             </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" ColumnDefinitions="2*,*" ColumnSpacing="5">
-                <Border Grid.Column="0" Style="{x:StaticResource SearchBorders}" StrokeShape="10">
+            <Border Grid.Column="0" Style="{x:StaticResource SearchBorders}" StrokeShape="10" HeightRequest="{x:StaticResource ButtonHeight}">
                     <SearchBar Placeholder="Filter..." Text="{Binding SearchTerm}" Keyboard="Text" />
                 </Border>
 

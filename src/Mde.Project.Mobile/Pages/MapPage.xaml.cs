@@ -7,6 +7,7 @@ namespace Mde.Project.Mobile.Pages;
 public partial class MapPage : ContentPage
 {
     private readonly IMapService _mapService;
+    private readonly IGeoCodingService _geoCoding;
     private readonly MapViewModel _viewModel;
 
     // constructor
@@ -44,5 +45,10 @@ public partial class MapPage : ContentPage
             _mapService.MoveTo(_viewModel.CurrentLocation);
         }
         _mapService.SetPins(_viewModel.Locations);
-    } 
+    }
+
+    public async void MapView_MapClicked(object sender, MapClickedEventArgs e)
+    {
+        await _viewModel.MapClickedCreateMemoria(e.Location);
+    }
 }

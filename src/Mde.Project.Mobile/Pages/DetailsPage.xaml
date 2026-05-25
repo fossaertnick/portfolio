@@ -14,7 +14,7 @@
 
         <VerticalStackLayout IsVisible="{Binding IsLoading}" HorizontalOptions="Center" VerticalOptions="Center" Spacing="15">
             <ActivityIndicator IsRunning="{Binding IsLoading}" HeightRequest="50" WidthRequest="50"/>
-            <Label IsVisible="{Binding IsLoading}" Text="Loading Memoria..."/>
+            <Label Text="Loading Memoria..."/>
         </VerticalStackLayout>
 
         <Grid Margin="5">

@@ -182,6 +182,16 @@ namespace Mde.Project.Mobile.ViewModels
                 {
                     await InitUpdate(id);
                 }
+                else if (query.ContainsKey("Latitude") && query.ContainsKey("Longitude"))
+                {
+                    InitCreate();
+                    Country = query["Country"]?.ToString() ?? string.Empty;
+                    City = query["City"]?.ToString() ?? string.Empty;
+                    Street = query["Street"]?.ToString() ?? string.Empty;
+                    HouseNumber = query["HouseNumber"]?.ToString() ?? string.Empty;
+                    Latitude = Convert.ToDouble(query["Latitude"]);
+                    Longitude = Convert.ToDouble(query["Longitude"]);
+                }
                 else
                 {
                     InitCreate();
@@ -451,7 +461,16 @@ namespace Mde.Project.Mobile.ViewModels
         }
         private async Task ExecuteCancelCommand(string situation)
         {
-            if (situation is string && situation == "cancel")
+            if (situation == "cancel")
+            {
+                bool bevestiging = await Shell.Current.DisplayAlertAsync(
+                "Cancel",
+                "You sure you want to cancel this action?",
+                "Yes",
+                "No"
+                );
+
+                if (!bevestiging) return;
             {
                 try
                 {
@@ -467,6 +486,8 @@ namespace Mde.Project.Mobile.ViewModels
                 {
                     IsBusy = false;
                 }
+            }
+
             }
         }
         private (bool, string) CheckIncomingValues()

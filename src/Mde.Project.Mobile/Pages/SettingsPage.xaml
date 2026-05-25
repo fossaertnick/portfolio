@@ -16,6 +16,9 @@
             <RadioButton Content="BloodRed"/>
             <RadioButton Content="DeepBlue"/>
         </VerticalStackLayout>
-
+        <HorizontalStackLayout>
+            <Label Text="Notifications"/>
+            <Switch IsToggled="{Binding NotificationsEnabled}"/>
+        </HorizontalStackLayout>
     </VerticalStackLayout>
 </ContentPage>

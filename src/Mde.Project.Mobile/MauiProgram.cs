@@ -10,6 +10,7 @@ using Mde.Project.Mobile.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Handlers;
+using Plugin.LocalNotification;
 
 namespace Mde.Project.Mobile
 {
@@ -21,7 +22,8 @@ namespace Mde.Project.Mobile
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
-                .UseMauiCommunityToolkitMediaElement(false);
+                .UseMauiCommunityToolkitMediaElement(false)
+                .UseLocalNotification();
 #if ANDROID
             builder.UseMauiMaps();
 #endif
@@ -110,7 +112,7 @@ namespace Mde.Project.Mobile
             builder.Services.AddScoped<IMediaService, MediaService>();
             builder.Services.AddScoped<IStatisticService, StatisticService>();
             builder.Services.AddScoped<ILocationService, LocationService>();
-            builder.Services.AddScoped<IManualService, ManualService>();
+            builder.Services.AddScoped<IRawToUserService, RawToUserService>();
             builder.Services.AddScoped<ISourceOfTruthService, SourceOfTruthService>();
             builder.Services.AddScoped<ILocalMemoriaCache, LocalMemoriaCache>();
 
