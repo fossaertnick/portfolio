@@ -116,7 +116,7 @@ namespace Mde.Project.Mobile
             builder.Services.AddScoped<ISourceOfTruthService, SourceOfTruthService>();
             builder.Services.AddScoped<ILocalMemoriaCache, LocalMemoriaCache>();
 
-            builder.Services.AddSingleton<AppCloser>();
+            builder.Services.AddSingleton<AppOptionsService>();
 
             if (OperatingSystem.IsWindows())
             {

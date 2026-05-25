@@ -16,20 +16,20 @@
         <Setter Property="Margin" Value="{StaticResource DefaultMargin}"/>
         <Setter Property="HorizontalOptions" Value="Center"/>
         <Setter Property="VerticalOptions" Value="Center"/>
-        <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
+        <Setter Property="BackgroundColor" Value="{DynamicResource Primary}"/>
         <Setter Property="FontAttributes" Value="Bold"/>
-        <Setter Property="TextColor" Value="White" />
+        <Setter Property="TextColor" Value="{DynamicResource White}" />
     </Style>
     <Style x:Key="FullButtons" TargetType="Button">
         <Setter Property="HeightRequest" Value="{StaticResource ButtonHeight}"/>
         <Setter Property="Margin" Value="{StaticResource DefaultMargin}"/>
         <Setter Property="HorizontalOptions" Value="Fill"/>
         <Setter Property="VerticalOptions" Value="Center"/>
-        <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
+        <Setter Property="BackgroundColor" Value="{DynamicResource Primary}"/>
         <Setter Property="FontAttributes" Value="Bold"/>
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="CornerRadius" Value="10"/>
-        <Setter Property="TextColor" Value="White" />
+        <Setter Property="TextColor" Value="{DynamicResource White}" />
     </Style>
     <Style x:Key="SearchBorders" TargetType="Border">
         <Setter Property="Padding" Value="10,0,0,0"/>

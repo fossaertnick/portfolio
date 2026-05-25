@@ -19,7 +19,7 @@
             </Grid.RowDefinitions>
         
             <Grid Grid.Row="0" ColumnDefinitions="*,2*" ColumnSpacing="5">
-                <Label Text="{Binding EditMode}" TextColor="{x:StaticResource Primary}" FontAttributes="Bold" HorizontalTextAlignment="Start" VerticalTextAlignment="Center" FontSize="35" />
+                <Label Text="{Binding EditMode}" FontAttributes="Bold" HorizontalTextAlignment="Start" VerticalTextAlignment="Center" FontSize="35" TextColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}"/>
                 <Border Grid.Column="1" Style="{x:StaticResource SearchBorders}">
                     <Entry Text="{Binding Name}" Placeholder="Title ... " Keyboard="Text"/>
                 </Border>
@@ -66,7 +66,7 @@
 
                 <Button x:Name="MediaChoice" Text="Choose proof of fun here." Clicked="MediaChoice_Clicked" Style="{x:StaticResource FullButtons}"/>
 
-                <CollectionView ItemsSource="{Binding TemporaryItems}" ItemsLayout="HorizontalList" Margin="0,25,0,0" HorizontalOptions="Center">
+                <CollectionView ItemsSource="{Binding TemporaryItems}" ItemsLayout="HorizontalList" Margin="0,20,0,20" HorizontalOptions="Center">
                     <CollectionView.EmptyView>
                         <HorizontalStackLayout VerticalOptions="Center" Spacing="15" HorizontalOptions="Center">
                             <Label FontFamily="appIcons" Text="&#xea0f;" FontSize="25" TextColor="DarkRed" />
@@ -115,7 +115,13 @@
             <Grid Grid.Row="3" ColumnDefinitions="*,*" ColumnSpacing="5">
                 <Button Command="{Binding CreateCommand}"
                         Text="{Binding EditMode}"
-                        Style="{x:StaticResource FullButtons}"/>
+                        Style="{x:StaticResource FullButtons}">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsUpdateMode}" Value="true">
+                            <Setter Property="BackgroundColor" Value="Orange"/>
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
                 <Button 
                 Text="Cancel"
                 Command="{Binding CancelCommand}" CommandParameter="cancel"

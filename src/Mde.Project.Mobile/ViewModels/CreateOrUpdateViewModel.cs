@@ -42,10 +42,12 @@ namespace Mde.Project.Mobile.ViewModels
                 if(SetProperty(ref editMode, value))
                 {
                     OnPropertyChanged(nameof(IsCreateMode));
+                    OnPropertyChanged(nameof(IsUpdateMode));
                 }
             }
         }
         public bool IsCreateMode => EditMode == EditMode.Create;
+        public bool IsUpdateMode => EditMode == EditMode.Update;
         public Guid Id { get; set; }
         public string Name
         {
@@ -260,7 +262,7 @@ namespace Mde.Project.Mobile.ViewModels
             Street = string.Empty;
             HouseNumber = string.Empty;
             EventDate = DateTime.Now;
-            eventTime = DateTime.Now.TimeOfDay;
+            EventTime = DateTime.Now.TimeOfDay;
             Latitude = 0;
             Longitude = 0;
         }

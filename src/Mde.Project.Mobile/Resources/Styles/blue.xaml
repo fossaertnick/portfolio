@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Mde.Project.Mobile.Resources.Styles.blue">
+
+    <!-- Primary kleuren -->
+    <Color x:Key="Primary">#2196F3</Color>
+    <Color x:Key="PrimaryDark">#1565C0</Color>
+    <Color x:Key="PrimaryDarkText">#FFFFFF</Color>
+
+    <!-- Secundaire accenten -->
+    <Color x:Key="Secondary">#BBDEFB</Color>
+    <Color x:Key="SecondaryDarkText">#000000</Color>
+
+    <!-- Extra accent -->
+    <Color x:Key="Tertiary">#64B5F6</Color>
+    <!-- Tekst -->
+    <Color x:Key="White">#FFFFFF</Color>
+    <Color x:Key="Black">#000000</Color>
+</ResourceDictionary>

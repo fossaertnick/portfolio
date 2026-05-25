@@ -7,7 +7,7 @@ namespace Mde.Project.Mobile.Domain.Services
 {
     public class RawToUserService : IRawToUserService
     {
-        // methoden
+        // methoden (manual to user)
         public async Task<ResultModel<string>> HelpTheUserAsync()
         {
             try
@@ -29,7 +29,7 @@ namespace Mde.Project.Mobile.Domain.Services
             }
         }
 
-
+        // methoden (chatterbox to user)
         public async Task InitializeNotifications()
         {
             LocalNotificationCenter.Current.CancelAll();

@@ -6,14 +6,14 @@ namespace Mde.Project.Mobile
 {
     public partial class AppShell : Shell
     {
-        private readonly AppCloser _closer;
+        private readonly AppOptionsService _closer;
         private readonly RawToUserService _toUser;
 
         // constructor
         public AppShell()
         {
             InitializeComponent();
-            _closer = new AppCloser();
+            _closer = new AppOptionsService();
             _toUser = new RawToUserService();
         }
 

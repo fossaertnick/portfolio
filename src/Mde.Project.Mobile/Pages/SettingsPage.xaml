@@ -8,14 +8,36 @@
 
         <Label Text="Settings" FontSize="35" HorizontalOptions="End" Margin="0,0,30,0"/>
 
-        <VerticalStackLayout Spacing="10" HorizontalOptions="Center" Margin="25,25,25,0"
-                                   RadioButtonGroup.GroupName="Occation" 
-                                   RadioButtonGroup.SelectedValue="{Binding ColorPalet}">
-            <RadioButton Content="App green"/>
-            <RadioButton Content="Light/Dark"/>
-            <RadioButton Content="BloodRed"/>
-            <RadioButton Content="DeepBlue"/>
+
+        <VerticalStackLayout Spacing="15"
+                         Padding="20"
+                         BackgroundColor="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource OffBlack}}">
+
+            <Label Text="Choose theme"
+               FontSize="22"
+               TextColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
+
+            <Button x:Name="systemColor" Text="System" 
+                    BackgroundColor="{AppThemeBinding
+                        Light={DynamicResource Black},
+                        Dark={DynamicResource White}}"
+
+                    TextColor="{AppThemeBinding
+                        Light={DynamicResource White},
+                        Dark={DynamicResource Black}}"
+                Clicked="systemColor_Clicked" />
+
+            <Button x:Name="purpleColor" Text="purple" TextColor="Black" BackgroundColor="#BA68C8"
+               Clicked="purpleColor_Clicked"/>
+
+            <Button x:Name="greenColor" Text="Natural Green"  TextColor="Black" BackgroundColor="#66BB6A"
+               Clicked="greenColor_Clicked"/>
+
+            <Button x:Name="blueColor" Text="Sky Blue" TextColor="Black" BackgroundColor="#64B5F6"
+                Clicked="blueColor_Clicked" />
+
         </VerticalStackLayout>
+
         <HorizontalStackLayout>
             <Label Text="Notifications"/>
             <Switch IsToggled="{Binding NotificationsEnabled}"/>

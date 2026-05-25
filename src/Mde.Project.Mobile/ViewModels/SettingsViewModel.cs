@@ -1,11 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
-using Mde.Project.Mobile.Pages;
 using Plugin.LocalNotification;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
+using Microsoft.Maui.Storage;
+using Mde.Project.Mobile.Core.Entities.Enums;
 
 namespace Mde.Project.Mobile.ViewModels
 {
@@ -54,6 +51,10 @@ namespace Mde.Project.Mobile.ViewModels
         {
             AppInfo.Current.ShowSettingsUI();
             return Task.CompletedTask;
+        }
+        public void SaveColorChoice(ColorChoice choice)
+        {
+            Preferences.Set("color_choice", (int)choice);
         }
     }
 }
