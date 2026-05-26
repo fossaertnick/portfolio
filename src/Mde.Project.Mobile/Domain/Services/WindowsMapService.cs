@@ -89,7 +89,7 @@ namespace Mde.Project.Mobile.Domain.Services
                 return ResultModel<bool>.Failure(ex.ToString(), "Something went wrong with the moving of the map.");
             }
         }
-        public async Task<ResultModel<bool>> SetPins(IEnumerable<Memoria> items)
+        public async Task<ResultModel<bool>> SetPins(IEnumerable<MemoriaList> items)
         {
             try
             {
@@ -99,10 +99,8 @@ namespace Mde.Project.Mobile.Domain.Services
                 await _webView.EvaluateJavaScriptAsync("clearMarkers()");
                 foreach (var pin in items)
                 {
-                    if (pin.MemoriaAddress == null) { Console.WriteLine($"Memoria {pin.Id} had no address"); continue; }
-
                     var safeTitle = pin.Name.Replace("'", "\\");
-                    var js = $"addMarker({pin.MemoriaAddress.Latitude}, {pin.MemoriaAddress.Longitude}, '{pin.Name}')";
+                    var js = $"addMarker({pin.Latitude}, {pin.Longitude}, '{pin.Name}')";
                     await _webView.EvaluateJavaScriptAsync(js);
                 }
 

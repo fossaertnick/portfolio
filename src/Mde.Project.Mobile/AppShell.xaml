@@ -4,28 +4,31 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:Mde.Project.Mobile.Pages"
-    xmlns:local="clr-namespace:Mde.Project.Mobile">
+    xmlns:local="clr-namespace:Mde.Project.Mobile"
+    Shell.BackgroundColor="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource Black}}"
+    Shell.TitleColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}"
+    Shell.ForegroundColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}">
 
-    <ShellContent
-            Route="mainPage"
-            ContentTemplate="{DataTemplate pages:MainPage}"/>
 
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
-        <Tab Title="Settings">
-            <ShellContent
-            ContentTemplate="{DataTemplate pages:SettingsPage}"
-            Route="settingsPage" />
-        </Tab>
-        <Tab Title="Statistics">
-            <ShellContent
-            ContentTemplate="{DataTemplate pages:StatisticsPage}"
-            Route="statisticsPage" />
-        </Tab>
         <Tab Title="Main">
             <ShellContent
             ContentTemplate="{DataTemplate pages:MainPage}"
             Route="mainPage" />
         </Tab>
+            
+        <Tab Title="Settings">
+            <ShellContent
+            ContentTemplate="{DataTemplate pages:SettingsPage}"
+            Route="settingsPage" />
+        </Tab>
+        
+        <Tab Title="Statistics">
+            <ShellContent
+            ContentTemplate="{DataTemplate pages:StatisticsPage}"
+            Route="statisticsPage" />
+        </Tab>
+        
     </FlyoutItem>
     <MenuItem x:Name="ManualPage" Text="Handleiding" Clicked="ManualPage_Clicked"/>
     <MenuItem x:Name="Logout" Text="Logout" Clicked="Logout_Clicked"/>

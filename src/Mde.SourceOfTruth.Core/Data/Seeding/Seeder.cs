@@ -1,9 +1,6 @@
 ﻿using Mde.SourceOfTruth.Core.Entities;
 using Mde.SourceOfTruth.Core.Entities.enums;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mde.SourceOfTruth.Core.Data.Seeding
 {
@@ -123,31 +120,170 @@ namespace Mde.SourceOfTruth.Core.Data.Seeding
                 },
             };
             var images = new List<MediaItem>
-            {
+            { // fotos voor parijs
                 new MediaItem
                 {
-                    Id = Guid.Parse("22222222-2222-2222-2222-222222222220"),
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222221"),
                     Type = MediaType.Photo,
-                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/france.jpg",
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/paris1.jpg",
                     CreatedAt = new DateTime(2025, 01, 03),
                     MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
                 },
                 new MediaItem
                 {
-                    Id = Guid.Parse("22222222-2222-2222-2222-222222222221"),
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
                     Type = MediaType.Photo,
-                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/frankrijk.jpg",
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/paris2.jpg",
                     CreatedAt = new DateTime(2025, 01, 13),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                },
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222223"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/paris3.jpg",
+                    CreatedAt = new DateTime(2025, 01, 27),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                },
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222224"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/paris4.jpg",
+                    CreatedAt = new DateTime(2025, 01, 03),
                     MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
                 },
                 new MediaItem
                 {
                     Id = Guid.Parse("22222222-2222-2222-2222-222222222225"),
                     Type = MediaType.Photo,
-                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/home.jpg",
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/paris5.jpg",
+                    CreatedAt = new DateTime(2025, 01, 13),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                },
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222226"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/paris6.jpg",
                     CreatedAt = new DateTime(2025, 01, 27),
                     MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
-                }
+                },
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222227"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/paris7.jpg",
+                    CreatedAt = new DateTime(2025, 01, 13),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                },
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222228"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/paris8.jpg",
+                    CreatedAt = new DateTime(2025, 01, 27),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                },
+                // fotos rome/venetie
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222229"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/rome1.jpg",
+                    CreatedAt = new DateTime(2025, 01, 03),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                },
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222230"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/rome2.jpg",
+                    CreatedAt = new DateTime(2025, 01, 03),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                },
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222231"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/ventie1.jpg",
+                    CreatedAt = new DateTime(2025, 01, 03),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                },
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222232"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/venetie2.jpg",
+                    CreatedAt = new DateTime(2025, 01, 03),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                },
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222233"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/venetie3.jpg",
+                    CreatedAt = new DateTime(2025, 01, 05),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                },
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222234"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/venetie4.jpg",
+                    CreatedAt = new DateTime(2025, 01, 05),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                },
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222235"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/venetie5.jpg",
+                    CreatedAt = new DateTime(2025, 01, 11),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                },
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222236"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/venetie6.jpg",
+                    CreatedAt = new DateTime(2025, 01, 11),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                },
+                // fotos berlijn
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222237"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/venetie7.jpg",
+                    CreatedAt = new DateTime(2025, 01, 11),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000003"),
+                },
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222238"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/venetie8.jpg",
+                    CreatedAt = new DateTime(2025, 01, 11),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000003"),
+                },
+                // fotos barcelona
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222239"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/sagrada1.jpg",
+                    CreatedAt = new DateTime(2025, 01, 27),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000004"),
+                },
+                new MediaItem
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222240"),
+                    Type = MediaType.Photo,
+                    FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/sagrada2.jpg",
+                    CreatedAt = new DateTime(2025, 01, 27),
+                    MemoriaId = Guid.Parse("00000000-0000-0000-0000-000000000004"),
+                },
             };
 
             builder.Entity<Memoria>().HasData(memorias);

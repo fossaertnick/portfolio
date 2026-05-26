@@ -11,10 +11,10 @@
         Padding="25,0,25,25"
         Spacing="25">
 
-            <!-- Titel -->
+        <!-- Titel -->
         <Label
             Text="Statistics"
-            FontSize="34"
+            FontSize="30"
             FontAttributes="Bold"
             HorizontalOptions="Center"/>
 
@@ -44,9 +44,9 @@
 
 
             <!-- Categorieën -->
-            <VerticalStackLayout Spacing="10">
+        <VerticalStackLayout Spacing="10">
 
-                <Label
+            <Label
                 Text="Categorieën"
                 FontAttributes="Bold"
                 FontSize="20"/>

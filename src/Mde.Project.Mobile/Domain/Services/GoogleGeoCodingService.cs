@@ -85,20 +85,6 @@ namespace Mde.Project.Mobile.Domain.Locations.Mock
                 };
 
                 return ResultModel<Address>.Success(address);
-
-                /*var placemarks = await Geocoding.Default.GetPlacemarksAsync(coordinates.Latitude, coordinates.Longitude);
-                var place = placemarks?.FirstOrDefault();
-                if (place == null) return ResultModel<Address>.Failure("No placemark found", "No address found for this location.");
-                
-                var address = new Address
-                {
-                    Country = place.CountryName,
-                    City = place.Locality ?? place.SubAdminArea ?? place.AdminArea,
-                    Street = place.Thoroughfare ?? place.FeatureName,
-                    HouseNumber = place.SubThoroughfare ?? string.Empty,
-                };
-
-                return ResultModel<Address>.Success(address);*/
             }
             catch(Exception ex)
             {

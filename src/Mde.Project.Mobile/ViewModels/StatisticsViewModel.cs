@@ -104,6 +104,7 @@ namespace Mde.Project.Mobile.ViewModels
             try
             {
                 IsBusy = true;
+
                 var result = await HandleResult(await _statisticService.GetStatisticsAsync());
                 if (result == null) return;
 

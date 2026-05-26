@@ -28,13 +28,13 @@ namespace Mde.Project.Mobile.Core.Services
                 var statistics = new StatisticsModel
                 {
                     TotalMemorias = memorias.Count().ToString(),
-                    WerkMemoria = memorias.Count(m => m.Occation.Equals(OccationType.Work)).ToString(),
-                    ReisMemoria = memorias.Count(m => m.Occation.Equals(OccationType.Travel)).ToString(),
-                    UitgaanMemoria = memorias.Count(m => m.Occation.Equals(OccationType.Friends)).ToString(),
-                    AndereMemoria = memorias.Count(m => m.Occation.Equals(OccationType.Other)).ToString(),
-                    TotalMemoriaFotos = memorias.Sum(m => m.MediaMaterial.Count(media => media.Type == MediaType.Photo)).ToString(),
-                    TotalMemoriaVideo = memorias.Sum(m => m.MediaMaterial.Count(media => media.Type == MediaType.Video)).ToString(),
-                    FavoriteMemoriaCountry = memorias.GroupBy(m => m.MemoriaAddress.Country).OrderByDescending(g => g.Count()).FirstOrDefault()?.Key ?? string.Empty,
+                    WerkMemoria = memorias.Count(m => m.OccationType.Equals(OccationType.Work)).ToString(),
+                    ReisMemoria = memorias.Count(m => m.OccationType.Equals(OccationType.Travel)).ToString(),
+                    UitgaanMemoria = memorias.Count(m => m.OccationType.Equals(OccationType.Friends)).ToString(),
+                    AndereMemoria = memorias.Count(m => m.OccationType.Equals(OccationType.Other)).ToString(),
+                    TotalMemoriaFotos = memorias.Sum(m => m.TotalPhotos).ToString(),
+                    TotalMemoriaVideo = memorias.Sum(m => m.TotalVideos).ToString(),
+                    FavoriteMemoriaCountry = memorias.GroupBy(m => m.Country).OrderByDescending(c => c.Count()).Select(g => g.Key).FirstOrDefault() ?? "X"
                 };
 
                 return ResultModel<StatisticsModel>.Success(statistics);

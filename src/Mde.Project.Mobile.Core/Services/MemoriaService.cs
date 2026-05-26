@@ -4,7 +4,6 @@ using Mde.Project.Mobile.Core.Dtos.Memoria;
 using Mde.Project.Mobile.Core.Entities;
 using Mde.Project.Mobile.Core.Entities.Models;
 using Mde.Project.Mobile.Core.Services.Interfaces;
-using static Mde.Project.Mobile.Core.Entities.Models.GoogleResponse;
 
 namespace Mde.Project.Mobile.Core.Services
 {
@@ -38,23 +37,23 @@ namespace Mde.Project.Mobile.Core.Services
                 return ResultModel<bool>.Failure(ex.ToString(), "Er liep iets mis bij het verwijderen van de Memoria.");
             }
         }
-        public Task<ResultModel<IEnumerable<Memoria>>> GetAllMemoriaAsync()
+        public Task<ResultModel<IEnumerable<MemoriaList>>> GetAllMemoriaAsync()
         {
             return GetMemoriaAsync();
         }
-        public async Task<ResultModel<IEnumerable<Memoria>>> GetMemoriaByFilterAsync(string searchTerm)
+        public async Task<ResultModel<IEnumerable<MemoriaList>>> GetMemoriaByFilterAsync(string searchTerm)
         {
             try
             {
                 var result = await GetMemoriaAsync();
-                if (!result.IsSucces) return CreateFailureFromResult<IEnumerable<Memoria>>(result);
+                if (!result.IsSucces) return CreateFailureFromResult<IEnumerable<MemoriaList>>(result);
 
                 var filteredMemorias = result.Data.Where(m => m.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
-                return ResultModel<IEnumerable<Memoria>>.Success(filteredMemorias);
+                return ResultModel<IEnumerable<MemoriaList>>.Success(filteredMemorias);
             }
             catch (Exception ex)
             {
-                return ResultModel<IEnumerable<Memoria>>.Failure(ex.ToString(), "Something went wrong while filtering the memorias.");
+                return ResultModel<IEnumerable<MemoriaList>>.Failure(ex.ToString(), "Something went wrong while filtering the memorias.");
             }
         }
         public async Task<ResultModel<Memoria>> GetMemoriaByIdAsync(Guid id)
@@ -132,18 +131,18 @@ namespace Mde.Project.Mobile.Core.Services
         {
             return ResultModel<T>.Failure(result.Errors.FirstOrDefault() ?? "Unknown error", result.UserMessage, result.StatusCode);
         }
-        private async Task<ResultModel<IEnumerable<Memoria>>> GetMemoriaAsync()
+        private async Task<ResultModel<IEnumerable<MemoriaList>>> GetMemoriaAsync()
         {
             try
             {
                 var result = await _sourceOfTruth.GetAllMemoriasAsync();
-                if (!result.IsSucces) return CreateFailureFromResult<IEnumerable<Memoria>>(result);
+                if (!result.IsSucces) return CreateFailureFromResult<IEnumerable<MemoriaList>>(result);
 
-                return ResultModel<IEnumerable<Memoria>>.Success(result.Data);
+                return ResultModel<IEnumerable<MemoriaList>>.Success(result.Data);
             }
             catch (Exception ex)
             {
-                return ResultModel<IEnumerable<Memoria>>.Failure(ex.ToString(), "Something went wrong while picking up the memorias");
+                return ResultModel<IEnumerable<MemoriaList>>.Failure(ex.ToString(), "Something went wrong while picking up the memorias");
             }
         }
         private MemoriaRequestDto TransformIntoDto(Memoria createOrUpdateMemoria)

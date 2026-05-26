@@ -31,6 +31,10 @@ namespace Mde.Project.Mobile.ViewModels
                 SetProperty(ref temporaryItems, value);
             }
         }
+        public bool HasMedia => TemporaryItems.Any() == true;
+        public GridLength MediaColumnWidth => HasMedia ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+        public GridLength ContentColumnWidth => HasMedia ? new GridLength(2, GridUnitType.Star) : new GridLength(1, GridUnitType.Star);
+
 
         // Commands
         public ICommand UpdateMemoriaCommand => new Command<Guid>(async (memoriaDetailsId) =>
@@ -47,6 +51,12 @@ namespace Mde.Project.Mobile.ViewModels
         {
             _memoriaService = memoriaService;
             TemporaryItems = new ObservableCollection<MediaItem>();
+            TemporaryItems.CollectionChanged += (_, __) =>
+            {
+                OnPropertyChanged(nameof(HasMedia));
+                OnPropertyChanged(nameof(ContentColumnWidth));
+                OnPropertyChanged(nameof(MediaColumnWidth));
+            };
         }
 
         // methoden
@@ -71,7 +81,7 @@ namespace Mde.Project.Mobile.ViewModels
                 IsBusy = true;
                 if (memoriaId == Guid.Empty)
                 {
-                        await Shell.Current.DisplayAlert(
+                        await Shell.Current.DisplayAlertAsync(
                             "Error",
                             "No valid memoria selected",
                             "OK");
@@ -79,7 +89,7 @@ namespace Mde.Project.Mobile.ViewModels
                         return;
                 }
 
-                bool confirm = await Shell.Current.DisplayAlert(
+                bool confirm = await Shell.Current.DisplayAlertAsync(
                     "Delete",
                     "Are you sure?",
                     "YES",
@@ -141,6 +151,10 @@ namespace Mde.Project.Mobile.ViewModels
                     FilePath = media.FilePath,
                 });
             }
+
+            OnPropertyChanged(nameof(HasMedia));
+            OnPropertyChanged(nameof(ContentColumnWidth));
+            OnPropertyChanged(nameof(MediaColumnWidth));
         }
     }
 }

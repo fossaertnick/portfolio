@@ -1,7 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Mde.Project.Mobile.Core.Entities;
+﻿using Mde.Project.Mobile.Core.Entities;
 using Mde.Project.Mobile.Core.Services.Interfaces;
-using Mde.Project.Mobile.Domain.Locations;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Mde.Project.Mobile.Pages;
 using System.Collections.ObjectModel;
@@ -28,7 +26,7 @@ namespace Mde.Project.Mobile.ViewModels
                 SetProperty(ref currentLocation, value);
             }
         }
-        public ObservableCollection<Memoria> Locations { get; set; } = new();
+        public ObservableCollection<MemoriaList> Locations { get; set; } = new();
 
         // Commands
         public ICommand PinClickedCommand => new Command<Guid>(async (memoriaDetailsId) =>
@@ -73,7 +71,7 @@ namespace Mde.Project.Mobile.ViewModels
         {
             if (memoriaDetailsId == Guid.Empty)
             {
-                await Shell.Current.DisplayAlert(
+                await Shell.Current.DisplayAlertAsync(
                     "Error",
                     "No valid memoria selected.",
                     "OK");

@@ -12,86 +12,148 @@
 
     <Grid Padding="10">
 
-        <VerticalStackLayout IsVisible="{Binding IsLoading}" HorizontalOptions="Center" VerticalOptions="Center" Spacing="15">
-            <ActivityIndicator IsRunning="{Binding IsLoading}" HeightRequest="50" WidthRequest="50"/>
-            <Label Text="Loading Memoria..."/>
-        </VerticalStackLayout>
+        <!-- Buitenste layout -->
+        <Grid
+            RowDefinitions="*,Auto">
 
-        <Grid Margin="5">
-            
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+            <Grid>
+            <!-- CONTENT -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{Binding ContentColumnWidth}"/>
+                <ColumnDefinition Width="{Binding MediaColumnWidth}"/>
+            </Grid.ColumnDefinitions>
 
-                <VerticalStackLayout Grid.Row="0" Spacing="10">
-            <Label Text="{Binding SelectedLocation.Name}" FontSize="36" FontAttributes="Bold"/>
+            <!-- LINKER KOLOM -->
+                <ScrollView Grid.Column="0" HorizontalOptions="Fill" VerticalOptions="Fill">
 
-                <Grid ColumnDefinitions="*,*">
-                    <VerticalStackLayout>
-                        <Label Text="Event" FontAttributes="Bold"/>
-                        <Label Text="{Binding SelectedLocation.EventDate, StringFormat='{0:dd/MM/yyyy HH:mm}'}"/>
+                    <VerticalStackLayout Spacing="15" HorizontalOptions="Fill">
+
+                        <Label
+                            Text="{Binding SelectedLocation.Name}"
+                            FontSize="35"
+                            FontAttributes="Bold"/>
+
+                        <Grid ColumnDefinitions="*,*">
+
+                            <VerticalStackLayout>
+                                <Label Text="Event"
+                                       FontAttributes="Bold"/>
+
+                                <Label
+                                    Text="{Binding SelectedLocation.EventDate,
+                                           StringFormat='{0:dd/MM/yyyy HH:mm}'}"/>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="Type"
+                                       FontAttributes="Bold"/>
+
+                                <Label
+                                    Text="{Binding SelectedLocation.Occation}"/>
+                            </VerticalStackLayout>
+
+                        </Grid>
+
+                        <Border
+                            Padding="10"
+                            StrokeShape="RoundRectangle 10">
+
+                            <Label>
+
+                                <Label.FormattedText>
+                                    <FormattedString>
+
+                                        <Span Text="{Binding SelectedLocation.MemoriaAddress.Street}" />
+                                        <Span Text=" "/>
+                                        <Span Text="{Binding SelectedLocation.MemoriaAddress.HouseNumber}" />
+                                        <Span Text=", "/>
+                                        <Span Text="{Binding SelectedLocation.MemoriaAddress.City}" />
+                                        <Span Text=", "/>
+                                        <Span Text="{Binding SelectedLocation.MemoriaAddress.Country}" />
+
+                                    </FormattedString>
+                                </Label.FormattedText>
+
+                            </Label>
+
+                        </Border>
+
+                        <Label
+                            Text="Description"
+                            FontAttributes="Bold"/>
+
+                        <Label
+                            Text="{Binding SelectedLocation.Description}" LineBreakMode="WordWrap" HorizontalOptions="Fill"/>
+
                     </VerticalStackLayout>
-                    <VerticalStackLayout Grid.Column="1">
-                        <Label Text="Type" FontAttributes="Bold"/>
-                        <Label Text="{Binding SelectedLocation.Occation}"/>
-                    </VerticalStackLayout>
-                </Grid>
 
-                <Border Padding="10" StrokeShape="RoundRectangle 10">
-                    <Label>
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{Binding SelectedLocation.MemoriaAddress.Street}"/>
-                                <Span Text=" "/>
-                                <Span Text="{Binding SelectedLocation.MemoriaAddress.HouseNumber}"/>
-                                <Span Text=", "/>
-                                <Span Text="{Binding SelectedLocation.MemoriaAddress.City}"/>
-                                <Span Text=", "/>
-                                <Span Text="{Binding SelectedLocation.MemoriaAddress.Country}"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                </Border>
-                    <Label Text="{Binding SelectedLocation.Description}" MaxLines="3" LineBreakMode="TailTruncation"/>
-                    <Label Text="Photos" FontAttributes="Bold"/>
-            </VerticalStackLayout>
+                </ScrollView>
+                
+                <!-- RECHTER KOLOM -->
+            <CollectionView
+                    Grid.Column="1"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Fill"
+                    HorizontalScrollBarVisibility="Never"
+                    ItemsSource="{Binding TemporaryItems}"
+                    SelectionMode="None"
+                    IsVisible="{Binding HasMedia}">
 
-            <CollectionView Grid.Row="1" ItemsSource="{Binding TemporaryItems}" ItemsLayout="HorizontalList">
-                <CollectionView.EmptyView  IsVisible="{Binding IsLoading, Converter={StaticResource LoadingConvertion}}">
-                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                        <Label FontFamily="appIcons" Text="&#xea0f;" FontSize="70" TextColor="DarkRed" HorizontalOptions="Center"/>
-                        <Label Text="There are no images to show."/>
-                    </VerticalStackLayout>
-                </CollectionView.EmptyView>
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout
+                            Orientation="Vertical"/>
+                </CollectionView.ItemsLayout>
+
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="images:MediaItem">
-                        <HorizontalStackLayout Padding="8" Spacing="15">
-                            <!-- Foto -->
+
+                    <DataTemplate
+                            x:DataType="images:MediaItem">
+
+                        <Border
+                                Margin="0,0,0,10"
+                                StrokeShape="RoundRectangle 10"
+                                HorizontalOptions="Center">
+
                             <Image
                                     Source="{Binding FilePath}"
-                                    HeightRequest="300"
-                                    WidthRequest="300"
-                                    Aspect="AspectFill" >
-                            </Image>
-                        </HorizontalStackLayout>
+                                    Aspect="AspectFill"
+                                    HeightRequest="100"
+                                    WidthRequest="100"/>
+
+                        </Border>
+
                     </DataTemplate>
+
                 </CollectionView.ItemTemplate>
+
             </CollectionView>
-
-            <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="5">
-
-                <Button Text="Update" Command="{Binding UpdateMemoriaCommand}" BackgroundColor="Orange"
-                        Style="{x:StaticResource FullButtons}" 
-                        CommandParameter="{Binding SelectedLocation.Id}"
-                        Grid.Column="0"/>
-            
-                <Button x:Name="DeleteMemoriaButton" Clicked="DeleteMemoriaButton_Clicked" Text="Delete" 
-                    BackgroundColor="Red" Style="{x:StaticResource FullButtons}" 
-                        BindingContext="{Binding SelectedLocation.Id}"
-                        Grid.Column="1"/>
             </Grid>
+
+            <!-- BUTTONS -->
+            <Grid
+                Grid.Row="1"
+                ColumnDefinitions="*,*"
+                ColumnSpacing="5"
+                Margin="0,10,0,0">
+
+                <Button
+                    Text="Update"
+                    Command="{Binding UpdateMemoriaCommand}"
+                    CommandParameter="{Binding SelectedLocation.Id}"
+                    BackgroundColor="Orange"
+                    Style="{x:StaticResource FullButtons}"
+                    Grid.Column="0"/>
+
+                <Button
+                    Text="Delete"
+                    Clicked="DeleteMemoriaButton_Clicked"
+                    BindingContext="{Binding SelectedLocation.Id}"
+                    BackgroundColor="Red"
+                    Style="{x:StaticResource FullButtons}"
+                    Grid.Column="1"/>
+
+            </Grid>
+
         </Grid>
 
     </Grid>

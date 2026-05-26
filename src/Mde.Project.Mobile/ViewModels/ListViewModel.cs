@@ -13,12 +13,12 @@ namespace Mde.Project.Mobile.ViewModels
         private readonly IMemoriaService _memoriaService;
 
         // fields
-        private ObservableCollection<Memoria> locations;
+        private ObservableCollection<MemoriaList> locations;
         private string searchTerm;
         private CancellationTokenSource? _searchWay;
 
         // properties
-        public ObservableCollection<Memoria> Locations
+        public ObservableCollection<MemoriaList> Locations
         {
             get { return locations; }
             set => SetProperty(ref locations, value);
@@ -62,7 +62,7 @@ namespace Mde.Project.Mobile.ViewModels
         public ListViewModel(IMemoriaService memoriaService)
         {
             _memoriaService = memoriaService;
-            Locations = new ObservableCollection<Memoria>();
+            Locations = new ObservableCollection<MemoriaList>();
             InitializeMemoriaCommand = new Command(async () => await ExecuteInitializeMemoriaCommand());
         }
 
@@ -85,12 +85,10 @@ namespace Mde.Project.Mobile.ViewModels
             try
             {
                 IsBusy = true;
-                IsLoading = true;
                 await RefreshMemoriaList();
             }
             finally
             {
-                IsLoading = false;
                 IsBusy = false;
             }
         }
@@ -148,6 +146,7 @@ namespace Mde.Project.Mobile.ViewModels
                     return;
                 }
 
+                await Task.Delay(1);
                 var result = await _memoriaService.GetMemoriaByFilterAsync(name);
                 var filtered = await HandleResult(result);
                 if (filtered == null) return;

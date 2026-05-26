@@ -4,8 +4,8 @@
              x:Class="Mde.Project.Mobile.Resources.Styles.Layout">
 
     <x:Double x:Key="DefaultMargin">5</x:Double>
-    <x:Double x:Key="ButtonHeight">50</x:Double>
-    <x:Double x:Key="BorderHeight">75</x:Double>
+    <x:Double x:Key="ButtonHeight">55</x:Double>
+    <x:Double x:Key="BorderHeight">70</x:Double>
     <x:Double x:Key="DefaultRound">15</x:Double>
 
     <Style x:Key="RoundButton" TargetType="Button">
@@ -32,7 +32,7 @@
         <Setter Property="TextColor" Value="{DynamicResource White}" />
     </Style>
     <Style x:Key="SearchBorders" TargetType="Border">
-        <Setter Property="Padding" Value="10,0,0,0"/>
+        <Setter Property="Padding" Value="10,5,0,0"/>
         <Setter Property="HeightRequest" Value="{StaticResource BorderHeight}"/>
         <Setter Property="Margin" Value="{StaticResource DefaultMargin}"/>
         <Setter Property="StrokeShape" Value="10"/>

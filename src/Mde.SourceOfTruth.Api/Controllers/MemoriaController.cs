@@ -2,6 +2,7 @@
 using Mde.SourceOfTruth.Api.Dto.MediaItem;
 using Mde.SourceOfTruth.Api.Dto.Memoria;
 using Mde.SourceOfTruth.Core.Entities;
+using Mde.SourceOfTruth.Core.Entities.enums;
 using Mde.SourceOfTruth.Core.Services.Interfaces;
 using Mde.SourceOfTruth.Core.Services.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -23,34 +24,22 @@ namespace Mde.SourceOfTruth.Api.Controllers
 
         // ActionResult (GET)
         [HttpGet]
-        public async Task<ActionResult<MemoriaDetailResponseDto>> GetAllMemorias()
+        public async Task<ActionResult<MemoriaListReponseDto>> GetAllMemorias()
         {
             ResultModel<IEnumerable<Memoria>> result = await _memoriaService.GetAllMemoriasAsync();
             if(!result.IsSucces) return BadRequest(result.Errors);
 
-            IEnumerable<MemoriaDetailResponseDto> memoriaResponses = result.Data.Select(m => new MemoriaDetailResponseDto
+            IEnumerable<MemoriaListReponseDto> memoriaResponses = result.Data.Select(m => new MemoriaListReponseDto
             {
                 Id = m.Id,
                 Name = m.Name,
-                Occation = m.Occation,
-                Description = m.Description,
+                OccationType = m.Occation,
                 EventDate = m.EventDate,
-                CreatedOn = m.CreatedOn,
-                LastEditedOn = m.LastEditedOn,
-                Address = new AddressResponseDto
-                {
-                    Country = m.MemoriaAddress.Country,
-                    City = m.MemoriaAddress.City,
-                    Street = m.MemoriaAddress.Street,
-                    HouseNumber = m.MemoriaAddress.HouseNumber,
-                    Latitude = m.MemoriaAddress.Latitude,
-                    Longitude = m.MemoriaAddress.Longitude,
-                },
-                MediaMaterial = m.MediaMaterial.Select(media => new MediaItemResponseDto
-                {
-                    FilePath = media.FilePath,
-                    MediaType = media.Type,
-                }).ToList()
+                Latitude = m.MemoriaAddress.Latitude,
+                Longitude = m.MemoriaAddress.Longitude,
+                Country = m.MemoriaAddress.Country,
+                TotalPhotos = m.MediaMaterial.Count(ph => ph.Type.Equals(MediaType.Photo)),
+                TotalVideos = m.MediaMaterial.Count(ph => ph.Type.Equals(MediaType.Video)),
             });
             return Ok(memoriaResponses);
         }

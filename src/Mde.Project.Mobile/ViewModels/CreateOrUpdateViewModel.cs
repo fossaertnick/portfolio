@@ -32,6 +32,8 @@ namespace Mde.Project.Mobile.ViewModels
         private TimeSpan eventTime = DateTime.Now.TimeOfDay;
         private Memoria selectedMemoria;
         private ImageSource photo;
+        private double progressBar;
+        private bool isSaving;
 
         // properties
         public EditMode EditMode
@@ -127,6 +129,22 @@ namespace Mde.Project.Mobile.ViewModels
             set
             {
                 SetProperty(ref photo, value);
+            }
+        }
+        public double ProgressBar
+        {
+            get { return progressBar; }
+            set
+            {
+                SetProperty(ref progressBar, value);
+            }
+        }
+        public bool IsSaving
+        {
+            get { return isSaving; }
+            set
+            {
+                SetProperty(ref  isSaving, value);
             }
         }
         public ObservableCollection<MediaItem> TemporaryItems { get; set; } = new();
@@ -265,6 +283,7 @@ namespace Mde.Project.Mobile.ViewModels
             EventTime = DateTime.Now.TimeOfDay;
             Latitude = 0;
             Longitude = 0;
+            TemporaryItems.Clear();
         }
         private async Task GiveUserHisCurrentLocation()
         {
@@ -301,6 +320,8 @@ namespace Mde.Project.Mobile.ViewModels
             try
             {
                 IsBusy = true;
+                IsSaving = true;
+                ProgressBar = 0.1;
                 var validation = CheckIncomingValues();
                 if(!validation.Item1)
                 {
@@ -311,6 +332,8 @@ namespace Mde.Project.Mobile.ViewModels
 
                     return;
                 }
+
+                ProgressBar = 0.25;
 
                 Memoria memoria;
                 if(SelectedMemoria == null)
@@ -359,17 +382,32 @@ namespace Mde.Project.Mobile.ViewModels
                         }).ToList()
                     };
                 }
-                TemporaryItems.Clear();
+                ProgressBar = 0.50;
 
                 var geoResult = await _geoCodingService.ForwardGeoCodeAsync(memoria);
                 var geoSuccess = await HandleResult(geoResult);
                 if (geoSuccess != true) return;
 
+                progressBar = 0.75;
+
                 var saveResult = await _memoriaService.SaveMemoriaAsync(memoria);
                 var saveSuccess = await HandleResult(saveResult);
-                if(saveSuccess != true) return;
+                TemporaryItems.Clear();
+                if (saveSuccess != true)
+                {
+                    IsSaving = false;
+                    ProgressBar = 0;
+                    ResetFields();
+                    await Shell.Current.GoToAsync(nameof(ListPage));
+                    return;
+                }
+                
+                ProgressBar = 1.0;
+                await Task.Delay(150);
 
                 await Shell.Current.GoToAsync(nameof(ListPage));
+                IsSaving = false;
+                ProgressBar = 0;
             }
             finally
             {
@@ -482,11 +520,11 @@ namespace Mde.Project.Mobile.ViewModels
                     var succes = await HandleResult(result);
                     if (succes != true) return;
 
-                    TemporaryItems.Clear();
                     await Shell.Current.GoToAsync(nameof(ListPage));
                 }
                 finally
                 {
+                    TemporaryItems.Clear();
                     IsBusy = false;
                 }
             }

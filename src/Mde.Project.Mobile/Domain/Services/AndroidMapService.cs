@@ -55,7 +55,7 @@ namespace Mde.Project.Mobile.Domain.Services
                 return ResultModel<bool>.Failure(ex.ToString(), "Something went wrong while moving the map.");
             }
         }
-        public async Task<ResultModel<bool>> SetPins(IEnumerable<Memoria> items)
+        public async Task<ResultModel<bool>> SetPins(IEnumerable<MemoriaList> items)
         {
             try
             {
@@ -64,12 +64,10 @@ namespace Mde.Project.Mobile.Domain.Services
                 _map.Pins.Clear();
                 foreach(var memoria in items)
                 {
-                    if (memoria.MemoriaAddress == null) { Console.WriteLine($"Memoria {memoria.Id} had no address."); continue; }
-
                     var pin = new Pin
                     {
                         Label = memoria.Name,
-                        Location = new Location(memoria.MemoriaAddress.Latitude, memoria.MemoriaAddress.Longitude),
+                        Location = new Location(memoria.Latitude, memoria.Longitude),
                         BindingContext = memoria.Id,
                     };
 

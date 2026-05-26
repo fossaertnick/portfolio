@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Mde.Project.Mobile.Core.Entities.Models;
+using Mde.Project.Mobile.Domain.Services;
 
 namespace Mde.Project.Mobile.ViewModels
 {
@@ -8,7 +9,6 @@ namespace Mde.Project.Mobile.ViewModels
         // fields
         private bool isBusy;
         private string errorMessage;
-        private bool isLoading = true;
 
         // properties
         public bool IsBusy
@@ -25,14 +25,6 @@ namespace Mde.Project.Mobile.ViewModels
             set
             {
                 SetProperty(ref errorMessage, value);
-            }
-        }
-        public bool IsLoading
-        {
-            get { return isLoading; }
-            set
-            {
-                SetProperty(ref isLoading, value);
             }
         }
 
