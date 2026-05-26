@@ -24,7 +24,7 @@ namespace Mde.Project.Mobile.Core.Services
         }
 
         // methoden
-        public async Task<ResultModel<IEnumerable<Memoria>>> GetAllMemoriasAsync()
+        public async Task<ResultModel<IEnumerable<MemoriaList>>> GetAllMemoriasAsync()
         {
             try
             {
@@ -32,43 +32,30 @@ namespace Mde.Project.Mobile.Core.Services
                 {
                     Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }, PropertyNameCaseInsensitive = true
                 };
-                var memoriaDtos = await _httpClient.GetFromJsonAsync<List<MemoriaDetailResponseDto>>($"{Constants.GetAllMemorias}", options);
+                var memoriaDtos = await _httpClient.GetFromJsonAsync<List<MemoriaListResponseDto>>($"{Constants.GetAllMemorias}", options);
 
                 if (memoriaDtos is null || !memoriaDtos.Any())
                 {
-                    return ResultModel<IEnumerable<Memoria>>.Failure("No memorias were found from the API.", "No memorias were found.");
+                    return ResultModel<IEnumerable<MemoriaList>>.Failure("No memorias were found from the API.", "No memorias were found.");
                 }
 
-                var allMemoria = memoriaDtos.Select(m => new Memoria
+                var allMemoria = memoriaDtos.Select(m => new MemoriaList
                 {
                     Id = m.Id,
                     Name = m.Name,
-                    Occation = m.Occation,
-                    Description = m.Description,
+                    OccationType = m.OccationType,
                     EventDate = m.EventDate,
-                    CreatedOn = m.CreatedOn,
-                    LastEditedOn = m.LastEditedOn,
-                    MemoriaAddress = new Address
-                    {
-                        Country = m.Address.Country,
-                        City = m.Address.City,
-                        Street = m.Address.Street,
-                        HouseNumber = m.Address.HouseNumber,
-                        Latitude = m.Address.Latitude,
-                        Longitude = m.Address.Longitude,
-                    },
-                    MediaMaterial = m.MediaMaterial.Select(media => new MediaItem
-                    {
-                        Id = media.Id,
-                        Type = media.MediaType,
-                        FilePath = media.FilePath,
-                    }).ToList()
+                    Country = m.Country,
+                    Latitude = m.Latitude,
+                    Longitude = m.Longitude,
+                    TotalPhotos = m.TotalPhotos,
+                    TotalVideos = m.TotalVideos,
                 });
-                return ResultModel<IEnumerable<Memoria>>.Success(allMemoria);
+                return ResultModel<IEnumerable<MemoriaList>>.Success(allMemoria);
             }
             catch (Exception ex)
             {
-                return ResultModel<IEnumerable<Memoria>>.Failure(ex.Message.ToString(), "Something went wrong while picking up the memorias.");
+                return ResultModel<IEnumerable<MemoriaList>>.Failure(ex.Message.ToString(), "Something went wrong while picking up the memorias.");
             }
         }
         public async Task<ResultModel<Memoria>> GetMemoriaByIdAsync(Guid id)

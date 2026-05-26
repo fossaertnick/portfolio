@@ -12,7 +12,7 @@ namespace Mde.Project.Mobile.Core.Services.Interfaces
     {
         // methoden
         Task<ResultModel<Memoria>> GetMemoriaByIdAsync(Guid id);
-        Task<ResultModel<IEnumerable<Memoria>>> GetAllMemoriasAsync();
+        Task<ResultModel<IEnumerable<MemoriaList>>> GetAllMemoriasAsync();
         Task<ResultModel<MemoriaDetailResponseDto>> CreateMemoriaAsync(MemoriaRequestDto newMemoria);
         Task<string> UploadPhotoAsync(string localPath);
         Task<ResultModel<MemoriaDetailResponseDto>> UpdateMemoriaAsync(MemoriaRequestDto updatingMemoria, Guid id);
