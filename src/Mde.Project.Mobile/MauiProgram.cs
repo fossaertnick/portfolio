@@ -113,25 +113,17 @@ namespace Mde.Project.Mobile
             builder.Services.AddScoped<IStatisticService, StatisticService>();
             builder.Services.AddScoped<ILocationService, LocationService>();
             builder.Services.AddScoped<IRawToUserService, RawToUserService>();
-            builder.Services.AddScoped<ISourceOfTruthService, SourceOfTruthService>();
             builder.Services.AddScoped<ILocalMemoriaCache, LocalMemoriaCache>();
-
             builder.Services.AddSingleton<AppOptionsService>();
-
-            if (OperatingSystem.IsWindows())
-            {
-                builder.Services.AddScoped<IMapService, WindowsMapService>();
-            }
-            else
-            {
-                builder.Services.AddScoped<IMapService, AndroidMapService>();
-            }
-
+            builder.Services.AddSingleton<JwtService>();
+            builder.Services.AddSingleton<ISourceOfTruthService, SourceOfTruthService>();
             builder.Services.AddHttpClient<IGeoCodingService, GoogleGeoCodingService>();
+
+            builder.Services.AddTransient<JwtHandler>();
 
             // API CONNECTION
             builder.Services.AddHttpClient(Constants.MemoriaClientName,
-                config => config.BaseAddress = new Uri(Constants.MemoriaApiUrl));
+                config => config.BaseAddress = new Uri(Constants.MemoriaApiUrl)).AddHttpMessageHandler<JwtHandler>();
             
             var app = builder.Build();
 
