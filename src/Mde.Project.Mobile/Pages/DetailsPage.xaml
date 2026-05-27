@@ -114,6 +114,10 @@
                                 StrokeShape="RoundRectangle 10"
                                 HorizontalOptions="Center">
 
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OpenImageCommand}"
+                                                          CommandParameter="{Binding FilePath}"/>
+                                </Border.GestureRecognizers>
                             <Image
                                     Source="{Binding FilePath}"
                                     Aspect="AspectFill"

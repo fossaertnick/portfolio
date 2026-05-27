@@ -1,4 +1,6 @@
-﻿using Mde.Project.Mobile.Core.Entities;
+﻿using CommunityToolkit.Maui.Extensions;
+using CommunityToolkit.Mvvm.Input;
+using Mde.Project.Mobile.Core.Entities;
 using Mde.Project.Mobile.Core.Services.Interfaces;
 using Mde.Project.Mobile.Pages;
 using System.Collections.ObjectModel;
@@ -6,7 +8,7 @@ using System.Windows.Input;
 
 namespace Mde.Project.Mobile.ViewModels
 {
-    public class DetailsViewModel : BaseViewModel, IQueryAttributable
+    public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
     {
         private readonly IMemoriaService _memoriaService;
 
@@ -60,11 +62,16 @@ namespace Mde.Project.Mobile.ViewModels
         }
 
         // methoden
+        [RelayCommand]
+        private async Task OpenImageAsync(string path)
+        {
+            await Shell.Current.CurrentPage.ShowPopupAsync(new ImagePopup(path));
+        }
         private async Task ExecuteUpdateMemoriaCommand(Guid memoriaId)
         {
             if (memoriaId == Guid.Empty)
             {
-                await Shell.Current.DisplayAlert(
+                await Shell.Current.DisplayAlertAsync(
                     "Error",
                     "No valid memoria selected",
                     "OK");
