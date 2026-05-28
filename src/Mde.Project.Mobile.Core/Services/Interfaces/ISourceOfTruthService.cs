@@ -10,7 +10,8 @@ namespace Mde.Project.Mobile.Core.Services.Interfaces
 {
     public interface ISourceOfTruthService
     {
-        // methoden
+
+        // methoden 
         Task<ResultModel<Memoria>> GetMemoriaByIdAsync(Guid id);
         Task<ResultModel<IEnumerable<MemoriaList>>> GetAllMemoriasAsync();
         Task<ResultModel<MemoriaDetailResponseDto>> CreateMemoriaAsync(MemoriaRequestDto newMemoria);

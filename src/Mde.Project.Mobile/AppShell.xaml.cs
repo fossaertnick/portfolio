@@ -15,6 +15,7 @@ namespace Mde.Project.Mobile
             InitializeComponent();
             _closer = new AppOptionsService();
             _toUser = new RawToUserService();
+
         }
 
         // methoden
