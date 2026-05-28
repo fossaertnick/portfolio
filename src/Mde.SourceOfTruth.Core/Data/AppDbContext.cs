@@ -10,19 +10,12 @@ namespace Mde.SourceOfTruth.Core.Data
         {
         }
     
-        public DbSet<RegisteredDevice> RegisteredDevices { get; set; }
         public DbSet<Memoria> Memorias { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<MediaItem> MediaItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<RegisteredDevice>()
-                .HasMany(d => d.memorias)
-                .WithOne(m => m.Device)
-                .HasForeignKey(m => m.RegisteredDeviceId)
-                .OnDelete(DeleteBehavior.Restrict);
-
             builder.Entity<Memoria>()
                .HasOne(m => m.MemoriaAddress)
                .WithOne(a => a.Memoria)

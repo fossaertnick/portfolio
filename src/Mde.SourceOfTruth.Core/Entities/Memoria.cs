@@ -20,7 +20,5 @@ namespace Mde.SourceOfTruth.Core.Entities
         // navigation properties
         public Address MemoriaAddress { get; set; } = null!;
         public ICollection<MediaItem> MediaMaterial { get; set; } = new List<MediaItem>();
-        public Guid RegisteredDeviceId { get; set; }
-        public RegisteredDevice Device { get; set; }
     }
 }

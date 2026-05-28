@@ -1,4 +1,6 @@
+using Mde.Project.Mobile.Core.Services.Interfaces;
 using Mde.Project.Mobile.ViewModels;
+using System.ComponentModel;
 namespace Mde.Project.Mobile.Pages;
 
 public partial class CreateOrUpdatePage : ContentPage
@@ -37,5 +39,9 @@ public partial class CreateOrUpdatePage : ContentPage
                 _viewModel.TakeVideoCommand.Execute(null);
                 break;
         }
+    }
+    private void Mic_Clicked(object sender, EventArgs e)
+    {
+        _viewModel.StartSpeech();
     }
 }

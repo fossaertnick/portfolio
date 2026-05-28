@@ -14,22 +14,6 @@ namespace Mde.SourceOfTruth.Core.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "RegisteredDevices",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DeviceId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DeviceName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Platform = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    RegisteredAt = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RegisteredDevices", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Memorias",
                 columns: table => new
                 {
@@ -39,18 +23,11 @@ namespace Mde.SourceOfTruth.Core.Migrations
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastEditedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Occation = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RegisteredDeviceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Memorias", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Memorias_RegisteredDevices_RegisteredDeviceId",
-                        column: x => x.RegisteredDeviceId,
-                        principalTable: "RegisteredDevices",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -99,24 +76,15 @@ namespace Mde.SourceOfTruth.Core.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "RegisteredDevices",
-                columns: new[] { "Id", "DeviceId", "DeviceName", "IsActive", "Platform", "RegisteredAt" },
-                values: new object[,]
-                {
-                    { new Guid("99999999-9999-9999-9999-999999999998"), "PFKZOFK94839", "Iemand anders", false, "IPhone", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { new Guid("99999999-9999-9999-9999-999999999999"), "sdfqsdg", "A54 van Nick", true, "Android", new DateTime(2023, 6, 28, 0, 0, 0, 0, DateTimeKind.Unspecified) }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Memorias",
-                columns: new[] { "Id", "CreatedOn", "Description", "EventDate", "LastEditedOn", "Name", "Occation", "RegisteredDeviceId" },
+                columns: new[] { "Id", "CreatedOn", "Description", "EventDate", "LastEditedOn", "Name", "Occation" },
                 values: new object[,]
                 {
-                    { new Guid("00000000-0000-0000-0000-000000000001"), new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "Iconische toren en symbool van Parijs.", new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 1, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Eiffel Tower", "Travel", new Guid("99999999-9999-9999-9999-999999999999") },
-                    { new Guid("00000000-0000-0000-0000-000000000002"), new DateTime(2025, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "Oud Romeins amfitheater.", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "Colosseum", "Travel", new Guid("99999999-9999-9999-9999-999999999999") },
-                    { new Guid("00000000-0000-0000-0000-000000000003"), new DateTime(2025, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), "Historische stadspoort in Berlijn.", new DateTime(2025, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 1, 21, 0, 0, 0, 0, DateTimeKind.Unspecified), "Brandenburg Gate", "Work", new Guid("99999999-9999-9999-9999-999999999999") },
-                    { new Guid("00000000-0000-0000-0000-000000000004"), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Beroemde basiliek ontworpen door Gaudí.", new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Sagrada Familia", "Travel", new Guid("99999999-9999-9999-9999-999999999999") },
-                    { new Guid("00000000-0000-0000-0000-000000000005"), new DateTime(2025, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Bekende klokkentoren van Londen.", new DateTime(2025, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Big Ben", "Other", new Guid("99999999-9999-9999-9999-999999999999") }
+                    { new Guid("00000000-0000-0000-0000-000000000001"), new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "Iconische toren en symbool van Parijs.", new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 1, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Eiffel Tower", "Travel" },
+                    { new Guid("00000000-0000-0000-0000-000000000002"), new DateTime(2025, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "Oud Romeins amfitheater.", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "Colosseum", "Travel" },
+                    { new Guid("00000000-0000-0000-0000-000000000003"), new DateTime(2025, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), "Historische stadspoort in Berlijn.", new DateTime(2025, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 1, 21, 0, 0, 0, 0, DateTimeKind.Unspecified), "Brandenburg Gate", "Work" },
+                    { new Guid("00000000-0000-0000-0000-000000000004"), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Beroemde basiliek ontworpen door Gaudí.", new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), "Sagrada Familia", "Travel" },
+                    { new Guid("00000000-0000-0000-0000-000000000005"), new DateTime(2025, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Bekende klokkentoren van Londen.", new DateTime(2025, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Big Ben", "Other" }
                 });
 
             migrationBuilder.InsertData(
@@ -168,11 +136,6 @@ namespace Mde.SourceOfTruth.Core.Migrations
                 name: "IX_MediaItems_MemoriaId",
                 table: "MediaItems",
                 column: "MemoriaId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Memorias_RegisteredDeviceId",
-                table: "Memorias",
-                column: "RegisteredDeviceId");
         }
 
         /// <inheritdoc />
@@ -186,9 +149,6 @@ namespace Mde.SourceOfTruth.Core.Migrations
 
             migrationBuilder.DropTable(
                 name: "Memorias");
-
-            migrationBuilder.DropTable(
-                name: "RegisteredDevices");
         }
     }
 }

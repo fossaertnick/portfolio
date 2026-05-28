@@ -1,4 +1,7 @@
-﻿using CommunityToolkit.Maui;
+﻿#if ANDROID
+using Mde.Project.Mobile.Platforms.Android;
+#endif
+using CommunityToolkit.Maui;
 using Mde.Project.Mobile.Core.Data;
 using Mde.Project.Mobile.Core.Services;
 using Mde.Project.Mobile.Core.Services.Interfaces;
@@ -114,11 +117,15 @@ namespace Mde.Project.Mobile
             builder.Services.AddScoped<ILocationService, LocationService>();
             builder.Services.AddScoped<IRawToUserService, RawToUserService>();
             builder.Services.AddScoped<ILocalMemoriaCache, LocalMemoriaCache>();
+            builder.Services.AddScoped<IMapService, AndroidMapService>();
             builder.Services.AddSingleton<AppOptionsService>();
             builder.Services.AddSingleton<JwtService>();
             builder.Services.AddSingleton<ISourceOfTruthService, SourceOfTruthService>();
             builder.Services.AddHttpClient<IGeoCodingService, GoogleGeoCodingService>();
 
+#if ANDROID
+            builder.Services.AddSingleton<ISpeechToTextService, AndroidSpeechToTextService>();
+#endif
             builder.Services.AddTransient<JwtHandler>();
 
             // API CONNECTION

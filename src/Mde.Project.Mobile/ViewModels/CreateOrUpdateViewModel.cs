@@ -16,6 +16,7 @@ namespace Mde.Project.Mobile.ViewModels
         private readonly IMemoriaService _memoriaService;
         private readonly ILocationService _locationService;
         private readonly IGeoCodingService _geoCodingService;
+        private readonly ISpeechToTextService _speechToTextService;
 
         // fields
         private EditMode editMode;
@@ -34,6 +35,7 @@ namespace Mde.Project.Mobile.ViewModels
         private ImageSource photo;
         private double progressBar;
         private bool isSaving;
+        private bool isListening;
 
         // properties
         public EditMode EditMode
@@ -147,6 +149,14 @@ namespace Mde.Project.Mobile.ViewModels
                 SetProperty(ref  isSaving, value);
             }
         }
+        public bool IsListening
+        {
+            get { return isListening; }
+            set
+            {
+                SetProperty<bool>(ref isListening, value);
+            }
+        }
         public ObservableCollection<MediaItem> TemporaryItems { get; set; } = new();
 
         // commands
@@ -180,12 +190,13 @@ namespace Mde.Project.Mobile.ViewModels
         });
 
         // constructor
-        public CreateOrUpdateViewModel(IMediaService mediaService, IGeoCodingService geoCodingService, IMemoriaService memoriaService, ILocationService locationService)
+        public CreateOrUpdateViewModel(IMediaService mediaService, IGeoCodingService geoCodingService, IMemoriaService memoriaService, ILocationService locationService, ISpeechToTextService speechToTextService)
         {
             _mediaService = mediaService;
             _geoCodingService = geoCodingService;
             _memoriaService = memoriaService;
             _locationService = locationService;
+            _speechToTextService = speechToTextService;
         }
 
         // methoden
@@ -545,6 +556,76 @@ namespace Mde.Project.Mobile.ViewModels
                 return (false, message);
             }
             return (true, message);
+        }
+        public async void StartSpeech()
+        {
+            try
+            {
+                IsBusy = true;
+
+                var status = await Permissions.RequestAsync<Permissions.Microphone>();
+                if (status != PermissionStatus.Granted)
+                {
+                    await Shell.Current.DisplayAlertAsync("Error", "No microphone permission", "ok");
+                    return;
+                }
+                IsListening = true;
+
+                _speechToTextService.StartListening(text =>
+                {
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        if (string.IsNullOrWhiteSpace(text)) return;
+                        ApplySpeechTofields(text);
+                    });
+                });
+            }
+            finally
+            {
+                IsListening = false;
+                IsBusy = false;
+            }
+        }
+        public void StopSpeech()
+        {
+            IsListening = false;
+            _speechToTextService?.StopListening();
+        }
+        private void ApplySpeechTofields(string text)
+        {
+            text = text.ToLower();
+
+            if (text.Contains("naam")) Name = ExtractAfter(text, "naam");
+            if (text.Contains("beschrijving")) Description = ExtractAfter(text, "beschrijving");
+            if (text.Contains("land")) Country = ExtractAfter(text, "land");
+            if (text.Contains("stad")) City = ExtractAfter(text, "stad");
+            if (text.Contains("straat")) Street = ExtractAfter(text, "straat");
+            if (text.Contains("nummer")) HouseNumber = ExtractAfter(text, "nummer");
+        }
+        private string ExtractAfter(string text, string description)
+        {
+            var index = text.IndexOf(description);
+            if (index == -1) return string.Empty;
+
+            var result = text[(index + description.Length)..].Trim();
+
+            var stopWord = new[]
+            {
+                "naam",
+                "beschrijving",
+                "land",
+                "stad",
+                "straat",
+                "nummer",
+            };
+
+            foreach(var stop in stopWord)
+            {
+                var stopIndex = result.IndexOf(stop);
+                if (stopIndex > -1) result = result[..stopIndex].Trim();
+            }
+
+            return result;
         }
     }
 }

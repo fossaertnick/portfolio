@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Mde.SourceOfTruth.Core.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260528173130_InitialMigration")]
+    [Migration("20260528185744_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -335,12 +335,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("RegisteredDeviceId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("RegisteredDeviceId");
 
                     b.ToTable("Memorias");
 
@@ -353,8 +348,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             EventDate = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Eiffel Tower",
-                            Occation = "Travel",
-                            RegisteredDeviceId = new Guid("99999999-9999-9999-9999-999999999999")
+                            Occation = "Travel"
                         },
                         new
                         {
@@ -364,8 +358,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             EventDate = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Colosseum",
-                            Occation = "Travel",
-                            RegisteredDeviceId = new Guid("99999999-9999-9999-9999-999999999999")
+                            Occation = "Travel"
                         },
                         new
                         {
@@ -375,8 +368,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             EventDate = new DateTime(2025, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Brandenburg Gate",
-                            Occation = "Work",
-                            RegisteredDeviceId = new Guid("99999999-9999-9999-9999-999999999999")
+                            Occation = "Work"
                         },
                         new
                         {
@@ -386,8 +378,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Sagrada Familia",
-                            Occation = "Travel",
-                            RegisteredDeviceId = new Guid("99999999-9999-9999-9999-999999999999")
+                            Occation = "Travel"
                         },
                         new
                         {
@@ -397,57 +388,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             EventDate = new DateTime(2025, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Big Ben",
-                            Occation = "Other",
-                            RegisteredDeviceId = new Guid("99999999-9999-9999-9999-999999999999")
-                        });
-                });
-
-            modelBuilder.Entity("Mde.SourceOfTruth.Core.Entities.RegisteredDevice", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("DeviceId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DeviceName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Platform")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("RegisteredAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RegisteredDevices");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("99999999-9999-9999-9999-999999999999"),
-                            DeviceId = "sdfqsdg",
-                            DeviceName = "A54 van Nick",
-                            IsActive = true,
-                            Platform = "Android",
-                            RegisteredAt = new DateTime(2023, 6, 28, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("99999999-9999-9999-9999-999999999998"),
-                            DeviceId = "PFKZOFK94839",
-                            DeviceName = "Iemand anders",
-                            IsActive = false,
-                            Platform = "IPhone",
-                            RegisteredAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            Occation = "Other"
                         });
                 });
 
@@ -475,26 +416,10 @@ namespace Mde.SourceOfTruth.Core.Migrations
 
             modelBuilder.Entity("Mde.SourceOfTruth.Core.Entities.Memoria", b =>
                 {
-                    b.HasOne("Mde.SourceOfTruth.Core.Entities.RegisteredDevice", "Device")
-                        .WithMany("memorias")
-                        .HasForeignKey("RegisteredDeviceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Device");
-                });
-
-            modelBuilder.Entity("Mde.SourceOfTruth.Core.Entities.Memoria", b =>
-                {
                     b.Navigation("MediaMaterial");
 
                     b.Navigation("MemoriaAddress")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Mde.SourceOfTruth.Core.Entities.RegisteredDevice", b =>
-                {
-                    b.Navigation("memorias");
                 });
 #pragma warning restore 612, 618
         }

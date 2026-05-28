@@ -47,7 +47,21 @@
                     </Border>
                 </Grid>
 
-                <Button Text="Where am I now?" Command="{Binding ClickForLocationCommand}" IsEnabled="{Binding HasInternet}" Style="{x:StaticResource FullButtons}"/>
+                <Grid ColumnDefinitions="3*,*" ColumnSpacing="5">
+
+                    <Button Text="Where am I now?" Command="{Binding ClickForLocationCommand}" IsEnabled="{Binding HasInternet}" Style="{x:StaticResource FullButtons}"/>
+                    <Button x:Name="Mic" Grid.Column="1" Command="{Binding SpeechToTextComamnd}" IsEnabled="{Binding HasInternet}" 
+                            Style="{x:StaticResource FullButtons}" Clicked="Mic_Clicked">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button" Binding="{Binding IsListening}" Value="True">
+                                <Setter Property="BackgroundColor" Value="Red"/>
+                            </DataTrigger>
+                        </Button.Triggers>
+                        <Button.ImageSource>
+                            <FontImageSource Glyph="&#xe91e;" FontFamily="appIcons" Size="20"/>
+                        </Button.ImageSource>
+                    </Button>
+                </Grid>
 
                 <Grid ColumnDefinitions="*,*" ColumnSpacing="5">
                     <Border HorizontalOptions="Fill" Style="{x:StaticResource SearchBorders}" HeightRequest="{x:StaticResource ButtonHeight}">
