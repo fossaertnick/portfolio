@@ -1,5 +1,7 @@
+using Mde.Project.Mobile.Core.Data;
 using Mde.Project.Mobile.Core.Entities.Enums;
 using Mde.Project.Mobile.Domain.Services;
+using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Mde.Project.Mobile.ViewModels;
 
 namespace Mde.Project.Mobile.Pages;
@@ -7,10 +9,10 @@ namespace Mde.Project.Mobile.Pages;
 public partial class SettingsPage : ContentPage
 {
     private readonly SettingsViewModel _viewModel;
-    private readonly AppOptionsService _colorOptions;
+    private readonly IDeviceSystemService _colorOptions;
 
     // constructor
-    public SettingsPage(SettingsViewModel viewModel, AppOptionsService options)
+    public SettingsPage(SettingsViewModel viewModel, IDeviceSystemService options)
 	{
 		InitializeComponent();
         BindingContext = viewModel;
@@ -26,7 +28,7 @@ public partial class SettingsPage : ContentPage
     }
     public void Apply(ColorChoice choice)
     {
-        Preferences.Set("color_choice", (int)choice);
+        Preferences.Set(Constants.ColorChoice, (int)choice);
         _colorOptions.ApplyColorTheme(choice);
     }
     private void systemColor_Clicked(object sender, EventArgs e)

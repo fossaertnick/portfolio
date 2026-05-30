@@ -1,11 +1,13 @@
 ﻿#if ANDROID
 using Mde.Project.Mobile.Platforms.Android;
+#elif WINDOWS
+using Mde.Project.Mobile.Platforms.Windows;
 #endif
+
 using CommunityToolkit.Maui;
 using Mde.Project.Mobile.Core.Data;
 using Mde.Project.Mobile.Core.Services;
 using Mde.Project.Mobile.Core.Services.Interfaces;
-using Mde.Project.Mobile.Domain.Locations.Mock;
 using Mde.Project.Mobile.Domain.Services;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Mde.Project.Mobile.Pages;
@@ -115,22 +117,20 @@ namespace Mde.Project.Mobile
             builder.Services.AddScoped<IMediaService, MediaService>();
             builder.Services.AddScoped<IStatisticService, StatisticService>();
             builder.Services.AddScoped<ILocationService, LocationService>();
-            builder.Services.AddScoped<IRawToUserService, RawToUserService>();
             builder.Services.AddScoped<ILocalMemoriaCache, LocalMemoriaCache>();
             builder.Services.AddScoped<IMapService, AndroidMapService>();
-            builder.Services.AddSingleton<AppOptionsService>();
-            builder.Services.AddSingleton<JwtService>();
-            builder.Services.AddSingleton<ISourceOfTruthService, SourceOfTruthService>();
-            builder.Services.AddHttpClient<IGeoCodingService, GoogleGeoCodingService>();
 
+            builder.Services.AddSingleton<IDeviceSystemService, DeviceSystemService>();
+            builder.Services.AddSingleton<AppShell>();
+            builder.Services.AddSingleton<ISourceOfTruthService, SourceOfTruthService>();
 #if ANDROID
             builder.Services.AddSingleton<ISpeechToTextService, AndroidSpeechToTextService>();
+#elif WINDOWS
+            builder.Services.AddSingleton<ISpeechToTextService, WindowsSpeechToTextService>();
 #endif
-            builder.Services.AddTransient<JwtHandler>();
-
             // API CONNECTION
             builder.Services.AddHttpClient(Constants.MemoriaClientName,
-                config => config.BaseAddress = new Uri(Constants.MemoriaApiUrl)).AddHttpMessageHandler<JwtHandler>();
+                config => config.BaseAddress = new Uri(Constants.MemoriaApiUrl));
             
             var app = builder.Build();
 

@@ -1,12 +1,79 @@
-﻿using Mde.Project.Mobile.Core.Entities.Models;
+﻿#if ANDROID
+using Android.OS;
+#endif
+
+using Mde.Project.Mobile.Core.Data;
+using Mde.Project.Mobile.Core.Entities.Enums;
+using Mde.Project.Mobile.Core.Entities.Models;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
+using Mde.Project.Mobile.Resources.Styles;
 using Plugin.LocalNotification;
 using Plugin.LocalNotification.Core.Models;
+using Environment = System.Environment;
 
 namespace Mde.Project.Mobile.Domain.Services
 {
-    public class RawToUserService : IRawToUserService
+    public class DeviceSystemService : IDeviceSystemService
     {
+        private ResourceDictionary? _activeColorResource;
+
+        // methode (veranderen kleur systeem)
+        public void ApplyColorTheme(ColorChoice choice)
+        {
+            var merged = Application.Current.Resources.MergedDictionaries;
+
+            foreach (var dict in merged.ToList())
+            {
+                if (dict is Purple || dict is Green || dict is blue)
+                {
+                    merged.Remove(dict);
+                }
+            }
+
+            _activeColorResource = null;
+
+            if (choice == ColorChoice.System)
+            {
+                Preferences.Set(Constants.ColorChoice, (int)ColorChoice.System);
+                return;
+            }
+
+            _activeColorResource = choice switch
+            {
+                ColorChoice.Blue => new blue(),
+                ColorChoice.Purple => new Purple(),
+                ColorChoice.Green => new Green(),
+                _ => null
+            };
+
+            if (_activeColorResource != null)
+            {
+                merged.Add(_activeColorResource);
+            }
+
+            Preferences.Set(Constants.ColorChoice, (int)choice);
+        }
+        public void LoadSavedTheme()
+        {
+            var stored = Preferences.Get(Constants.ColorChoice, (int)ColorChoice.System);
+            ApplyColorTheme((ColorChoice)stored);
+        }
+
+        // methode (app sluiten)
+        public void Close()
+        {
+
+#if ANDROID
+
+            Process.KillProcess(Process.MyPid());
+
+#elif WINDOWS
+
+            Application.Current?.Quit();
+
+#endif
+        }
+
         // methoden (manual to user)
         public async Task<ResultModel<string>> HelpTheUserAsync()
         {
@@ -50,6 +117,14 @@ namespace Mde.Project.Mobile.Domain.Services
                 await LocalNotificationCenter.Current.Show(request);
             }
         }
+        public Task StopNotifications()
+        {
+            LocalNotificationCenter.Current.CancelAll();
+
+            return Task.CompletedTask;
+        }
+     
+        // ondersteunende methoden
         private async Task<List<string>> ReadPhrases()
         {
             using var stream = await FileSystem.OpenAppPackageFileAsync("chatterBox.md");
@@ -57,12 +132,6 @@ namespace Mde.Project.Mobile.Domain.Services
             var content = await reader.ReadToEndAsync();
 
             return content.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList();
-        }
-        public Task StopNotifications()
-        {
-            LocalNotificationCenter.Current.CancelAll();
-
-            return Task.CompletedTask;
         }
     }
 }

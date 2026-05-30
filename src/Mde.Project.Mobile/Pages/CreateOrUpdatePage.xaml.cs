@@ -18,7 +18,7 @@ public partial class CreateOrUpdatePage : ContentPage
     // methoden
     private async void MediaChoice_Clicked(object sender, EventArgs e)
     {
-        string action = await Application.Current.MainPage.DisplayActionSheet
+        string action = await Application.Current.MainPage.DisplayActionSheetAsync
                 (
                     "Choose option",
                     "Cancel",
@@ -34,9 +34,6 @@ public partial class CreateOrUpdatePage : ContentPage
                 break;
             case "Library":
                 _viewModel.PickPhotoCommand.Execute(null);
-                break;
-            case "Video":
-                _viewModel.TakeVideoCommand.Execute(null);
                 break;
         }
     }

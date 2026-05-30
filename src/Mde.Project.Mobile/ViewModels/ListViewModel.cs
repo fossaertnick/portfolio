@@ -13,7 +13,7 @@ namespace Mde.Project.Mobile.ViewModels
         private readonly IMemoriaService _memoriaService;
 
         // fields
-        private ObservableCollection<MemoriaList> locations;
+        private ObservableCollection<MemoriaList> locations = new ObservableCollection<MemoriaList>();
         private string searchTerm;
         private CancellationTokenSource? _searchWay;
 
@@ -35,11 +35,15 @@ namespace Mde.Project.Mobile.ViewModels
             }
         }
         public bool ShowMapButton => DeviceInfo.Current.Platform == DevicePlatform.Android;
+        public bool NoMemorias => IsOffline || Locations.Count <= 0;
         public int SearchColumnSpan => ShowMapButton ? 1 : 2;
 
 
         // Commands
-        public ICommand InitializeMemoriaCommand { get; }
+        public ICommand InitializeMemoriaCommand => new Command(async () =>
+        {
+            await ExecuteInitializeMemoriaCommand();
+        });
         public ICommand DetailsMemoriaCommand => new Command<Guid>(async (memoriaId) =>
         {
             await ExecuteDetailsMemoriaCommand(memoriaId);
@@ -62,23 +66,9 @@ namespace Mde.Project.Mobile.ViewModels
         public ListViewModel(IMemoriaService memoriaService)
         {
             _memoriaService = memoriaService;
-            Locations = new ObservableCollection<MemoriaList>();
-            InitializeMemoriaCommand = new Command(async () => await ExecuteInitializeMemoriaCommand());
         }
 
         // methodes
-        private async Task RefreshMemoriaList()
-        {
-            var result = await _memoriaService.GetAllMemoriaAsync();
-            var memorias = await HandleResult(result);
-            if (memorias == null) return;
-
-            Locations.Clear();
-            foreach (var memoria in memorias)
-            {
-                Locations.Add(memoria);
-            }
-        }
         [RelayCommand]
         private async Task ExecuteInitializeMemoriaCommand()
         {
@@ -135,7 +125,81 @@ namespace Mde.Project.Mobile.ViewModels
 
             await Shell.Current.GoToAsync($"{nameof(CreateOrUpdatePage)}?id={memoriaId}");
         }
-        private async Task ExecuteVisuallyFilterLocationsCommand(string name)
+        private async Task ExecuteDeleteMemoriaCommand(Guid memoriaId)
+        {
+            bool bevestiging = await Shell.Current.DisplayAlertAsync(
+                "Delete",
+                "You want to delete this Memoria?",
+                "Yes",
+                "No"
+                );
+
+            if (!bevestiging) return;
+            
+            try
+            {
+                IsBusy = true;
+                if (memoriaId == Guid.Empty)
+                {
+                    await Shell.Current.DisplayAlertAsync(
+                        "Error",
+                        "No valid memoria selected",
+                        "OK");
+
+                    return;
+                }
+
+                bool confirm = await Shell.Current.DisplayAlertAsync(
+                    "Delete",
+                    "Are you sure?",
+                    "Yes",
+                    "No");
+                if (!confirm) return;
+                var result = await _memoriaService.DeleteMemoriaAsync(memoriaId);
+                var deleted = await HandleResult(result);
+                if (!deleted) return;
+
+                await RefreshMemoriaList();
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+        private async Task BounceSearchAsync(string search)
+        {
+            _searchWay?.Cancel();
+            _searchWay = new CancellationTokenSource();
+            try
+            {
+                await Task.Delay(300, _searchWay.Token);
+
+                await ExecuteVisuallyFilterLocation(search);
+            }
+            catch (TaskCanceledException)
+            {
+
+            }
+        }
+        protected override async Task OnInternetRestored()
+        {
+            await ExecuteInitializeMemoriaCommand();
+        }
+
+        // ondersteunende methoden
+        private async Task RefreshMemoriaList()
+        {
+            var result = await _memoriaService.GetAllMemoriaAsync();
+            var memorias = await HandleResult(result);
+            if (memorias == null) return;
+
+            Locations.Clear();
+            foreach (var memoria in memorias)
+            {
+                Locations.Add(memoria);
+            }
+        }
+        private async Task ExecuteVisuallyFilterLocation(string name)
         {
             try
             {
@@ -160,53 +224,6 @@ namespace Mde.Project.Mobile.ViewModels
             finally
             {
                 IsBusy = false;
-            }
-        }
-        private async Task ExecuteDeleteMemoriaCommand(Guid memoriaId)
-        {
-            try
-            {
-                IsBusy = true;
-                if (memoriaId == Guid.Empty)
-                {
-                    await Shell.Current.DisplayAlertAsync(
-                        "Error",
-                        "No valid memoria selected",
-                        "OK");
-
-                    return;
-                }
-
-                bool confirm = await Shell.Current.DisplayAlertAsync(
-                    "Delete",
-                    "Are you sure?",
-                    "YES",
-                    "NO");
-                if (!confirm) return;
-                var result = await _memoriaService.DeleteMemoriaAsync(memoriaId);
-                var deleted = await HandleResult(result);
-                if (!deleted) return;
-
-                await RefreshMemoriaList();
-            }
-            finally
-            {
-                IsBusy = false;
-            }
-        }
-        private async Task BounceSearchAsync(string search)
-        {
-            _searchWay?.Cancel();
-            _searchWay = new CancellationTokenSource();
-            try
-            {
-                await Task.Delay(300, _searchWay.Token);
-
-                await ExecuteVisuallyFilterLocationsCommand(search);
-            }
-            catch (TaskCanceledException)
-            {
-
             }
         }
     }

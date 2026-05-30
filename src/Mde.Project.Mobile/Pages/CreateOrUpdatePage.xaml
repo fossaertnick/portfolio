@@ -13,44 +13,46 @@
 
     <Grid>
 
-        <Grid Padding="10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-        
-            <Grid Grid.Row="0" ColumnDefinitions="*,2*" ColumnSpacing="5">
-                <Label Text="{Binding EditMode}" FontAttributes="Bold" HorizontalTextAlignment="Start" VerticalTextAlignment="Center" FontSize="35" TextColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}"/>
+        <Grid Padding="{x:StaticResource DefaultPadding}" IsVisible="{Binding IsLoading}" Style="{x:StaticResource FourGrid}">
+
+            <Grid IsVisible="{Binding IsBusy}" >
+                <VerticalStackLayout Style="{x:StaticResource LoadingBlock}">
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" Style="{x:StaticResource Loading}"/>
+                    <Label Text="Loading Memorias..."/>
+                </VerticalStackLayout>
+            </Grid>
+
+            <Grid Grid.Row="0" Style="{x:StaticResource BasicGridDivition}" ColumnDefinitions="*,2*">
+                <Label Text="{Binding EditMode}" HorizontalTextAlignment="Start" VerticalTextAlignment="Center" Style="{x:StaticResource Titles}" TextColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}"/>
                 <Border Grid.Column="1" Style="{x:StaticResource SearchBorders}">
-                    <Entry Text="{Binding Name}" Placeholder="Title ... " Keyboard="Text"/>
+                    <Entry Text="{Binding Name}" Placeholder="Naam ... " Keyboard="Text"/>
                 </Border>
             </Grid>
-        
+
             <VerticalStackLayout Grid.Row="1" >
 
-                <Grid  ColumnDefinitions="*,*" ColumnSpacing="5">
+                <Grid Style="{x:StaticResource BasicGridDivition}">
                     <Border Style="{x:StaticResource SearchBorders}">
-                        <Entry Text="{Binding Country}" Placeholder="Country ..." Keyboard="Text"/>
+                        <Entry Text="{Binding Country}" Placeholder="Land ..." Keyboard="Text"/>
                     </Border>
                     <Border Style="{x:StaticResource SearchBorders}" Grid.Column="1">
-                        <Entry Text="{Binding City}" Placeholder="City ... " Keyboard="Text"/>
+                        <Entry Text="{Binding City}" Placeholder="Stad ... " Keyboard="Text"/>
                     </Border>
                 </Grid>
 
-                <Grid ColumnDefinitions="3*,*" ColumnSpacing="5">
+                <Grid Style="{x:StaticResource BasicGridDivition}" ColumnDefinitions="3*,*">
                     <Border Style="{x:StaticResource SearchBorders}">
-                        <Entry Text="{Binding Street}" Placeholder="Street ..." Keyboard="Text"/>
+                        <Entry Text="{Binding Street}" Placeholder="STraat ..." Keyboard="Text"/>
                     </Border>
                     <Border Style="{x:StaticResource SearchBorders}" Grid.Column="1">
-                        <Entry Text="{Binding HouseNumber}" Placeholder="Number ... " Keyboard="Numeric"/>
+                        <Entry Text="{Binding HouseNumber}" Placeholder="Nummer ... " Keyboard="Numeric"/>
                     </Border>
                 </Grid>
 
-                <Grid ColumnDefinitions="3*,*" ColumnSpacing="5">
+                <Grid Style="{x:StaticResource BasicGridDivition}" ColumnDefinitions="3*,*">
 
                     <Button Text="Where am I now?" Command="{Binding ClickForLocationCommand}" IsEnabled="{Binding HasInternet}" Style="{x:StaticResource FullButtons}"/>
-                    <Button x:Name="Mic" Grid.Column="1" Command="{Binding SpeechToTextComamnd}" IsEnabled="{Binding HasInternet}" 
+                    <Button x:Name="Mic" Grid.Column="1" IsEnabled="{Binding HasInternet}"  
                             Style="{x:StaticResource FullButtons}" Clicked="Mic_Clicked">
                         <Button.Triggers>
                             <DataTrigger TargetType="Button" Binding="{Binding IsListening}" Value="True">
@@ -63,7 +65,7 @@
                     </Button>
                 </Grid>
 
-                <Grid ColumnDefinitions="*,*" ColumnSpacing="5">
+                <Grid Style="{x:StaticResource BasicGridDivition}" >
                     <Border HorizontalOptions="Fill" Style="{x:StaticResource SearchBorders}" HeightRequest="{x:StaticResource ButtonHeight}">
                         <DatePicker Date="{Binding EventDate, Mode=TwoWay}"/>
                     </Border>
@@ -72,7 +74,7 @@
                     </Border>
                 </Grid>
 
-                <Grid  HorizontalOptions="Center" RadioButtonGroup.GroupName="Occation" ColumnDefinitions="*,*,*,*" ColumnSpacing="5"
+                <Grid  HorizontalOptions="Center" RadioButtonGroup.GroupName="Occation" Style="{x:StaticResource BasicGridDivition}" ColumnDefinitions="*,*,*,*"
                        RadioButtonGroup.SelectedValue="{Binding Occation, Mode=TwoWay}">
                     <RadioButton Grid.Column="0" Content="travel" Value="{x:Static enum:OccationType.Travel}"/>
                     <RadioButton Grid.Column="1" Content="work" Value="{x:Static enum:OccationType.Work}"/>
@@ -84,7 +86,7 @@
 
                 <CollectionView ItemsSource="{Binding TemporaryItems}" ItemsLayout="HorizontalList" Margin="0,15,0,15" HorizontalOptions="Center">
                     <CollectionView.EmptyView>
-                        <HorizontalStackLayout VerticalOptions="Center" Spacing="15" HorizontalOptions="Center">
+                        <HorizontalStackLayout VerticalOptions="Center" Spacing="{x:StaticResource DefaultSpacing}" HorizontalOptions="Center">
                             <Label FontFamily="appIcons" Text="&#xea0f;" FontSize="25" TextColor="DarkRed" />
                             <Label Text="There are no images to show."/>
                         </HorizontalStackLayout>
@@ -107,15 +109,6 @@
                                             NumberOfTapsRequired="1" CommandParameter="{Binding .}"/>
                                     </Image.GestureRecognizers>
                                 </Image>
-
-                                <toolkit:MediaElement
-                                    Source="{Binding FilePath}"
-                                    IsVisible="{Binding IsVideo}"
-                                    WidthRequest="60"
-                                    HeightRequest="60"
-                                    ShouldShowPlaybackControls="False"
-                                    ShouldAutoPlay="False">
-                                </toolkit:MediaElement>
                             </HorizontalStackLayout>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
@@ -123,15 +116,17 @@
 
                 <Border HeightRequest="150" Style="{x:StaticResource SearchBorders}">
                     <ScrollView>
-                        <Editor Text="{Binding Description}" Placeholder="Description..." Keyboard="Plain" AutoSize="TextChanges"/>
+                        <Editor Text="{Binding Description}" Placeholder="Beschrijving ..." Keyboard="Plain" AutoSize="TextChanges"/>
                     </ScrollView>
                 </Border>
             </VerticalStackLayout>
 
-            <Grid Grid.Row="3" ColumnDefinitions="*,*" ColumnSpacing="5">
+
+            <Grid Grid.Row="2" Style="{x:StaticResource BasicGridDivition}">
                 <Button Command="{Binding CreateCommand}"
                         Text="{Binding EditMode}"
-                        Style="{x:StaticResource FullButtons}">
+                        Style="{x:StaticResource FullButtons}"
+                        IsEnabled="{Binding HasInternet}">
                     <Button.Triggers>
                         <DataTrigger TargetType="Button" Binding="{Binding IsUpdateMode}" Value="true">
                             <Setter Property="BackgroundColor" Value="Orange"/>
@@ -144,8 +139,11 @@
                 Style="{x:StaticResource FullButtons}"
                 BackgroundColor="Red" Grid.Column="1"/>
             </Grid>
+            <Border Grid.Row="3" IsVisible="{Binding IsOffline}" Padding="{x:StaticResource DefaultPadding}" BackgroundColor="DarkRed">
+                <Label Text="No internet connection has been detected. Some features may be unavailable." HorizontalOptions="Center"/>
+            </Border>
         </Grid>
-        
+
         <Grid IsVisible="{Binding IsSaving}" BackgroundColor="Black" Opacity="1.0" ZIndex="999" VerticalOptions="Center">
             <VerticalStackLayout>
                 <Label Text="Saving Memoria ..." TextColor="White" HorizontalOptions="Center"/>

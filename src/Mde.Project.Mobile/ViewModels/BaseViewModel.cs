@@ -9,6 +9,7 @@ namespace Mde.Project.Mobile.ViewModels
         // fields
         private bool isBusy;
         private string errorMessage;
+        private bool hasInternet;
 
         // properties
         public bool IsBusy
@@ -16,7 +17,10 @@ namespace Mde.Project.Mobile.ViewModels
             get { return isBusy; }
             set
             {
-                SetProperty(ref isBusy, value);
+                if(SetProperty(ref isBusy, value))
+                {
+                    OnPropertyChanged(nameof(IsLoading));
+                }
             }
         }
         public string ErrorMessage
@@ -27,7 +31,31 @@ namespace Mde.Project.Mobile.ViewModels
                 SetProperty(ref errorMessage, value);
             }
         }
+        public bool HasInternet
+        {
+            get { return  hasInternet; }
+            set
+            {
+                if(SetProperty(ref hasInternet, value))
+                {
+                    OnPropertyChanged(nameof(IsOffline));
+                }
+            }
+        }
+        public bool IsLoading => !IsBusy;
+        public bool IsOffline => !HasInternet;
 
+        // constructor
+        public BaseViewModel()
+        {
+            UpdateConnectivity();
+            Connectivity.Current.ConnectivityChanged += async (_, e) =>
+            {
+                var previous = HasInternet;
+                HasInternet = e.NetworkAccess == NetworkAccess.Internet;
+                if (!previous && HasInternet) await OnInternetRestored();
+            };
+        }
         // methoden
         protected async Task<T?> HandleResult<T>(ResultModel<T> result)
         {
@@ -44,6 +72,14 @@ namespace Mde.Project.Mobile.ViewModels
             }
 
             return default;
+        }
+        private void UpdateConnectivity()
+        {
+            HasInternet = Connectivity.Current.NetworkAccess == NetworkAccess.Internet;
+        }
+        protected virtual Task OnInternetRestored()
+        {
+            return Task.CompletedTask;
         }
     }
 }

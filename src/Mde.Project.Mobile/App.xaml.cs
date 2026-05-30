@@ -1,25 +1,24 @@
 ﻿using Mde.Project.Mobile.Domain.Services;
+using Mde.Project.Mobile.Domain.Services.Interfaces;
 
 namespace Mde.Project.Mobile
 {
     public partial class App : Application
     {
-        private readonly AppOptionsService _optionsService;
-        private readonly JwtService _jwtService;
+        private readonly IDeviceSystemService _optionsService;
+        private readonly IServiceProvider _service;
 
         // constructor
-        public App(AppOptionsService optionsService, JwtService jwtService)
+        public App(IDeviceSystemService optionsService, IServiceProvider service)
         {
             InitializeComponent();
 
             _optionsService = optionsService;
-            _jwtService = jwtService;
+            _service = service;
 
-            _jwtService.EnsureDeviceId();
             _optionsService.LoadSavedTheme();
-            _ = _jwtService.EnsureTokenAsync();
 
-            MainPage = new AppShell();
+            MainPage = _service.GetRequiredService<AppShell>();
         }
     }
 }

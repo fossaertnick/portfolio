@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace Mde.Project.Mobile.ViewModels
 {
-    public class StatisticsViewModel : BaseViewModel
+    public partial class StatisticsViewModel : BaseViewModel
     {
         private readonly IStatisticService _statisticService;
 
@@ -98,6 +98,7 @@ namespace Mde.Project.Mobile.ViewModels
         {
             _statisticService = statisticService;
         }
+
         // methoden
         private async Task ExecuteInitializeCommand()
         {
@@ -121,6 +122,10 @@ namespace Mde.Project.Mobile.ViewModels
             {
                 IsBusy = false;
             }
+        }
+        protected override async Task OnInternetRestored()
+        {
+            await ExecuteInitializeCommand();
         }
     }
 }

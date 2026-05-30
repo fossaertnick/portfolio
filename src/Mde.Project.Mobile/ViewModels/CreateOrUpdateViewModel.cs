@@ -1,21 +1,18 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Mde.Project.Mobile.Core.Entities;
+﻿using Mde.Project.Mobile.Core.Entities;
 using Mde.Project.Mobile.Core.Entities.Enums;
 using Mde.Project.Mobile.Core.Services.Interfaces;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Mde.Project.Mobile.Pages;
 using System.Collections.ObjectModel;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
 namespace Mde.Project.Mobile.ViewModels
 {
-    public class CreateOrUpdateViewModel : BaseViewModel, IQueryAttributable
+    public partial class CreateOrUpdateViewModel : BaseViewModel, IQueryAttributable
     {
         private readonly IMediaService _mediaService;
         private readonly IMemoriaService _memoriaService;
         private readonly ILocationService _locationService;
-        private readonly IGeoCodingService _geoCodingService;
         private readonly ISpeechToTextService _speechToTextService;
 
         // fields
@@ -36,6 +33,7 @@ namespace Mde.Project.Mobile.ViewModels
         private double progressBar;
         private bool isSaving;
         private bool isListening;
+        private Guid _currentMemoriaId;
 
         // properties
         public EditMode EditMode
@@ -75,7 +73,6 @@ namespace Mde.Project.Mobile.ViewModels
                 }
             }
         }
-
         public double Longitude
         {
             get { return longitude; }
@@ -166,34 +163,29 @@ namespace Mde.Project.Mobile.ViewModels
         });
         public ICommand CreateCommand => new Command(async () =>
         {
-            await CreateOrUpdateMemoriaAsync();
+            await ExecuteCreateOrUpdateMemoriaCommandAsync();
         });
         public ICommand ClickForLocationCommand => new Command(async () =>
         {
-            await GiveUserHisCurrentLocation();
+            await ExecuteGiveUserHisCurrentLocationCommand();
         });
         public ICommand TakePhotoCommand => new Command(async () =>
         {
-            await TakePhotoAsync();
+            await ExecuteTakePhotoCommandAsync();
         });
         public ICommand PickPhotoCommand => new Command(async () =>
         {
-            await PickPhotoAsync();
-        });
-        public ICommand TakeVideoCommand => new Command(async () =>
-        {
-            await TakeVideoAsync();
+            await ExecutePickPhotoCommandAsync();
         });
         public ICommand DeleteTemporaryMediaItemCommand => new Command<MediaItem>(async (image) =>
         {
-            await RemoveImage(image);
+            await ExecuteRemoveImageCommand(image);
         });
 
         // constructor
-        public CreateOrUpdateViewModel(IMediaService mediaService, IGeoCodingService geoCodingService, IMemoriaService memoriaService, ILocationService locationService, ISpeechToTextService speechToTextService)
+        public CreateOrUpdateViewModel(IMediaService mediaService, IMemoriaService memoriaService, ILocationService locationService, ISpeechToTextService speechToTextService)
         {
             _mediaService = mediaService;
-            _geoCodingService = geoCodingService;
             _memoriaService = memoriaService;
             _locationService = locationService;
             _speechToTextService = speechToTextService;
@@ -204,99 +196,7 @@ namespace Mde.Project.Mobile.ViewModels
         {
             await HandleNavigation(query);
         }
-        private async Task HandleNavigation(IDictionary<string, object> query)
-        {
-            try
-            {
-                IsBusy = true;
-                if (query.TryGetValue("id", out var value) && Guid.TryParse(value?.ToString(), out var id))
-                {
-                    await InitUpdate(id);
-                }
-                else if (query.ContainsKey("Latitude") && query.ContainsKey("Longitude"))
-                {
-                    InitCreate();
-                    Country = query["Country"]?.ToString() ?? string.Empty;
-                    City = query["City"]?.ToString() ?? string.Empty;
-                    Street = query["Street"]?.ToString() ?? string.Empty;
-                    HouseNumber = query["HouseNumber"]?.ToString() ?? string.Empty;
-                    Latitude = Convert.ToDouble(query["Latitude"]);
-                    Longitude = Convert.ToDouble(query["Longitude"]);
-                }
-                else
-                {
-                    InitCreate();
-                }
-            }
-            finally
-            {
-                IsBusy = false;
-            }
-        }
-        private void InitCreate()
-        {
-            EditMode = EditMode.Create;
-            SelectedMemoria = null;
-            ResetFields();
-        }
-        private async Task InitUpdate(Guid id)
-        {
-            EditMode = EditMode.Update;
-            var result = await _memoriaService.GetMemoriaByIdAsync(id);
-            var memoria = await HandleResult(result);
-            if (memoria == null) return;
-
-            SelectedMemoria = memoria;
-            ApplyMemoriaToFields(SelectedMemoria);
-            LoadAdres();
-            await LoadExistingImages();
-        } 
-        private void LoadAdres()
-        {
-            if(SelectedMemoria.MemoriaAddress == null)
-            {
-
-                City = string.Empty;
-                Country = string.Empty;
-                Street = string.Empty;
-                HouseNumber = string.Empty;
-            }
-            else
-            {
-                City = SelectedMemoria.MemoriaAddress.City;
-                Country = SelectedMemoria.MemoriaAddress.Country;
-                Street = SelectedMemoria.MemoriaAddress.Street;
-                HouseNumber = SelectedMemoria.MemoriaAddress.HouseNumber;
-                Longitude = SelectedMemoria.MemoriaAddress.Longitude;
-                Latitude = SelectedMemoria.MemoriaAddress.Latitude;
-            }
-        }
-        private void ApplyMemoriaToFields(Memoria memoria)
-        {
-            if (memoria == null) return;
-
-            Id = memoria.Id;
-            Name = memoria.Name;
-            Description = memoria.Description;
-            Occation = memoria.Occation;
-        }
-        private void ResetFields()
-        {
-            Id = Guid.Empty;
-            Name = string.Empty;
-            Description = string.Empty;
-            Occation = default;
-            City = string.Empty;
-            Country = string.Empty;
-            Street = string.Empty;
-            HouseNumber = string.Empty;
-            EventDate = DateTime.Now;
-            EventTime = DateTime.Now.TimeOfDay;
-            Latitude = 0;
-            Longitude = 0;
-            TemporaryItems.Clear();
-        }
-        private async Task GiveUserHisCurrentLocation()
+        private async Task ExecuteGiveUserHisCurrentLocationCommand()
         {
             try
             {
@@ -309,7 +209,7 @@ namespace Mde.Project.Mobile.ViewModels
                 var currentCoordinates = await HandleResult(locationResult);
                 if(currentCoordinates ==  null) return;
 
-                var addressResult = await _geoCodingService.ReverseGeoCodingAsync(currentCoordinates);
+                var addressResult = await _locationService.ReverseGeoCodingAsync(currentCoordinates);
                 var addressFound = await HandleResult(addressResult);
                 if(addressFound == null) return;
 
@@ -326,7 +226,7 @@ namespace Mde.Project.Mobile.ViewModels
             }
 
         } 
-        private async Task CreateOrUpdateMemoriaAsync()
+        private async Task ExecuteCreateOrUpdateMemoriaCommandAsync()
         {
             try
             {
@@ -395,7 +295,7 @@ namespace Mde.Project.Mobile.ViewModels
                 }
                 ProgressBar = 0.50;
 
-                var geoResult = await _geoCodingService.ForwardGeoCodeAsync(memoria);
+                var geoResult = await _locationService.ForwardGeoCodeAsync(memoria);
                 var geoSuccess = await HandleResult(geoResult);
                 if (geoSuccess != true) return;
 
@@ -425,18 +325,7 @@ namespace Mde.Project.Mobile.ViewModels
                 IsBusy = false;
             }
         } 
-        private async Task LoadExistingImages()
-        {
-            TemporaryItems.Clear();
-            if (SelectedMemoria?.MediaMaterial != null)
-            {
-                foreach (var media in SelectedMemoria.MediaMaterial)
-                {
-                    TemporaryItems.Add(media);
-                }
-            }
-        }
-        private async Task RemoveImage(MediaItem image)
+        private async Task ExecuteRemoveImageCommand(MediaItem image)
         {
             try
             {
@@ -450,7 +339,7 @@ namespace Mde.Project.Mobile.ViewModels
                 IsBusy = false;
             }
         }
-        private async Task PickPhotoAsync()
+        private async Task ExecutePickPhotoCommandAsync()
         {
             try
             {
@@ -469,7 +358,7 @@ namespace Mde.Project.Mobile.ViewModels
                 IsBusy = false;
             }
         } 
-        private async Task TakePhotoAsync()
+        private async Task ExecuteTakePhotoCommandAsync()
         {
             try
             {
@@ -480,27 +369,6 @@ namespace Mde.Project.Mobile.ViewModels
                 if (photo == null) return;
 
                 var result = _mediaService.PrepareMediaItem(photo);
-                var mediaItem = await HandleResult(result);
-                if(mediaItem == null) return;
-
-                TemporaryItems.Add(mediaItem);
-            }
-            finally
-            {
-                IsBusy = false;
-            }
-        }
-        private async Task TakeVideoAsync()
-        {
-            try
-            {
-                IsBusy = true;
-                if (!MediaPicker.Default.IsCaptureSupported) return;
-
-                var video = await MediaPicker.Default.CaptureVideoAsync();
-                if (video == null) return;
-
-                var result = await _mediaService.SaveVideoAsync(video);
                 var mediaItem = await HandleResult(result);
                 if(mediaItem == null) return;
 
@@ -542,21 +410,6 @@ namespace Mde.Project.Mobile.ViewModels
 
             }
         }
-        private (bool, string) CheckIncomingValues()
-        {
-            string message = string.Empty;
-            if (string.IsNullOrWhiteSpace(Country) || string.IsNullOrWhiteSpace(City) || string.IsNullOrWhiteSpace(Street))
-            {
-                message = "Het land, stad en straat moeten ingevuld zijn";
-                return (false, message);
-            }
-            if (string.IsNullOrWhiteSpace(Name))
-            {
-                message = "De naam van de Memoria moet ingevuld zijn";
-                return (false, message);
-            }
-            return (true, message);
-        }
         public async void StartSpeech()
         {
             try
@@ -571,7 +424,7 @@ namespace Mde.Project.Mobile.ViewModels
                 }
                 IsListening = true;
 
-                _speechToTextService.StartListening(text =>
+                await _speechToTextService.StartListening(text =>
                 {
                     MainThread.BeginInvokeOnMainThread(() =>
                     {
@@ -590,6 +443,127 @@ namespace Mde.Project.Mobile.ViewModels
         {
             IsListening = false;
             _speechToTextService?.StopListening();
+        }
+
+        // ondersteunende methoden
+        private void ApplyMemoriaToFields(Memoria memoria)
+        {
+            if (memoria == null) return;
+
+            Id = memoria.Id;
+            Name = memoria.Name;
+            Description = memoria.Description;
+            Occation = memoria.Occation;
+        }
+        private void LoadAdres()
+        {
+            if(SelectedMemoria.MemoriaAddress == null)
+            {
+
+                City = string.Empty;
+                Country = string.Empty;
+                Street = string.Empty;
+                HouseNumber = string.Empty;
+            }
+            else
+            {
+                City = SelectedMemoria.MemoriaAddress.City;
+                Country = SelectedMemoria.MemoriaAddress.Country;
+                Street = SelectedMemoria.MemoriaAddress.Street;
+                HouseNumber = SelectedMemoria.MemoriaAddress.HouseNumber;
+                Longitude = SelectedMemoria.MemoriaAddress.Longitude;
+                Latitude = SelectedMemoria.MemoriaAddress.Latitude;
+            }
+        }
+        private async Task HandleNavigation(IDictionary<string, object> query)
+        {
+            try
+            {
+                IsBusy = true;
+                if (query.TryGetValue("id", out var value) && Guid.TryParse(value?.ToString(), out var id))
+                {
+                    _currentMemoriaId = id;
+                    await InitUpdate(id);
+                }
+                else if (query.ContainsKey("Latitude") && query.ContainsKey("Longitude"))
+                {
+                    InitCreate();
+                    Country = query["Country"]?.ToString() ?? string.Empty;
+                    City = query["City"]?.ToString() ?? string.Empty;
+                    Street = query["Street"]?.ToString() ?? string.Empty;
+                    HouseNumber = query["HouseNumber"]?.ToString() ?? string.Empty;
+                    Latitude = Convert.ToDouble(query["Latitude"]);
+                    Longitude = Convert.ToDouble(query["Longitude"]);
+                }
+                else
+                {
+                    InitCreate();
+                }
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+        private async Task InitUpdate(Guid id)
+        {
+            EditMode = EditMode.Update;
+            var result = await _memoriaService.GetMemoriaByIdAsync(id);
+            var memoria = await HandleResult(result);
+            if (memoria == null) return;
+
+            SelectedMemoria = memoria;
+            ApplyMemoriaToFields(SelectedMemoria);
+            LoadAdres();
+            await LoadExistingImages();
+        } 
+        private void InitCreate()
+        {
+            EditMode = EditMode.Create;
+            SelectedMemoria = null;
+            ResetFields();
+        }
+        private void ResetFields()
+        {
+            Id = Guid.Empty;
+            Name = string.Empty;
+            Description = string.Empty;
+            Occation = default;
+            City = string.Empty;
+            Country = string.Empty;
+            Street = string.Empty;
+            HouseNumber = string.Empty;
+            EventDate = DateTime.Now;
+            EventTime = DateTime.Now.TimeOfDay;
+            Latitude = 0;
+            Longitude = 0;
+            TemporaryItems.Clear();
+        }
+        private async Task LoadExistingImages()
+        {
+            TemporaryItems.Clear();
+            if (SelectedMemoria?.MediaMaterial != null)
+            {
+                foreach (var media in SelectedMemoria.MediaMaterial)
+                {
+                    TemporaryItems.Add(media);
+                }
+            }
+        }
+        private (bool, string) CheckIncomingValues()
+        {
+            string message = string.Empty;
+            if (string.IsNullOrWhiteSpace(Country) || string.IsNullOrWhiteSpace(City) || string.IsNullOrWhiteSpace(Street))
+            {
+                message = "Het land, stad en straat moeten ingevuld zijn";
+                return (false, message);
+            }
+            if (string.IsNullOrWhiteSpace(Name))
+            {
+                message = "De naam van de Memoria moet ingevuld zijn";
+                return (false, message);
+            }
+            return (true, message);
         }
         private void ApplySpeechTofields(string text)
         {
@@ -626,6 +600,14 @@ namespace Mde.Project.Mobile.ViewModels
             }
 
             return result;
+        }
+        protected override async Task OnInternetRestored()
+        {
+            if (_currentMemoriaId == Guid.Empty) InitCreate();
+            else
+            {
+                await InitUpdate(_currentMemoriaId);
+            }
         }
     }
 }

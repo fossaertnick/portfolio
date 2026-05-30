@@ -10,13 +10,21 @@
              Shell.TabBarIsVisible="False"
              Shell.FlyoutBehavior="Disabled">
 
-    <Grid Padding="10">
+    <Grid Padding="{x:StaticResource DefaultPadding}">
 
         <!-- Buitenste layout -->
-        <Grid
-            RowDefinitions="*,Auto">
+        <Grid Style="{x:StaticResource ThreeGrid}">
+            
+            <Grid IsVisible="{Binding IsBusy}" BackgroundColor="Black" Opacity="0.7">
+                <VerticalStackLayout  Style="{x:StaticResource LoadingBlock}">
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" Style="{x:StaticResource Loading}"/>
+                    <Label Text="Loading Memorias..."/>
+                </VerticalStackLayout>
+            </Grid>
 
-            <Grid>
+            <Grid IsVisible="{Binding IsLoading}">
+                
+                
             <!-- CONTENT -->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="{Binding ContentColumnWidth}"/>
@@ -26,14 +34,13 @@
             <!-- LINKER KOLOM -->
                 <ScrollView Grid.Column="0" HorizontalOptions="Fill" VerticalOptions="Fill">
 
-                    <VerticalStackLayout Spacing="15" HorizontalOptions="Fill">
+                    <VerticalStackLayout Spacing="{x:StaticResource DefaultSpacing}" HorizontalOptions="Fill">
 
                         <Label
                             Text="{Binding SelectedLocation.Name}"
-                            FontSize="35"
-                            FontAttributes="Bold"/>
+                            Style="{x:StaticResource Titles}"/>
 
-                        <Grid ColumnDefinitions="*,*">
+                        <Grid Style="{x:StaticResource BasicGridDivition}" >
 
                             <VerticalStackLayout>
                                 <Label Text="Event"
@@ -54,9 +61,7 @@
 
                         </Grid>
 
-                        <Border
-                            Padding="10"
-                            StrokeShape="RoundRectangle 10">
+                        <Border Style="{x:StaticResource CategoryBorders}">
 
                             <Label>
 
@@ -109,9 +114,9 @@
                     <DataTemplate
                             x:DataType="images:MediaItem">
 
-                        <Border
+                        <Border 
                                 Margin="0,0,0,10"
-                                StrokeShape="RoundRectangle 10"
+                                StrokeShape="RoundRectangle 15"
                                 HorizontalOptions="Center">
 
                                 <Border.GestureRecognizers>
@@ -136,27 +141,30 @@
             <!-- BUTTONS -->
             <Grid
                 Grid.Row="1"
-                ColumnDefinitions="*,*"
-                ColumnSpacing="5"
+                Style="{x:StaticResource BasicGridDivition}"
                 Margin="0,10,0,0">
 
                 <Button
                     Text="Update"
                     Command="{Binding UpdateMemoriaCommand}"
                     CommandParameter="{Binding SelectedLocation.Id}"
+                    IsEnabled="{Binding HasInternet}"
                     BackgroundColor="Orange"
-                    Style="{x:StaticResource FullButtons}"
-                    Grid.Column="0"/>
+                    Style="{x:StaticResource FullButtons}"/>
 
                 <Button
                     Text="Delete"
-                    Clicked="DeleteMemoriaButton_Clicked"
-                    BindingContext="{Binding SelectedLocation.Id}"
+                    Command="{Binding DeleteMemoriaCommand}"
+                    CommandParameter="{Binding SelectedLocation.Id}"
+                    IsEnabled="{Binding HasInternet}"
                     BackgroundColor="Red"
                     Style="{x:StaticResource FullButtons}"
                     Grid.Column="1"/>
 
             </Grid>
+            <Border Grid.Row="2" IsVisible="{Binding IsOffline}" Padding="{x:StaticResource DefaultPadding}" BackgroundColor="DarkRed">
+                <Label Text="No internet connection has been detected. Some features may be unavailable." HorizontalOptions="Center"/>
+            </Border>
 
         </Grid>
 

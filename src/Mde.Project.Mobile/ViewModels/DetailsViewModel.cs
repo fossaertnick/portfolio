@@ -83,6 +83,15 @@ namespace Mde.Project.Mobile.ViewModels
         }
         private async Task ExecuteDeleteMemoriaCommand(Guid memoriaId)
         {
+            bool bevestiging = await Shell.Current.DisplayAlertAsync(
+                "Delete",
+                "You want to delete this Memoria?",
+                "Yes",
+                "No"
+                );
+
+            if (!bevestiging) return;
+            
             try
             {
                 IsBusy = true;
@@ -97,10 +106,10 @@ namespace Mde.Project.Mobile.ViewModels
                 }
 
                 bool confirm = await Shell.Current.DisplayAlertAsync(
-                    "Delete",
+                    "Confirmation",
                     "Are you sure?",
-                    "YES",
-                    "NO");
+                    "Yes",
+                    "No");
                 if (!confirm) return;
                 var result = await _memoriaService.DeleteMemoriaAsync(memoriaId);
                 var deleted = await HandleResult(result);
@@ -117,6 +126,8 @@ namespace Mde.Project.Mobile.ViewModels
         {
             await HandleNavigation(query);
         }
+
+        // ondersteunende methoden
         private async Task HandleNavigation(IDictionary<string, object> query)
         {
             try

@@ -1,4 +1,6 @@
-﻿using Mde.Project.Mobile.Domain.Services;
+﻿using Mde.Project.Mobile.Core.Data;
+using Mde.Project.Mobile.Domain.Services;
+using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Plugin.LocalNotification;
 using System.Diagnostics;
 
@@ -6,45 +8,25 @@ namespace Mde.Project.Mobile
 {
     public partial class AppShell : Shell
     {
-        private readonly AppOptionsService _closer;
-        private readonly RawToUserService _toUser;
+        private readonly IDeviceSystemService _toUser;
 
         // constructor
-        public AppShell()
+        public AppShell(IDeviceSystemService toUser)
         {
             InitializeComponent();
-            _closer = new AppOptionsService();
-            _toUser = new RawToUserService();
-
+            _toUser = toUser;
         }
 
         // methoden
-        protected override async void OnAppearing()
+        protected override void OnAppearing()
         {
             base.OnAppearing();
-            await InitializeNotification();
-        }
-        private async Task InitializeNotification()
-        {
-            try
-            {
-                if (!Preferences.ContainsKey("notification_permission"))
-                {
-                    var granted = await LocalNotificationCenter.Current.RequestNotificationPermission();
-                    Preferences.Set("notification_permission", granted);
-                    if (granted) await _toUser.InitializeNotifications();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.ToString());
-            }
+            _ = InitializeNotification();
         }
         private async void ManualPage_Clicked(object sender, EventArgs e)
         {
             await Shell.Current.GoToAsync(nameof(ManualPage));
         }
-
         private async void Logout_Clicked(object sender, EventArgs e)
         {
             bool bevestiging = await DisplayAlertAsync(
@@ -56,7 +38,23 @@ namespace Mde.Project.Mobile
 
             if (!bevestiging) return;
 
-            _closer.Close();
+            _toUser.Close();
+        }
+        public async Task InitializeNotification()
+        {
+            try
+            {
+                if (!Preferences.ContainsKey(Constants.NotificationPermission))
+                {
+                    var granted = await LocalNotificationCenter.Current.RequestNotificationPermission();
+                    Preferences.Set(Constants.NotificationPermission, granted);
+                    if (granted) await _toUser.InitializeNotifications();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
         }
     }
 }

@@ -7,9 +7,9 @@ using System.Windows.Input;
 
 namespace Mde.Project.Mobile.ViewModels
 {
-    public class ManualViewModel : BaseViewModel
+    public partial class ManualViewModel : BaseViewModel
     {
-        private readonly IRawToUserService _manualService;
+        private readonly IDeviceSystemService _manualService;
 
         // fields
         private ObservableCollection<ManualSection> sections = new ObservableCollection<ManualSection>();
@@ -28,7 +28,7 @@ namespace Mde.Project.Mobile.ViewModels
         public ICommand InitializeCommand { get; }
 
         // constructor
-        public ManualViewModel(IRawToUserService manualService)
+        public ManualViewModel(IDeviceSystemService manualService)
         {
             _manualService = manualService;
             InitializeCommand = new Command(async () => await LoadManual());
@@ -49,6 +49,8 @@ namespace Mde.Project.Mobile.ViewModels
                 IsBusy = false;
             }
         }
+
+        // ondersteunende methoden
         private void ParseMarkdown(string markdown)
         {
             Sections.Clear();

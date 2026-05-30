@@ -9,3 +9,4 @@
         <Image x:Name="PopupImage" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center"/>
     </Grid>
 </toolkit:Popup>
+

@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 namespace Mde.Project.Mobile.ViewModels
 {
-    public class MainViewModel : ObservableObject
+    public partial class MainViewModel : BaseViewModel
     {
         // Commands
         public ICommand NavigationCommand => new Command<string>(async (destination) =>

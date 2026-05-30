@@ -126,7 +126,7 @@ namespace Mde.Project.Mobile.Core.Services
             }
         }
 
-        // aparte methoden
+        // ondersteunende methoden
         private ResultModel<T> CreateFailureFromResult<T>(BaseResult result)
         {
             return ResultModel<T>.Failure(result.Errors.FirstOrDefault() ?? "Unknown error", result.UserMessage, result.StatusCode);

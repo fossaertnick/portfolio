@@ -4,43 +4,42 @@
              xmlns:viewModels="clr-namespace:Mde.Project.Mobile.ViewModels"
              x:DataType="viewModels:SettingsViewModel"  
              x:Class="Mde.Project.Mobile.Pages.SettingsPage">
-    <VerticalStackLayout Spacing="15" Padding="20">
 
-        <Label Text="Settings" FontSize="35" HorizontalOptions="End" Margin="0,0,30,0"/>
+    <Grid Padding="{x:StaticResource DefaultPadding}" Style="{x:StaticResource TwoGrid}">
+
+        <VerticalStackLayout Grid.Row="0" Spacing="25" Padding="25" >
+
+            <Label Text="Settings" Style="{x:StaticResource Titles}" HorizontalOptions="Center" />
 
 
-        <VerticalStackLayout Spacing="15"
-                         Padding="20"
-                         BackgroundColor="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource OffBlack}}">
-
-            <Label Text="Choose theme"
+            <Border Padding="{x:StaticResource DefaultPadding}" StrokeThickness="0" BackgroundColor="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource OffBlack}}">
+                <VerticalStackLayout Spacing="{x:StaticResource DefaultSpacing}">
+                    
+                
+                <Label Text="Choose theme"
                FontSize="22"
-               TextColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" />
+               TextColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" FontAttributes="Bold"/>
 
-            <Button x:Name="systemColor" Text="System" 
-                    BackgroundColor="{AppThemeBinding
-                        Light={DynamicResource Black},
-                        Dark={DynamicResource White}}"
+                <Button x:Name="systemColor" Text="System" BackgroundColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}"
+                        TextColor="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource Black}}" Clicked="systemColor_Clicked" />
 
-                    TextColor="{AppThemeBinding
-                        Light={DynamicResource White},
-                        Dark={DynamicResource Black}}"
-                Clicked="systemColor_Clicked" />
+                <Button x:Name="purpleColor" Text="purple" TextColor="Black" BackgroundColor="#BA68C8" Clicked="purpleColor_Clicked"/>
 
-            <Button x:Name="purpleColor" Text="purple" TextColor="Black" BackgroundColor="#BA68C8"
-               Clicked="purpleColor_Clicked"/>
+                <Button x:Name="greenColor" Text="Natural Green"  TextColor="Black" BackgroundColor="#66BB6A" Clicked="greenColor_Clicked"/>
 
-            <Button x:Name="greenColor" Text="Natural Green"  TextColor="Black" BackgroundColor="#66BB6A"
-               Clicked="greenColor_Clicked"/>
+                <Button x:Name="blueColor" Text="Sky Blue" TextColor="Black" BackgroundColor="#64B5F6" Clicked="blueColor_Clicked" />
+                
+                </VerticalStackLayout>
+            </Border>
 
-            <Button x:Name="blueColor" Text="Sky Blue" TextColor="Black" BackgroundColor="#64B5F6"
-                Clicked="blueColor_Clicked" />
-
+            <Grid Style="{x:StaticResource BasicGridDivition}" ColumnDefinitions="*,Auto">
+                <Label Text="Notifications : " VerticalOptions="Center" FontSize="18"/>
+                <Switch Grid.Column="1" VerticalOptions="Center" IsToggled="{Binding NotificationsEnabled}"/>
+            </Grid>
+            
         </VerticalStackLayout>
-
-        <HorizontalStackLayout>
-            <Label Text="Notifications"/>
-            <Switch IsToggled="{Binding NotificationsEnabled}"/>
-        </HorizontalStackLayout>
-    </VerticalStackLayout>
+        <Border Grid.Row="1" IsVisible="{Binding IsOffline}" Padding="{x:StaticResource DefaultPadding}" BackgroundColor="DarkRed">
+            <Label Text="No internet connection has been detected. Some features may be unavailable." HorizontalOptions="Center"/>
+        </Border>
+    </Grid>
 </ContentPage>

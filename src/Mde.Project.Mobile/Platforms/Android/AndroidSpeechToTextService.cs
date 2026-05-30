@@ -14,7 +14,7 @@ namespace Mde.Project.Mobile.Platforms.Android
         SpeechRecognizer? _recognizer;
         Action<string>? _callback;
 
-        public void StartListening(Action<string> onResult)
+        public async Task StartListening(Action<string> onResult)
         {
             _callback = onResult;
 

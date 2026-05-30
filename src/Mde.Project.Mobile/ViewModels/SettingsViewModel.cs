@@ -1,14 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Mde.Project.Mobile.Core.Data;
+using Mde.Project.Mobile.Core.Entities.Enums;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Plugin.LocalNotification;
-using Microsoft.Maui.Storage;
-using Mde.Project.Mobile.Core.Entities.Enums;
 
 namespace Mde.Project.Mobile.ViewModels
 {
-    public class SettingsViewModel : ObservableObject
+    public partial class SettingsViewModel : BaseViewModel
     {
-        private readonly IRawToUserService _toUser;
+        private readonly IDeviceSystemService _toUser;
 
         // field
         private bool notificationsEnabled;
@@ -28,18 +28,18 @@ namespace Mde.Project.Mobile.ViewModels
         }
 
         // constructor
-        public SettingsViewModel(IRawToUserService toUser)
+        public SettingsViewModel(IDeviceSystemService toUser)
         {
             _toUser = toUser;
-            notificationsEnabled = Preferences.Get("notification_permission", false);
+            NotificationsEnabled = Preferences.Get("", false);
         }
 
         // methoden
         public async Task Refresh()
         {
-            var previous = Preferences.Get("notification_permission", false);
+            var previous = Preferences.Get(Constants.NotificationPermission, false);
             var current = await LocalNotificationCenter.Current.AreNotificationsEnabled();
-            Preferences.Set("notification_permission", current);
+            Preferences.Set(Constants.NotificationPermission, current);
             _updatingInternally = true;
             NotificationsEnabled = current;
             _updatingInternally = false;
@@ -47,14 +47,14 @@ namespace Mde.Project.Mobile.ViewModels
 
             if (!current && previous) await _toUser.StopNotifications();
         }
-        private Task UpdateNotificationSettings()
+        private async Task UpdateNotificationSettings()
         {
             AppInfo.Current.ShowSettingsUI();
-            return Task.CompletedTask;
+            return;
         }
         public void SaveColorChoice(ColorChoice choice)
         {
-            Preferences.Set("color_choice", (int)choice);
+            Preferences.Set(Constants.ColorChoice, (int)choice);
         }
     }
 }

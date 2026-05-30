@@ -8,11 +8,10 @@ using System.Windows.Input;
 
 namespace Mde.Project.Mobile.ViewModels
 {
-    public class MapViewModel : BaseViewModel
+    public partial class MapViewModel : BaseViewModel
     {
         private readonly ILocationService _locationService;
         private readonly IMemoriaService _memoriaService;
-        private readonly IGeoCodingService _geoCoding;
 
         // fields
         private Location? currentLocation;
@@ -35,36 +34,24 @@ namespace Mde.Project.Mobile.ViewModels
         });
 
         // constructor
-        public MapViewModel(ILocationService locationService, IMemoriaService memoriaService, IGeoCodingService geoCoding)
+        public MapViewModel(ILocationService locationService, IMemoriaService memoriaService)
         {
             _locationService = locationService;
             _memoriaService = memoriaService;
-            _geoCoding = geoCoding;
         }
 
         // methoden
-        private async Task ReadyMapService()
+        public async Task LoadMapAsync()
         {
-            var permissionResult = await _locationService.EnsureLocationPermission();
-            var hasPermission = await HandleResult(permissionResult);
-            if (hasPermission != true) return;
-
-            var locationResult = await _locationService.GetCurrentLocationAsync();
-            var location = await HandleResult(locationResult);
-            if (location == null) return;
-
-            CurrentLocation = new Location(location.Latitude, location.Longitude);
-        }
-        private async Task LoadExistingMemoriaAsync()
-        {
-            Locations.Clear();
-            var result = await _memoriaService.GetAllMemoriaAsync();
-            var memorias = await HandleResult(result);
-            if(memorias == null) return;
-
-            foreach(var memoria in memorias)
+            try
             {
-                Locations.Add(memoria);
+                IsBusy = true;
+                await ReadyMapService();
+                await LoadExistingMemoriaAsync();
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
         private async Task ExecuteDetailsMemoriaCommand(Guid memoriaDetailsId)
@@ -81,24 +68,11 @@ namespace Mde.Project.Mobile.ViewModels
             
             await Shell.Current.GoToAsync($"{nameof(DetailsPage)}?id={memoriaDetailsId}");
         }
-        public async Task LoadMapAsync()
-        {
-            try
-            {
-                IsBusy = true;
-                await ReadyMapService();
-                await LoadExistingMemoriaAsync();
-            }
-            finally
-            {
-                IsBusy = false;
-            }
-        }
         public async Task MapClickedCreateMemoria(Location coordinates)
         {
             try
             {
-                var result = await _geoCoding.ReverseGeoCodingAsync(coordinates);
+                var result = await _locationService.ReverseGeoCodingAsync(coordinates);
                 if (!result.IsSucces) return;
 
                 await Shell.Current.GoToAsync(nameof(CreateOrUpdatePage), new Dictionary<string, object>
@@ -115,6 +89,36 @@ namespace Mde.Project.Mobile.ViewModels
             {
                 Debug.WriteLine($"Error during map click handling: {ex.Message}");
             }
+        }
+        protected override async Task OnInternetRestored()
+        {
+            await LoadMapAsync();
+        }
+        
+        // ondersteunende methoden
+        private async Task LoadExistingMemoriaAsync()
+        {
+            Locations.Clear();
+            var result = await _memoriaService.GetAllMemoriaAsync();
+            var memorias = await HandleResult(result);
+            if(memorias == null) return;
+
+            foreach(var memoria in memorias)
+            {
+                Locations.Add(memoria);
+            }
+        }
+        private async Task ReadyMapService()
+        {
+            var permissionResult = await _locationService.EnsureLocationPermission();
+            var hasPermission = await HandleResult(permissionResult);
+            if (hasPermission != true) return;
+
+            var locationResult = await _locationService.GetCurrentLocationAsync();
+            var location = await HandleResult(locationResult);
+            if (location == null) return;
+
+            CurrentLocation = new Location(location.Latitude, location.Longitude);
         }
     }
 }
