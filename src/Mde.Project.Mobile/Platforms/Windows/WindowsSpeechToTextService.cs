@@ -1,4 +1,5 @@
 ﻿using Mde.Project.Mobile.Core.Services.Interfaces;
+using Windows.Globalization;
 using Windows.Media.SpeechRecognition;
 
 namespace Mde.Project.Mobile.Platforms.Windows
@@ -15,10 +16,19 @@ namespace Mde.Project.Mobile.Platforms.Windows
                 if (_isListening) return;
 
                 _isListening = true;
-                _speechRecognizer = new SpeechRecognizer();
+
+                _speechRecognizer = new SpeechRecognizer(new Language("en-US"));
                 await _speechRecognizer.CompileConstraintsAsync();
+
+                _speechRecognizer.UIOptions.AudiblePrompt = "Speak now";
+                _speechRecognizer.UIOptions.ExampleText = "Say something...";
+
                 var result = await _speechRecognizer.RecognizeAsync();
-                if(result.Status == SpeechRecognitionResultStatus.Success)
+
+                System.Diagnostics.Debug.WriteLine(result.Status);
+                System.Diagnostics.Debug.WriteLine(result.Text);
+
+                if (result.Status == SpeechRecognitionResultStatus.Success)
                 {
                     onResult?.Invoke(result.Text);
                 }

@@ -2,10 +2,8 @@
 using Android.Content;
 using Android.OS;
 using Android.Speech;
+using Mde.Project.Mobile.Core.Entities.Enums;
 using Mde.Project.Mobile.Core.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mde.Project.Mobile.Platforms.Android
 {
@@ -16,6 +14,13 @@ namespace Mde.Project.Mobile.Platforms.Android
 
         public async Task StartListening(Action<string> onResult)
         {
+            var status = await Permissions.RequestAsync<Permissions.Microphone>();
+            if (status != PermissionStatus.Granted)
+            {
+                _callback?.Invoke("Microphone permission denied.");
+                return;
+            }
+
             _callback = onResult;
 
             var activity = Platform.CurrentActivity;
@@ -23,7 +28,7 @@ namespace Mde.Project.Mobile.Platforms.Android
             intent.PutExtra(RecognizerIntent.ExtraLanguageModel, RecognizerIntent.LanguageModelFreeForm);
             intent.PutExtra(RecognizerIntent.ExtraPartialResults, true);
 
-            intent.PutExtra(RecognizerIntent.ExtraLanguage, "nl-BE");
+            intent.PutExtra(RecognizerIntent.ExtraLanguage, "en-US");
 
             _recognizer = SpeechRecognizer.CreateSpeechRecognizer(activity);
             _recognizer.SetRecognitionListener(new Listener(this));

@@ -12,14 +12,14 @@ namespace Mde.Project.Mobile.ViewModels
         private readonly IStatisticService _statisticService;
 
         // fields
-        private string totalMemorias;
-        private string werkMemoria;
-        private string reisMemoria;
-        private string uitgaanMemoria;
-        private string andereMemoria;
-        private string totalMemoriaFotos;
-        private string totalMemoriaVideos;
-        private string favoriteMemoriaCountry;
+        private string totalMemorias = "X";
+        private string werkMemoria = "X";
+        private string reisMemoria = "X";
+        private string uitgaanMemoria = "X";
+        private string andereMemoria = "X";
+        private string totalMemoriaFotos = "X";
+        private string totalMemoriaVideos = "X";
+        private string favoriteMemoriaCountry = "X";
 
         // properties
         public string TotalMemorias

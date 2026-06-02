@@ -230,9 +230,6 @@ namespace Mde.Project.Mobile.ViewModels
         {
             try
             {
-                IsBusy = true;
-                IsSaving = true;
-                ProgressBar = 0.1;
                 var validation = CheckIncomingValues();
                 if(!validation.Item1)
                 {
@@ -243,6 +240,9 @@ namespace Mde.Project.Mobile.ViewModels
 
                     return;
                 }
+                IsBusy = true;
+                IsSaving = true;
+                ProgressBar = 0.1;
 
                 ProgressBar = 0.25;
 
@@ -410,18 +410,11 @@ namespace Mde.Project.Mobile.ViewModels
 
             }
         }
-        public async void StartSpeech()
+        public async Task StartSpeech()
         {
             try
             {
                 IsBusy = true;
-
-                var status = await Permissions.RequestAsync<Permissions.Microphone>();
-                if (status != PermissionStatus.Granted)
-                {
-                    await Shell.Current.DisplayAlertAsync("Error", "No microphone permission", "ok");
-                    return;
-                }
                 IsListening = true;
 
                 await _speechToTextService.StartListening(text =>
@@ -555,12 +548,12 @@ namespace Mde.Project.Mobile.ViewModels
             string message = string.Empty;
             if (string.IsNullOrWhiteSpace(Country) || string.IsNullOrWhiteSpace(City) || string.IsNullOrWhiteSpace(Street))
             {
-                message = "Het land, stad en straat moeten ingevuld zijn";
+                message = "The country, city, and street must be filled in";
                 return (false, message);
             }
             if (string.IsNullOrWhiteSpace(Name))
             {
-                message = "De naam van de Memoria moet ingevuld zijn";
+                message = "The name of the Memoria must be filled in";
                 return (false, message);
             }
             return (true, message);
@@ -569,12 +562,12 @@ namespace Mde.Project.Mobile.ViewModels
         {
             text = text.ToLower();
 
-            if (text.Contains("naam")) Name = ExtractAfter(text, "naam");
-            if (text.Contains("beschrijving")) Description = ExtractAfter(text, "beschrijving");
-            if (text.Contains("land")) Country = ExtractAfter(text, "land");
-            if (text.Contains("stad")) City = ExtractAfter(text, "stad");
-            if (text.Contains("straat")) Street = ExtractAfter(text, "straat");
-            if (text.Contains("nummer")) HouseNumber = ExtractAfter(text, "nummer");
+            if (text.Contains("name")) Name = ExtractAfter(text, "name");
+            if (text.Contains("description")) Description = ExtractAfter(text, "description");
+            if (text.Contains("country")) Country = ExtractAfter(text, "country");
+            if (text.Contains("city")) City = ExtractAfter(text, "city");
+            if (text.Contains("place")) Street = ExtractAfter(text, "place");
+            if (text.Contains("number")) HouseNumber = ExtractAfter(text, "number");
         }
         private string ExtractAfter(string text, string description)
         {
@@ -585,12 +578,13 @@ namespace Mde.Project.Mobile.ViewModels
 
             var stopWord = new[]
             {
-                "naam",
-                "beschrijving",
+                "name",
+                "description",
+                "country",
                 "land",
-                "stad",
-                "straat",
-                "nummer",
+                "city",
+                "place",
+                "number",
             };
 
             foreach(var stop in stopWord)

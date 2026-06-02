@@ -33,19 +33,19 @@
 
                 <Grid Style="{x:StaticResource BasicGridDivition}">
                     <Border Style="{x:StaticResource SearchBorders}">
-                        <Entry Text="{Binding Country}" Placeholder="Land ..." Keyboard="Text"/>
+                        <Entry Text="{Binding Country}" Placeholder="Country ..." Keyboard="Text"/>
                     </Border>
                     <Border Style="{x:StaticResource SearchBorders}" Grid.Column="1">
-                        <Entry Text="{Binding City}" Placeholder="Stad ... " Keyboard="Text"/>
+                        <Entry Text="{Binding City}" Placeholder="City ..." Keyboard="Text"/>
                     </Border>
                 </Grid>
 
                 <Grid Style="{x:StaticResource BasicGridDivition}" ColumnDefinitions="3*,*">
                     <Border Style="{x:StaticResource SearchBorders}">
-                        <Entry Text="{Binding Street}" Placeholder="STraat ..." Keyboard="Text"/>
+                        <Entry Text="{Binding Street}" Placeholder="Street (place) ..." Keyboard="Text"/>
                     </Border>
                     <Border Style="{x:StaticResource SearchBorders}" Grid.Column="1">
-                        <Entry Text="{Binding HouseNumber}" Placeholder="Nummer ... " Keyboard="Numeric"/>
+                        <Entry Text="{Binding HouseNumber}" Placeholder="Number ..." Keyboard="Numeric"/>
                     </Border>
                 </Grid>
 
