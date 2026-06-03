@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Mde.Project.Mobile.Core.Data;
 using Mde.Project.Mobile.Core.Entities.Enums;
+using Mde.Project.Mobile.Core.Services.Interfaces;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Plugin.LocalNotification;
 
@@ -9,6 +10,7 @@ namespace Mde.Project.Mobile.ViewModels
     public partial class SettingsViewModel : BaseViewModel
     {
         private readonly IDeviceSystemService _toUser;
+        private readonly IPushNotificationService _toPush;
 
         // field
         private bool notificationsEnabled;
@@ -28,10 +30,11 @@ namespace Mde.Project.Mobile.ViewModels
         }
 
         // constructor
-        public SettingsViewModel(IDeviceSystemService toUser)
+        public SettingsViewModel(IDeviceSystemService toUser, IPushNotificationService toPush)
         {
             _toUser = toUser;
-            NotificationsEnabled = Preferences.Get("", false);
+            _toPush = toPush;
+            NotificationsEnabled = Preferences.Get("", true);
         }
 
         // methoden
@@ -43,9 +46,10 @@ namespace Mde.Project.Mobile.ViewModels
             _updatingInternally = true;
             NotificationsEnabled = current;
             _updatingInternally = false;
-            if (current && !previous) await _toUser.InitializeNotifications();
+            if (current && !previous) await _toPush.InitializeNotifications();
 
-            if (!current && previous) await _toUser.StopNotifications();
+            if (!current && previous) await _toPush.StopNotifications();
+
         }
         private async Task UpdateNotificationSettings()
         {

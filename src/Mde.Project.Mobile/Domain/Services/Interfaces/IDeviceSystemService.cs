@@ -14,9 +14,5 @@ namespace Mde.Project.Mobile.Domain.Services.Interfaces
 
         // methoden (manual to user)
         Task<ResultModel<string>> HelpTheUserAsync();
-
-        // methoden (chatterbox to user)
-        Task InitializeNotifications();
-        Task StopNotifications();
     }
 }

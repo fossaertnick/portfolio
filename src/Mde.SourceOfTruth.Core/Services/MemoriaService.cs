@@ -3,9 +3,6 @@ using Mde.SourceOfTruth.Core.Entities;
 using Mde.SourceOfTruth.Core.Services.Interfaces;
 using Mde.SourceOfTruth.Core.Services.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mde.SourceOfTruth.Core.Services
 {
@@ -20,12 +17,12 @@ namespace Mde.SourceOfTruth.Core.Services
         }
 
         // methoden
-        public async Task<ResultModel<Memoria>> GetMemoriaByIdAsync(Guid id)
+        public async Task<ResultModel<Memoria>> GetMemoriaByIdAsync(Guid id, Guid deviceId)
         {
             if (id == Guid.Empty) return ResultModel<Memoria>.Failure("Id was empty.");
             try
             {
-                var oneMemoriaById = await _SourceDbContext.Memorias.Include(m => m.MemoriaAddress).Include(m => m.MediaMaterial).SingleOrDefaultAsync(m => m.Id == id);
+                var oneMemoriaById = await _SourceDbContext.Memorias.Include(m => m.MemoriaAddress).Include(m => m.MediaMaterial).SingleOrDefaultAsync(m => m.Id == id && m.DeviceId == deviceId);
                 if (oneMemoriaById is null)
                 {
                     return ResultModel<Memoria>.Failure($"The memoria with id: {id} could not be found.");
@@ -37,11 +34,11 @@ namespace Mde.SourceOfTruth.Core.Services
                 return ResultModel<Memoria>.Failure($"Something went wrong while picking all the memorias: {ex.Message}.");
             }
         }
-        public async Task<ResultModel<IEnumerable<Memoria>>> GetAllMemoriasAsync()
+        public async Task<ResultModel<IEnumerable<Memoria>>> GetAllMemoriasAsync(Guid deviceId)
         {
             try
             {
-                var allMemorias = await _SourceDbContext.Memorias.Include(m => m.MemoriaAddress).Include(m => m.MediaMaterial).ToListAsync();
+                var allMemorias = await _SourceDbContext.Memorias.Where(m => m.DeviceId == deviceId).Include(m => m.MemoriaAddress).Include(m => m.MediaMaterial).ToListAsync();
                 if (!allMemorias.Any())
                 {
                     return ResultModel<IEnumerable<Memoria>>.Failure($"There were no memorias to be found.");
@@ -58,7 +55,7 @@ namespace Mde.SourceOfTruth.Core.Services
             if(newMemoria == null) return ResultModel<Memoria>.Failure($"Memoria parameter was null");
             try
             {
-                bool exists = await _SourceDbContext.Memorias.Include(m => m.MemoriaAddress).Include(m => m.MediaMaterial).AnyAsync(m => m.Name == newMemoria.Name);
+                bool exists = await _SourceDbContext.Memorias.Include(m => m.MemoriaAddress).Include(m => m.MediaMaterial).AnyAsync(m => m.DeviceId == newMemoria.DeviceId && m.Name == newMemoria.Name);
                 if(exists) return ResultModel<Memoria>.Failure($"A memoria with this name '{newMemoria.Name}' already exists.");
                 newMemoria.CreatedOn = DateTime.UtcNow;
                 newMemoria.LastEditedOn = DateTime.UtcNow;
@@ -72,15 +69,15 @@ namespace Mde.SourceOfTruth.Core.Services
                 return ResultModel<Memoria>.Failure($"Something went wrong while creating this new memoria: {ex.Message}");
             }
         }
-        public async Task<ResultModel<Memoria>> UpdateMemoriaAsync(Memoria updatingMemoria)
+        public async Task<ResultModel<Memoria>> UpdateMemoriaAsync(Memoria updatingMemoria, Guid deviceId)
         {
             if (updatingMemoria == null) return ResultModel<Memoria>.Failure($"Memoria parameter was null");
             try
             {
-                bool exists = await _SourceDbContext.Memorias.AnyAsync(m => m.Name == updatingMemoria.Name && m.Id != updatingMemoria.Id);
+                bool exists = await _SourceDbContext.Memorias.AnyAsync(m => m.DeviceId == deviceId && m.Name == updatingMemoria.Name && m.Id != updatingMemoria.Id);
                 if (exists) return ResultModel<Memoria>.Failure($"A memoria with this name '{updatingMemoria.Name}' already exists.");
 
-                var oldMemoria = await GetMemoriaByIdAsync(updatingMemoria.Id);
+                var oldMemoria = await GetMemoriaByIdAsync(updatingMemoria.Id, deviceId);
                 if (!oldMemoria.IsSucces || oldMemoria.Data == null) return ResultModel<Memoria>.Failure($"{oldMemoria.Errors.FirstOrDefault()}");
 
                 oldMemoria.Data.Name = updatingMemoria.Name;
@@ -127,12 +124,12 @@ namespace Mde.SourceOfTruth.Core.Services
                 return ResultModel<Memoria>.Failure($"Something went wrong while updating this memoria: {ex.Message}");
             }
         }
-        public async Task<ResultModel<Memoria>> DeleteMemoriaAsync(Guid id)
+        public async Task<ResultModel<Memoria>> DeleteMemoriaAsync(Guid id, Guid deviceId)
         {
             if(id == Guid.Empty) return ResultModel<Memoria>.Failure("Id parameter was leeg");
             try
             {
-                var oneMemoriaById = await _SourceDbContext.Memorias.Include(m => m.MediaMaterial).SingleOrDefaultAsync(m => m.Id == id);
+                var oneMemoriaById = await _SourceDbContext.Memorias.Include(m => m.MediaMaterial).SingleOrDefaultAsync(m => m.Id == id && m.DeviceId == deviceId);
                 if (oneMemoriaById is null) return ResultModel<Memoria>.Failure($"Something went wrong while picking up the Memoria with id: {id}");
 
                 foreach (var media in oneMemoriaById.MediaMaterial)

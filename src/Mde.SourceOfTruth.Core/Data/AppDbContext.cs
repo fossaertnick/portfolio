@@ -9,13 +9,19 @@ namespace Mde.SourceOfTruth.Core.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
-    
+        public DbSet<Device> Devices { get; set; }
         public DbSet<Memoria> Memorias { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<MediaItem> MediaItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<Device>()
+               .HasMany(m => m.Memorias)
+               .WithOne(d => d.SpecificDevice)
+               .HasForeignKey(a => a.DeviceId)
+               .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<Memoria>()
                .HasOne(m => m.MemoriaAddress)
                .WithOne(a => a.Memoria)

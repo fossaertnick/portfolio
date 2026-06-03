@@ -1,4 +1,8 @@
-﻿namespace Mde.SourceOfTruth.Api.Dto.Auth
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Mde.Project.Mobile.Core.Dtos.Auth
 {
     public class AuthRequestDto
     {

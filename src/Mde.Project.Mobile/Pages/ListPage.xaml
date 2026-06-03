@@ -31,7 +31,8 @@
                     <VerticalStackLayout  Spacing="{x:StaticResource DefaultSpacing}" VerticalOptions="Center" HorizontalOptions="Center">
                         <Label FontFamily="appIcons" Text="&#xea0f;" FontSize="100" TextColor="DarkRed" HorizontalOptions="Center" IsVisible="{Binding IsLoading}"/>
                         <Label Text="There are no memorias to display." IsVisible="{Binding IsLoading}" />
-                        </VerticalStackLayout>
+                        <Label Text="Add some." IsVisible="{Binding IsLoading}" HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
                     </CollectionView.EmptyView>
 
                     <CollectionView.ItemTemplate>

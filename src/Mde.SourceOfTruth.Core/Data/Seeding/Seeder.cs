@@ -8,6 +8,24 @@ namespace Mde.SourceOfTruth.Core.Data.Seeding
     {
         public static void Seed(ModelBuilder builder)
         {
+            var devices = new List<Device>
+            {
+                new Device
+                {
+                    Id = Guid.Parse("33333333-3333-3333-3333-333333333333"),
+                    DeviceIdentifier = "device-001",
+                    DeviceName = "John's iPhone",
+                    RegisteredOn = new DateTime(2025, 01, 01),
+                },
+                new Device
+                {
+                    Id = Guid.Parse("33333333-3333-3333-3333-333333333334"),
+                    DeviceIdentifier = "RZCW0JQTST",
+                    DeviceName = "A54 van Nick",
+                    RegisteredOn = new DateTime(2025, 01, 05),
+                },
+            };
+
             var memorias = new List<Memoria>
             {
                 new Memoria
@@ -19,6 +37,7 @@ namespace Mde.SourceOfTruth.Core.Data.Seeding
                     LastEditedOn = new DateTime(2025, 01, 13),
                     Occation = OccationType.Travel,
                     Description = "Iconische toren en symbool van Parijs.",
+                    DeviceId = Guid.Parse("33333333-3333-3333-3333-333333333333"),
                 },
                 new Memoria
                 {
@@ -29,6 +48,7 @@ namespace Mde.SourceOfTruth.Core.Data.Seeding
                     LastEditedOn = new DateTime(2025, 01, 11),
                     Occation = OccationType.Travel,
                     Description = "Oud Romeins amfitheater.",
+                    DeviceId = Guid.Parse("33333333-3333-3333-3333-333333333334"),
                 },
                 new Memoria
                 {
@@ -39,6 +59,7 @@ namespace Mde.SourceOfTruth.Core.Data.Seeding
                     LastEditedOn = new DateTime(2025, 01, 21),
                     Occation = OccationType.Work,
                     Description = "Historische stadspoort in Berlijn.",
+                    DeviceId = Guid.Parse("33333333-3333-3333-3333-333333333333"),
                 },
                 new Memoria
                 {
@@ -49,6 +70,7 @@ namespace Mde.SourceOfTruth.Core.Data.Seeding
                     LastEditedOn = new DateTime(2025, 01, 27),
                     Occation = OccationType.Travel,
                     Description = "Beroemde basiliek ontworpen door Gaudí.",
+                    DeviceId = Guid.Parse("33333333-3333-3333-3333-333333333333"),
                 },
                 new Memoria
                 {
@@ -59,6 +81,7 @@ namespace Mde.SourceOfTruth.Core.Data.Seeding
                     LastEditedOn = new DateTime(2025, 02, 04),
                     Occation = OccationType.Other,
                     Description = "Bekende klokkentoren van Londen.",
+                    DeviceId = Guid.Parse("33333333-3333-3333-3333-333333333333"),
                 },
             };
             var addresses = new List<Address>
@@ -286,6 +309,7 @@ namespace Mde.SourceOfTruth.Core.Data.Seeding
                 },
             };
 
+            builder.Entity<Device>().HasData(devices);
             builder.Entity<Memoria>().HasData(memorias);
             builder.Entity<Address>().HasData(addresses);
             builder.Entity<MediaItem>().HasData(images);

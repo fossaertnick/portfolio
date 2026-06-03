@@ -4,7 +4,6 @@ using Mde.Project.Mobile.Core.Entities;
 using Mde.Project.Mobile.Core.Entities.Enums;
 using Mde.Project.Mobile.Core.Entities.Models;
 using Mde.Project.Mobile.Core.Services.Interfaces;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -15,12 +14,14 @@ namespace Mde.Project.Mobile.Core.Services
     {
         private readonly HttpClient _httpClient;
         private readonly ILocalMemoriaCache _localCache;
+        private readonly IAuthService _authService;
 
         // constructor
-        public SourceOfTruthService(IHttpClientFactory httpClientFactory, ILocalMemoriaCache localCache)
+        public SourceOfTruthService(IHttpClientFactory httpClientFactory, ILocalMemoriaCache localCache, IAuthService authService)
         {
             _httpClient = httpClientFactory.CreateClient(Constants.MemoriaClientName);
             _localCache = localCache;
+            _authService = authService; 
         }
 
         // methoden
@@ -28,6 +29,7 @@ namespace Mde.Project.Mobile.Core.Services
         {
             try
             {
+                await AddAuthorizationAsync();
                 var options = new JsonSerializerOptions
                 {
                     Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }, PropertyNameCaseInsensitive = true
@@ -62,6 +64,7 @@ namespace Mde.Project.Mobile.Core.Services
         {
             try
             {
+                await AddAuthorizationAsync();
                 var options = new JsonSerializerOptions
                 {
                     Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }, PropertyNameCaseInsensitive = true
@@ -106,6 +109,7 @@ namespace Mde.Project.Mobile.Core.Services
         {
             try
             {
+                await AddAuthorizationAsync();
                 HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"{Constants.GetAllMemorias}", newMemoria);
 
                 if (!response.IsSuccessStatusCode)
@@ -135,6 +139,7 @@ namespace Mde.Project.Mobile.Core.Services
             ResultModel<MemoriaDetailResponseDto> result = new();
             try
             {
+                await AddAuthorizationAsync();
                 HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"{Constants.GetAllMemorias}/{id}", updatingMemoria);
 
                 if (!response.IsSuccessStatusCode)
@@ -163,6 +168,7 @@ namespace Mde.Project.Mobile.Core.Services
         {
             try
             {
+                await AddAuthorizationAsync();
                 HttpResponseMessage response = await _httpClient.DeleteAsync($"{Constants.GetAllMemorias}/{id}");
 
                 if (!response.IsSuccessStatusCode)
@@ -204,6 +210,14 @@ namespace Mde.Project.Mobile.Core.Services
             catch (Exception ex)
             {
                 return ResultModel<MediaItem>.Failure(ex.ToString());
+            }
+        }
+        private async Task AddAuthorizationAsync()
+        {
+            var token = await _authService.GetTokenAsync();
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             }
         }
     }

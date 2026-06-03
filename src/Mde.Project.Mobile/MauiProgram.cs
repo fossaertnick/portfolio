@@ -1,7 +1,10 @@
 ﻿#if ANDROID
 using Mde.Project.Mobile.Platforms.Android;
+using Plugin.LocalNotification;
 #elif WINDOWS
 using Mde.Project.Mobile.Platforms.Windows;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Dispatching;
 #endif
 
 using CommunityToolkit.Maui;
@@ -15,7 +18,7 @@ using Mde.Project.Mobile.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Handlers;
-using Plugin.LocalNotification;
+
 
 namespace Mde.Project.Mobile
 {
@@ -27,9 +30,9 @@ namespace Mde.Project.Mobile
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
-                .UseMauiCommunityToolkitMediaElement(false)
-                .UseLocalNotification();
+                .UseMauiCommunityToolkitMediaElement(false);
 #if ANDROID
+            builder.UseLocalNotification();
             builder.UseMauiMaps();
 #endif
             builder.ConfigureFonts(fonts =>
@@ -122,11 +125,14 @@ namespace Mde.Project.Mobile
 
             builder.Services.AddSingleton<IDeviceSystemService, DeviceSystemService>();
             builder.Services.AddSingleton<AppShell>();
+            builder.Services.AddSingleton<IAuthService, AuthService>();
             builder.Services.AddSingleton<ISourceOfTruthService, SourceOfTruthService>();
 #if ANDROID
             builder.Services.AddSingleton<ISpeechToTextService, AndroidSpeechToTextService>();
+            builder.Services.AddSingleton<IPushNotificationService, AndroidNotificationsService>();
 #elif WINDOWS
             builder.Services.AddSingleton<ISpeechToTextService, WindowsSpeechToTextService>();
+            builder.Services.AddSingleton<IPushNotificationService, WindowsNotificationsService>();
 #endif
             // API CONNECTION
             builder.Services.AddHttpClient(Constants.MemoriaClientName,
@@ -134,8 +140,20 @@ namespace Mde.Project.Mobile
             
             var app = builder.Build();
 
+#if WINDOWS
+            WindowHandler.Mapper.AppendToMapping("DispatcherInit", (handler, view) =>
+            {
+                var dispatcher = handler.PlatformView?.DispatcherQueue;
+                if (dispatcher != null)
+                {
+                    WindowsNotificationsService.SetDispatcher(dispatcher);
+                }
+            });
+            
+#endif
+
             // SEEDING
-            using(var scope = app.Services.CreateScope())
+            using (var scope = app.Services.CreateScope())
             {
                 try
                 {
