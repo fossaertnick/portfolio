@@ -144,7 +144,7 @@
             </Border>
         </Grid>
 
-        <Grid IsVisible="{Binding IsSaving}" BackgroundColor="Black" Opacity="1.0" ZIndex="999" VerticalOptions="Center">
+        <Grid IsVisible="{Binding IsSaving}" BackgroundColor="{x:StaticResource Black}" Opacity="1.0" ZIndex="999" VerticalOptions="Center">
             <VerticalStackLayout>
                 <Label Text="Saving Memoria ..." TextColor="White" HorizontalOptions="Center"/>
                 <ProgressBar Progress="{Binding ProgressBar}" WidthRequest="250" HeightRequest="6"/>

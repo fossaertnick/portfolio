@@ -36,11 +36,6 @@ namespace Mde.Project.Mobile.Core.Services
                 };
                 var memoriaDtos = await _httpClient.GetFromJsonAsync<List<MemoriaListResponseDto>>($"{Constants.GetAllMemorias}", options);
 
-                if (memoriaDtos is null || !memoriaDtos.Any())
-                {
-                    return ResultModel<IEnumerable<MemoriaList>>.Failure("No memorias were found from the API.", "No memorias were found.");
-                }
-
                 var allMemoria = memoriaDtos.Select(m => new MemoriaList
                 {
                     Id = m.Id,

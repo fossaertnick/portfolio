@@ -19,7 +19,7 @@
 
     <!-- BASIS -->
     <Color x:Key="White">#FFFFFF</Color>
-    <Color x:Key="Black">#000000</Color>
+    <Color x:Key="Black">#121212</Color>
 
     <Color x:Key="Magenta">#404040</Color>
     <Color x:Key="MidnightBlue">#000000</Color>
