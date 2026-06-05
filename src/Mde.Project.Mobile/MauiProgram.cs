@@ -121,7 +121,6 @@ namespace Mde.Project.Mobile
             builder.Services.AddScoped<IStatisticService, StatisticService>();
             builder.Services.AddScoped<ILocationService, LocationService>();
             builder.Services.AddScoped<ILocalMemoriaCache, LocalMemoriaCache>();
-            builder.Services.AddScoped<IMapService, AndroidMapService>();
 
             builder.Services.AddSingleton<IDeviceSystemService, DeviceSystemService>();
             builder.Services.AddSingleton<AppShell>();
@@ -130,27 +129,17 @@ namespace Mde.Project.Mobile
 #if ANDROID
             builder.Services.AddSingleton<ISpeechToTextService, AndroidSpeechToTextService>();
             builder.Services.AddSingleton<IPushNotificationService, AndroidNotificationsService>();
+            builder.Services.AddScoped<IMapService, AndroidMapService>();
 #elif WINDOWS
             builder.Services.AddSingleton<ISpeechToTextService, WindowsSpeechToTextService>();
             builder.Services.AddSingleton<IPushNotificationService, WindowsNotificationsService>();
+            builder.Services.AddScoped<IMapService, WindowsMapService>();
 #endif
             // API CONNECTION
             builder.Services.AddHttpClient(Constants.MemoriaClientName,
                 config => config.BaseAddress = new Uri(Constants.MemoriaApiUrl));
             
             var app = builder.Build();
-
-#if WINDOWS
-            WindowHandler.Mapper.AppendToMapping("DispatcherInit", (handler, view) =>
-            {
-                var dispatcher = handler.PlatformView?.DispatcherQueue;
-                if (dispatcher != null)
-                {
-                    WindowsNotificationsService.SetDispatcher(dispatcher);
-                }
-            });
-            
-#endif
 
             // SEEDING
             using (var scope = app.Services.CreateScope())

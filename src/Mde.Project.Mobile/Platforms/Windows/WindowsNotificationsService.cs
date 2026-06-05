@@ -2,6 +2,7 @@
 using Mde.Project.Mobile.Core.Services.Interfaces;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.UI.Dispatching;
+using System.Diagnostics;
 
 namespace Mde.Project.Mobile.Platforms.Windows
 {
@@ -9,25 +10,31 @@ namespace Mde.Project.Mobile.Platforms.Windows
     {
         private Timer? _timer;
         private List<string> _phrases = new List<string>();
-        private static DispatcherQueue? _dispatcher;
+        private const string LastNotificationTime = "LastNotificationTime";
 
         // methoden (chatterbox to user)
         public async Task InitializeNotifications()
         {
             _phrases = await ReadPhrases();
-            _timer = new Timer(ShowNotifications, null, TimeSpan.Zero, TimeSpan.FromHours(8));
+
+            var lastTicks = Preferences.Get(LastNotificationTime, 0L);
+            if(lastTicks == 0)
+            {
+                ShowNotifications(null);
+                Preferences.Set(LastNotificationTime, DateTime.UtcNow.Ticks);
+            }
+
+            _timer = new Timer(CheckNotification, null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
         }
 
         public Task<bool> RequestPermission()
         {
-            return Task.FromResult(true);
+            throw new NotImplementedException();
         }
 
         public Task StopNotifications()
         {
-            _timer?.Dispose();
-            _timer = null;
-            return Task.CompletedTask;
+            throw new NotImplementedException();
         }
 
         // ondersteunende methoden
@@ -42,22 +49,33 @@ namespace Mde.Project.Mobile.Platforms.Windows
         private void ShowNotifications(object? state)
         {
             var phrase = _phrases[Random.Shared.Next(_phrases.Count)];
-            _dispatcher?.TryEnqueue(() =>
+            try
             {
                 new ToastContentBuilder()
                     .AddText("Memoriá")
                     .AddText(phrase)
                     .Show();
-            });
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Failed to show notification: {ex}");
+            }
         }
-        public static void SetDispatcher(DispatcherQueue dispatcher)
+        private void CheckNotification(object? state)
         {
-            _dispatcher = dispatcher;
+            var lastTicks = Preferences.Get(LastNotificationTime, 0L);
+            var lastTime = new DateTime(lastTicks, DateTimeKind.Utc);
+            if(DateTime.UtcNow - lastTime >= TimeSpan.FromHours(8))
+            {
+                ShowNotifications(null);
+                Preferences.Set(LastNotificationTime, DateTime.UtcNow.Ticks);
+            }
         }
 
         public Task<bool> AreNotficationsEnabled()
         {
-            return Task.FromResult(Preferences.Get(Constants.NotificationPermission, false));
+            throw new NotImplementedException();
         }
     }
 }

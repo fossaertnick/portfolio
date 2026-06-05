@@ -42,11 +42,18 @@ namespace Mde.Project.Mobile
         {
             try
             {
-                if (!Preferences.ContainsKey(Constants.NotificationPermission))
+                if(DeviceInfo.Platform == DevicePlatform.WinUI)
                 {
-                    var granted = await LocalNotificationCenter.Current.RequestNotificationPermission();
-                    Preferences.Set(Constants.NotificationPermission, granted);
-                    if (granted) await _toUserService.InitializeNotifications();
+                    await _toUserService.InitializeNotifications();
+                }
+                else // (DeviceInfo.Platform == DevicePlatform.Android)
+                {
+                    if (!Preferences.ContainsKey(Constants.NotificationPermission))
+                    {
+                        var granted = await LocalNotificationCenter.Current.RequestNotificationPermission();
+                        Preferences.Set(Constants.NotificationPermission, granted);
+                        if (granted) await _toUserService.InitializeNotifications();
+                    }
                 }
             }
             catch (Exception ex)

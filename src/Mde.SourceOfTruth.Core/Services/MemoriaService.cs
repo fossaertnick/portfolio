@@ -39,10 +39,6 @@ namespace Mde.SourceOfTruth.Core.Services
             try
             {
                 var allMemorias = await _SourceDbContext.Memorias.Where(m => m.DeviceId == deviceId).Include(m => m.MemoriaAddress).Include(m => m.MediaMaterial).ToListAsync();
-                if (!allMemorias.Any())
-                {
-                    return ResultModel<IEnumerable<Memoria>>.Failure($"There were no memorias to be found.");
-                }
                 return ResultModel<IEnumerable<Memoria>>.Success(allMemorias);
             }
             catch(Exception ex)

@@ -5,7 +5,7 @@ using Microsoft.Maui.Controls.Maps;
 using Microsoft.Maui.Maps;
 using Map = Microsoft.Maui.Controls.Maps.Map;
 
-namespace Mde.Project.Mobile.Domain.Services
+namespace Mde.Project.Mobile.Platforms.Android
 {
     public class AndroidMapService : IMapService
     {
@@ -22,7 +22,7 @@ namespace Mde.Project.Mobile.Domain.Services
 
                 return ResultModel<bool>.Success(true);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return ResultModel<bool>.Failure(ex.ToString(), "Something went wrong while deleting the pins.");
             }
@@ -36,7 +36,7 @@ namespace Mde.Project.Mobile.Domain.Services
 
                 return ResultModel<bool>.Success(true);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return ResultModel<bool>.Failure(ex.ToString(), "Something went wrong while initializing the map.");
             }
@@ -50,7 +50,7 @@ namespace Mde.Project.Mobile.Domain.Services
 
                 return ResultModel<bool>.Success(true);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return ResultModel<bool>.Failure(ex.ToString(), "Something went wrong while moving the map.");
             }
@@ -62,7 +62,7 @@ namespace Mde.Project.Mobile.Domain.Services
                 if (_map == null) return ResultModel<bool>.Failure("Map was null.", "Map was not initialized.");
                 if (items == null) return ResultModel<bool>.Failure("Items collection was null", "No locations received.");
                 _map.Pins.Clear();
-                foreach(var memoria in items)
+                foreach (var memoria in items)
                 {
                     var pin = new Pin
                     {
@@ -73,9 +73,9 @@ namespace Mde.Project.Mobile.Domain.Services
 
                     pin.MarkerClicked += (s, e) =>
                     {
-                        if(pin.BindingContext is Guid id)
+                        if (pin.BindingContext is Guid id)
                         {
-                            OnPinClicked?.Invoke(memoria.Id);                       
+                            OnPinClicked?.Invoke(memoria.Id);
                         }
                     };
 

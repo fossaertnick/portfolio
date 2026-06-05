@@ -52,7 +52,7 @@ namespace Mde.Project.Mobile.Core.Services
             }
             catch (Exception ex)
             {
-                return ResultModel<IEnumerable<MemoriaList>>.Failure(ex.Message.ToString(), "Something went wrong while picking up the memorias.");
+                return ResultModel<IEnumerable<MemoriaList>>.Failure(ex.Message.ToString(), "Something went wrong while picking up the memorias. Server might be offline");
             }
         }
         public async Task<ResultModel<Memoria>> GetMemoriaByIdAsync(Guid id)
@@ -97,7 +97,7 @@ namespace Mde.Project.Mobile.Core.Services
             }
             catch (Exception ex)
             {
-                return ResultModel<Memoria>.Failure(ex.Message.ToString(), "Something went wrong while picking up the memoria.");
+                return ResultModel<Memoria>.Failure(ex.Message.ToString(), "Something went wrong while picking up the memoria. Server might be offline");
             }
         }
         public async Task<ResultModel<MemoriaDetailResponseDto>> CreateMemoriaAsync(MemoriaRequestDto newMemoria)
@@ -126,7 +126,7 @@ namespace Mde.Project.Mobile.Core.Services
             }
             catch (Exception ex)
             {
-                return ResultModel<MemoriaDetailResponseDto>.Failure(ex.Message.ToString(), "Something went wrong while saving the memoria");
+                return ResultModel<MemoriaDetailResponseDto>.Failure(ex.Message.ToString(), "Something went wrong while saving the memoria. Server might be offline.");
             }
         }
         public async Task<ResultModel<MemoriaDetailResponseDto>> UpdateMemoriaAsync(MemoriaRequestDto updatingMemoria, Guid id)
@@ -156,7 +156,7 @@ namespace Mde.Project.Mobile.Core.Services
             }
             catch (Exception ex)
             {
-                return ResultModel<MemoriaDetailResponseDto>.Failure(ex.Message.ToString(), "Something went wrong while updating the memoria");
+                return ResultModel<MemoriaDetailResponseDto>.Failure(ex.Message.ToString(), "Something went wrong while updating the memoria. Server might be offline.");
             }
         }
         public async Task<ResultModel<bool>> DeleteMemoriaAsync(Guid id)
