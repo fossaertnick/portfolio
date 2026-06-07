@@ -10,63 +10,83 @@
              Shell.TabBarIsVisible="False"
              Shell.FlyoutBehavior="Disabled"
              Shell.NavBarIsVisible="False">
-    <ScrollView>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Label Text="{Binding EditMode}" TextColor="Green" Grid.Row="0" Grid.Column="0" HorizontalTextAlignment="Start" Padding="10,0,0,0" VerticalTextAlignment="Center" Margin="25,0,10,0" FontSize="35" />
-        <Border Grid.Row="0" Grid.Column="1" HeightRequest="50" Margin="10,0,25,0" Padding="10,0,0,0">
-            <Entry Text="{Binding Name}" Placeholder="title" Keyboard="Text"/>
-        </Border>
-        <VerticalStackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" >
-            
-            <HorizontalStackLayout HorizontalOptions="Center" Margin="0,25,0,0" Spacing="10">
-                <Border Padding="10">
-                    <Entry Text="{Binding Country}" Placeholder="Country" WidthRequest="150"/>
-                </Border>
-                <Border Padding="10">
-                    <Entry Text="{Binding City}" Placeholder="City" WidthRequest="150"/>
-                </Border>
-            </HorizontalStackLayout>
 
-            <HorizontalStackLayout HorizontalOptions="Center" Margin="0,25,0,0" Spacing="10">
-                <Border Padding="10">
-                    <Entry Text="{Binding Street}" Placeholder="Straat" WidthRequest="150"/>
+    <Grid>
+
+        <Grid Padding="{x:StaticResource DefaultPadding}" IsVisible="{Binding IsLoading}" Style="{x:StaticResource FourGrid}">
+
+            <Grid IsVisible="{Binding IsBusy}" >
+                <VerticalStackLayout Style="{x:StaticResource LoadingBlock}">
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" Style="{x:StaticResource Loading}"/>
+                    <Label Text="Loading Memorias..."/>
+                </VerticalStackLayout>
+            </Grid>
+
+            <Grid Grid.Row="0" Style="{x:StaticResource BasicGridDivition}" ColumnDefinitions="*,2*">
+                <Label Text="{Binding EditMode}" HorizontalTextAlignment="Start" VerticalTextAlignment="Center" Style="{x:StaticResource Titles}" TextColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}"/>
+                <Border Grid.Column="1" Style="{x:StaticResource SearchBorders}">
+                    <Entry Text="{Binding Name}" Placeholder="Name ... " Keyboard="Text"/>
                 </Border>
-                <Border Padding="10">
-                    <Entry Text="{Binding HouseNumber}" Placeholder="Number" WidthRequest="150"/>
-                </Border>
-            </HorizontalStackLayout>
-                <Button Text="Where am I now?" Margin="25,25,25,0" Command="{Binding ClickForLocationCommand}"/>
-            
-                <HorizontalStackLayout HorizontalOptions="Center" IsVisible="{Binding IsCreateMode}">
-                    <Border Margin="25,25,25,0" HorizontalOptions="Fill">
+            </Grid>
+
+            <VerticalStackLayout Grid.Row="1" >
+
+                <Grid Style="{x:StaticResource BasicGridDivition}">
+                    <Border Style="{x:StaticResource SearchBorders}">
+                        <Entry Text="{Binding Country}" Placeholder="Country ..." Keyboard="Text"/>
+                    </Border>
+                    <Border Style="{x:StaticResource SearchBorders}" Grid.Column="1">
+                        <Entry Text="{Binding City}" Placeholder="City ..." Keyboard="Text"/>
+                    </Border>
+                </Grid>
+
+                <Grid Style="{x:StaticResource BasicGridDivition}" ColumnDefinitions="3*,*">
+                    <Border Style="{x:StaticResource SearchBorders}">
+                        <Entry Text="{Binding Street}" Placeholder="Street (place) ..." Keyboard="Text"/>
+                    </Border>
+                    <Border Style="{x:StaticResource SearchBorders}" Grid.Column="1">
+                        <Entry Text="{Binding HouseNumber}" Placeholder="Nr ..." Keyboard="Numeric"/>
+                    </Border>
+                </Grid>
+
+                <Grid Style="{x:StaticResource BasicGridDivition}" ColumnDefinitions="3*,*">
+
+                    <Button Text="Where am I now?" Command="{Binding ClickForLocationCommand}" IsEnabled="{Binding HasInternet}" Style="{x:StaticResource FullButtons}"/>
+                    <Button x:Name="Mic" Grid.Column="1" IsEnabled="{Binding HasInternet}"  
+                            Style="{x:StaticResource FullButtons}" Clicked="Mic_Clicked">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button" Binding="{Binding IsListening}" Value="True">
+                                <Setter Property="BackgroundColor" Value="Red"/>
+                            </DataTrigger>
+                        </Button.Triggers>
+                        <Button.ImageSource>
+                            <FontImageSource Glyph="&#xe91e;" FontFamily="appIcons" Size="20"/>
+                        </Button.ImageSource>
+                    </Button>
+                </Grid>
+
+                <Grid Style="{x:StaticResource BasicGridDivition}" >
+                    <Border HorizontalOptions="Fill" Style="{x:StaticResource SearchBorders}" HeightRequest="{x:StaticResource ButtonHeight}">
                         <DatePicker Date="{Binding EventDate, Mode=TwoWay}"/>
                     </Border>
-                    <Border Margin="25,25,25,0" HorizontalOptions="Fill">
+                    <Border HorizontalOptions="Fill" Style="{x:StaticResource SearchBorders}" Grid.Column="1" HeightRequest="{x:StaticResource ButtonHeight}">
                         <TimePicker Time="{Binding EventTime, Mode=TwoWay}"/>
                     </Border>
-                </HorizontalStackLayout>
-                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center" Margin="25,25,25,0"
-                                   RadioButtonGroup.GroupName="Occation" 
-                                   RadioButtonGroup.SelectedValue="{Binding Occation, Mode=TwoWay}">
-                    <RadioButton Content="travel" Value="{x:Static enum:OccationType.Travel}"/>
-                    <RadioButton Content="work" Value="{x:Static enum:OccationType.Work}"/>
-                    <RadioButton Content="friends" Value="{x:Static enum:OccationType.Friends}"/>
-                    <RadioButton Content="other" Value="{x:Static enum:OccationType.Other}"/>
-                </HorizontalStackLayout>
-                <Button x:Name="MediaChoice" Text="Choose proof of fun here." Clicked="MediaChoice_Clicked" Margin="25,25,25,0"/>
+                </Grid>
 
-                <CollectionView ItemsSource="{Binding TemporaryItems}" ItemsLayout="HorizontalList" Margin="0,25,0,0" HorizontalOptions="Center">
+                <Grid  HorizontalOptions="Center" RadioButtonGroup.GroupName="Occation" Style="{x:StaticResource BasicGridDivition}" ColumnDefinitions="*,*,*,*"
+                       RadioButtonGroup.SelectedValue="{Binding Occation, Mode=TwoWay}">
+                    <RadioButton Grid.Column="0" Content="travel" Value="{x:Static enum:OccationType.Travel}"/>
+                    <RadioButton Grid.Column="1" Content="work" Value="{x:Static enum:OccationType.Work}"/>
+                    <RadioButton Grid.Column="2" Content="friends" Value="{x:Static enum:OccationType.Friends}"/>
+                    <RadioButton Grid.Column="3" Content="other" Value="{x:Static enum:OccationType.Other}"/>
+                </Grid>
+
+                <Button x:Name="MediaChoice" Text="Choose proof of fun here." Clicked="MediaChoice_Clicked" Style="{x:StaticResource FullButtons}"/>
+
+                <CollectionView ItemsSource="{Binding TemporaryItems}" ItemsLayout="HorizontalList" Margin="0,15,0,15" HorizontalOptions="Center">
                     <CollectionView.EmptyView>
-                        <HorizontalStackLayout VerticalOptions="Center" Spacing="15" HorizontalOptions="Center">
+                        <HorizontalStackLayout VerticalOptions="Center" Spacing="{x:StaticResource DefaultSpacing}" HorizontalOptions="Center">
                             <Label FontFamily="appIcons" Text="&#xea0f;" FontSize="25" TextColor="DarkRed" />
                             <Label Text="There are no images to show."/>
                         </HorizontalStackLayout>
@@ -78,8 +98,8 @@
                                 <Image
                                     Source="{Binding FilePath}"
                                     IsVisible="{Binding IsPhoto}"
-                                    WidthRequest="60"
-                                    HeightRequest="60"
+                                    WidthRequest="50"
+                                    HeightRequest="50"
                                     Aspect="AspectFill" >
 
                                     <Image.GestureRecognizers>
@@ -89,46 +109,46 @@
                                             NumberOfTapsRequired="1" CommandParameter="{Binding .}"/>
                                     </Image.GestureRecognizers>
                                 </Image>
-
-                                <toolkit:MediaElement
-                                    Source="{Binding FilePath}"
-                                    IsVisible="{Binding IsVideo}"
-                                    WidthRequest="60"
-                                    HeightRequest="60"
-                                    ShouldShowPlaybackControls="False"
-                                    ShouldAutoPlay="False">
-                                </toolkit:MediaElement>
                             </HorizontalStackLayout>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-            
-                <Border Margin="25,25,25,0" Padding="10,0,0,0" HeightRequest="150">
-                <Editor Text="{Binding Description}" Placeholder="Description..." Keyboard="Plain"/>
+
+                <Border HeightRequest="150" Style="{x:StaticResource SearchBorders}">
+                    <ScrollView>
+                        <Editor Text="{Binding Description}" Placeholder="Description ..." Keyboard="Plain" AutoSize="TextChanges"/>
+                    </ScrollView>
+                </Border>
+            </VerticalStackLayout>
+
+
+            <Grid Grid.Row="2" Style="{x:StaticResource BasicGridDivition}">
+                <Button Command="{Binding CreateCommand}"
+                        Text="{Binding EditMode}"
+                        Style="{x:StaticResource FullButtons}"
+                        IsEnabled="{Binding HasInternet}">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsUpdateMode}" Value="true">
+                            <Setter Property="BackgroundColor" Value="Orange"/>
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+                <Button 
+                Text="Cancel"
+                Command="{Binding CancelCommand}" CommandParameter="cancel"
+                Style="{x:StaticResource FullButtons}"
+                BackgroundColor="Red" Grid.Column="1"/>
+            </Grid>
+            <Border Grid.Row="3" IsVisible="{Binding IsOffline}" Padding="{x:StaticResource DefaultPadding}" BackgroundColor="DarkRed">
+                <Label Text="No internet connection has been detected. Some features may be unavailable." HorizontalOptions="Center"/>
             </Border>
+        </Grid>
 
-        </VerticalStackLayout>
-        <Button 
-            Command="{Binding CreateCommand}"
-            Text="{Binding EditMode}"
-            WidthRequest="200"
-            HeightRequest="20"
-            Grid.Row="2"
-            Grid.Column="0"
-            HorizontalOptions="Center"
-            Margin="5,0,0,0"/>
-
-        <Button 
-            x:Name="CancelButton"
-            Text="Cancel"
-            Clicked="CancelButton_Clicked"
-            BackgroundColor="Red"
-            HorizontalOptions="Center"
-            WidthRequest="200"
-            HeightRequest="20"
-            Grid.Row="2"
-            Grid.Column="1"
-            Margin="0,0,5,0"/>
+        <Grid IsVisible="{Binding IsSaving}" BackgroundColor="{x:StaticResource Black}" Opacity="1.0" ZIndex="999" VerticalOptions="Center">
+            <VerticalStackLayout>
+                <Label Text="Saving Memoria ..." TextColor="White" HorizontalOptions="Center"/>
+                <ProgressBar Progress="{Binding ProgressBar}" WidthRequest="250" HeightRequest="6"/>
+            </VerticalStackLayout>
+        </Grid>
     </Grid>
-    </ScrollView>
 </ContentPage>

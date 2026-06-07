@@ -19,11 +19,11 @@ public partial class MapPage : ContentPage
 
         // nu geef ik 'MapView' door zodat deze weet dat hij de 
         _mapService.Initialize(MapView);
-
         _mapService.OnPinClicked += (id) =>
             {
                 Dispatcher.Dispatch(() =>
                 {
+                    if(!_viewModel.HasInternet) return;
                     _viewModel.PinClickedCommand.Execute(id);
                 });
             };
@@ -44,5 +44,11 @@ public partial class MapPage : ContentPage
             _mapService.MoveTo(_viewModel.CurrentLocation);
         }
         _mapService.SetPins(_viewModel.Locations);
-    } 
+    }
+
+    public async void MapView_MapClicked(object sender, MapClickedEventArgs e)
+    {
+        if (!_viewModel.HasInternet) return;
+        await _viewModel.MapClickedCreateMemoria(e.Location);
+    }
 }

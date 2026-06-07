@@ -17,79 +17,31 @@ namespace Mde.Project.Mobile.Core.Services
 
         }
         // methoden
-        public async Task<ResultModel<string>> GetTotalMemorias()
+        public async Task<ResultModel<StatisticsModel>> GetStatisticsAsync()
         {
             try
             {
-                var result = await GetMemoriaAsync();
-                if (!result.IsSucces) return CreateFailureFromResult<string>(result);
+                var result = await _sourceOfTruth.GetAllMemoriasAsync();
+                if (!result.IsSucces) return CreateFailureFromResult<StatisticsModel>(result);
 
-                string totalCount = result.Data.Count().ToString();
-                return ResultModel<string>.Success(totalCount);
+                var memorias = result.Data.ToList();
+                var statistics = new StatisticsModel
+                {
+                    TotalMemorias = memorias.Count().ToString(),
+                    WerkMemoria = memorias.Count(m => m.OccationType.Equals(OccationType.Work)).ToString(),
+                    ReisMemoria = memorias.Count(m => m.OccationType.Equals(OccationType.Travel)).ToString(),
+                    UitgaanMemoria = memorias.Count(m => m.OccationType.Equals(OccationType.Friends)).ToString(),
+                    AndereMemoria = memorias.Count(m => m.OccationType.Equals(OccationType.Other)).ToString(),
+                    TotalMemoriaFotos = memorias.Sum(m => m.TotalPhotos).ToString(),
+                    TotalMemoriaVideo = memorias.Sum(m => m.TotalVideos).ToString(),
+                    FavoriteMemoriaCountry = memorias.GroupBy(m => m.Country).OrderByDescending(c => c.Count()).Select(g => g.Key).FirstOrDefault() ?? "X"
+                };
+
+                return ResultModel<StatisticsModel>.Success(statistics);
             }
             catch (Exception ex)
             {
-                return ResultModel<string>.Failure(ex.ToString(), "Something went wrong while picking up the total count.");
-            }
-        }
-        public async Task<ResultModel<string>> GetMemoriasByOccasionAsync(OccationType type)
-        {
-            try
-            {
-                var result = await GetMemoriaAsync();
-                if (!result.IsSucces) return CreateFailureFromResult<string>(result);
-
-                string totalCount = result.Data.Count(m => m.Occation.Equals(type)).ToString();
-                return ResultModel<string>.Success(totalCount);
-            }
-            catch (Exception ex)
-            {
-                return ResultModel<string>.Failure(ex.ToString(), "Something went wrong while picking up occation count.");
-            }
-        }
-        public async Task<ResultModel<string>> GetPhotoCountAsync()
-        {
-            try
-            {
-                var result = await GetMemoriaAsync();
-                if (!result.IsSucces) return CreateFailureFromResult<string>(result);
-
-                string totalCount = result.Data.Sum(m => m.MediaMaterial.Count(media => media.Type == MediaType.Photo)).ToString();
-                return ResultModel<string>.Success(totalCount);
-            }
-            catch (Exception ex)
-            {
-                return ResultModel<string>.Failure(ex.ToString(), "Something went wrong while picking up the total photo count.");
-            }
-        }
-        public async Task<ResultModel<string>> GetVideoCountAsync()
-        {
-            try
-            {
-                var result = await GetMemoriaAsync();
-                if (!result.IsSucces) return CreateFailureFromResult<string>(result);
-
-                string totalCount = result.Data.Sum(m => m.MediaMaterial.Count(media => media.Type == MediaType.Video)).ToString();
-                return ResultModel<string>.Success(totalCount);
-            }
-            catch (Exception ex)
-            {
-                return ResultModel<string>.Failure(ex.ToString(), "Something went wrong while picking up the total video count.");
-            }
-        }
-        public async Task<ResultModel<string>> GetFavoriteCountryAsync()
-        {
-            try
-            {
-                var result = await GetMemoriaAsync();
-                if (!result.IsSucces) return CreateFailureFromResult<string>(result);
-
-                string favoriteCountry = result.Data.GroupBy(m => m.MemoriaAddress.Country).OrderByDescending(g => g.Count()).FirstOrDefault()?.Key ?? string.Empty;
-                return ResultModel<string>.Success(favoriteCountry);
-            }
-            catch (Exception ex)
-            {
-                return ResultModel<string>.Failure(ex.ToString(), "Something went wrong while picking up the favorite country.");
+                return ResultModel<StatisticsModel>.Failure(ex.ToString());
             }
         }
 
@@ -97,20 +49,6 @@ namespace Mde.Project.Mobile.Core.Services
         private ResultModel<T> CreateFailureFromResult<T>(BaseResult result)
         {
             return ResultModel<T>.Failure(result.Errors.FirstOrDefault() ?? "Unknown error", result.UserMessage, result.StatusCode);
-        }
-        private async Task<ResultModel<IEnumerable<Memoria>>> GetMemoriaAsync()
-        {
-            try
-            {
-                var result = await _sourceOfTruth.GetAllMemoriasAsync();
-                if(!result.IsSucces) return CreateFailureFromResult<IEnumerable<Memoria>>(result);
-
-                return ResultModel<IEnumerable<Memoria>>.Success(result.Data);
-            }
-            catch(Exception ex)
-            {
-                return ResultModel<IEnumerable<Memoria>>.Failure(ex.ToString(), "Something went wrong while picking up the memorias");
-            }
         }
     }
 }

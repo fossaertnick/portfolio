@@ -5,7 +5,6 @@ using Mde.Project.Mobile.Core.Entities.Enums;
 using Mde.Project.Mobile.Core.Entities.Models;
 using Mde.Project.Mobile.Core.Services.Interfaces;
 using System.Net.Http.Json;
-using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -15,66 +14,52 @@ namespace Mde.Project.Mobile.Core.Services
     {
         private readonly HttpClient _httpClient;
         private readonly ILocalMemoriaCache _localCache;
+        private readonly IAuthService _authService;
 
         // constructor
-        public SourceOfTruthService(IHttpClientFactory httpClientFactory, ILocalMemoriaCache localCache)
+        public SourceOfTruthService(IHttpClientFactory httpClientFactory, ILocalMemoriaCache localCache, IAuthService authService)
         {
             _httpClient = httpClientFactory.CreateClient(Constants.MemoriaClientName);
             _localCache = localCache;
+            _authService = authService; 
         }
 
         // methoden
-        public async Task<ResultModel<IEnumerable<Memoria>>> GetAllMemoriasAsync()
+        public async Task<ResultModel<IEnumerable<MemoriaList>>> GetAllMemoriasAsync()
         {
             try
             {
+                await AddAuthorizationAsync();
                 var options = new JsonSerializerOptions
                 {
                     Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }, PropertyNameCaseInsensitive = true
                 };
-                var memoriaDtos = await _httpClient.GetFromJsonAsync<List<MemoriaDetailResponseDto>>($"{Constants.GetAllMemorias}", options);
+                var memoriaDtos = await _httpClient.GetFromJsonAsync<List<MemoriaListResponseDto>>($"{Constants.GetAllMemorias}", options);
 
-                if (memoriaDtos is null || !memoriaDtos.Any())
-                {
-                    return ResultModel<IEnumerable<Memoria>>.Failure("No memorias were found from the API.", "No memorias were found.");
-                }
-
-                var allMemoria = memoriaDtos.Select(m => new Memoria
+                var allMemoria = memoriaDtos.Select(m => new MemoriaList
                 {
                     Id = m.Id,
                     Name = m.Name,
-                    Occation = m.Occation,
-                    Description = m.Description,
+                    OccationType = m.OccationType,
                     EventDate = m.EventDate,
-                    CreatedOn = m.CreatedOn,
-                    LastEditedOn = m.LastEditedOn,
-                    MemoriaAddress = new Address
-                    {
-                        Country = m.Address.Country,
-                        City = m.Address.City,
-                        Street = m.Address.Street,
-                        HouseNumber = m.Address.HouseNumber,
-                        Latitude = m.Address.Latitude,
-                        Longitude = m.Address.Longitude,
-                    },
-                    MediaMaterial = m.MediaMaterial.Select(media => new MediaItem
-                    {
-                        Id = media.Id,
-                        Type = media.MediaType,
-                        FilePath = media.FilePath,
-                    }).ToList()
+                    Country = m.Country,
+                    Latitude = m.Latitude,
+                    Longitude = m.Longitude,
+                    TotalPhotos = m.TotalPhotos,
+                    TotalVideos = m.TotalVideos,
                 });
-                return ResultModel<IEnumerable<Memoria>>.Success(allMemoria);
+                return ResultModel<IEnumerable<MemoriaList>>.Success(allMemoria);
             }
             catch (Exception ex)
             {
-                return ResultModel<IEnumerable<Memoria>>.Failure(ex.Message.ToString(), "Something went wrong while picking up the memorias.");
+                return ResultModel<IEnumerable<MemoriaList>>.Failure(ex.Message.ToString(), "Something went wrong while picking up the memorias. Server might be offline");
             }
         }
         public async Task<ResultModel<Memoria>> GetMemoriaByIdAsync(Guid id)
         {
             try
             {
+                await AddAuthorizationAsync();
                 var options = new JsonSerializerOptions
                 {
                     Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }, PropertyNameCaseInsensitive = true
@@ -112,13 +97,14 @@ namespace Mde.Project.Mobile.Core.Services
             }
             catch (Exception ex)
             {
-                return ResultModel<Memoria>.Failure(ex.Message.ToString(), "Something went wrong while picking up the memoria.");
+                return ResultModel<Memoria>.Failure(ex.Message.ToString(), "Something went wrong while picking up the memoria. Server might be offline");
             }
         }
         public async Task<ResultModel<MemoriaDetailResponseDto>> CreateMemoriaAsync(MemoriaRequestDto newMemoria)
         {
             try
             {
+                await AddAuthorizationAsync();
                 HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"{Constants.GetAllMemorias}", newMemoria);
 
                 if (!response.IsSuccessStatusCode)
@@ -140,7 +126,7 @@ namespace Mde.Project.Mobile.Core.Services
             }
             catch (Exception ex)
             {
-                return ResultModel<MemoriaDetailResponseDto>.Failure(ex.Message.ToString(), "Something went wrong while saving the memoria");
+                return ResultModel<MemoriaDetailResponseDto>.Failure(ex.Message.ToString(), "Something went wrong while saving the memoria. Server might be offline.");
             }
         }
         public async Task<ResultModel<MemoriaDetailResponseDto>> UpdateMemoriaAsync(MemoriaRequestDto updatingMemoria, Guid id)
@@ -148,6 +134,7 @@ namespace Mde.Project.Mobile.Core.Services
             ResultModel<MemoriaDetailResponseDto> result = new();
             try
             {
+                await AddAuthorizationAsync();
                 HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"{Constants.GetAllMemorias}/{id}", updatingMemoria);
 
                 if (!response.IsSuccessStatusCode)
@@ -169,13 +156,14 @@ namespace Mde.Project.Mobile.Core.Services
             }
             catch (Exception ex)
             {
-                return ResultModel<MemoriaDetailResponseDto>.Failure(ex.Message.ToString(), "Something went wrong while updating the memoria");
+                return ResultModel<MemoriaDetailResponseDto>.Failure(ex.Message.ToString(), "Something went wrong while updating the memoria. Server might be offline.");
             }
         }
         public async Task<ResultModel<bool>> DeleteMemoriaAsync(Guid id)
         {
             try
             {
+                await AddAuthorizationAsync();
                 HttpResponseMessage response = await _httpClient.DeleteAsync($"{Constants.GetAllMemorias}/{id}");
 
                 if (!response.IsSuccessStatusCode)
@@ -217,6 +205,14 @@ namespace Mde.Project.Mobile.Core.Services
             catch (Exception ex)
             {
                 return ResultModel<MediaItem>.Failure(ex.ToString());
+            }
+        }
+        private async Task AddAuthorizationAsync()
+        {
+            var token = await _authService.GetTokenAsync();
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             }
         }
     }

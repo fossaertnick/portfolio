@@ -18,7 +18,7 @@
                     </Border.StrokeShape>
                     <toolkit:Expander>
                         <toolkit:Expander.Header>
-                            <Grid Padding="16">
+                            <Grid Padding="{x:StaticResource DefaultPadding}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
@@ -27,7 +27,7 @@
                                 <Label Grid.Column="1" Text="⌄" FontSize="20"/>
                             </Grid>
                         </toolkit:Expander.Header>
-                        <VerticalStackLayout Padding="16">
+                        <VerticalStackLayout Padding="{x:StaticResource DefaultPadding}">
                             <Label FontSize="15" LineBreakMode="WordWrap" Text="{Binding Content}"/>
                         </VerticalStackLayout>
                     </toolkit:Expander>

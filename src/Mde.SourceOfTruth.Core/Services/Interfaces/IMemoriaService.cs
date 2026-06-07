@@ -9,10 +9,10 @@ namespace Mde.SourceOfTruth.Core.Services.Interfaces
     public interface IMemoriaService
     {
         // methoden
-        Task<ResultModel<Memoria>> GetMemoriaByIdAsync(Guid id);
-        Task<ResultModel<IEnumerable<Memoria>>> GetAllMemoriasAsync();
+        Task<ResultModel<Memoria>> GetMemoriaByIdAsync(Guid id, Guid deviceId);
+        Task<ResultModel<IEnumerable<Memoria>>> GetAllMemoriasAsync(Guid deviceId);
         Task<ResultModel<Memoria>> CreateMemoriaAsync(Memoria newMemoria);
-        Task<ResultModel<Memoria>> UpdateMemoriaAsync(Memoria updatingMemoria);
-        Task<ResultModel<Memoria>> DeleteMemoriaAsync(Guid id);
+        Task<ResultModel<Memoria>> UpdateMemoriaAsync(Memoria updatingMemoria, Guid deviceId);
+        Task<ResultModel<Memoria>> DeleteMemoriaAsync(Guid id, Guid deviceId);
     }
 }

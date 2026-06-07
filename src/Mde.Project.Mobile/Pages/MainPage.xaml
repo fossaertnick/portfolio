@@ -7,12 +7,8 @@
              x:Class="Mde.Project.Mobile.Pages.MainPage"
              Shell.FlyoutBehavior="Disabled"
              Shell.TabBarIsVisible="False">
-    
-    <Grid Padding="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+
+    <Grid Padding="{x:StaticResource DefaultPadding}" Style="{x:StaticResource ThreeGrid}">
 
         <Button 
             Command="{Binding NavigationCommand}"
@@ -21,7 +17,7 @@
             Text="ADD"
             Grid.ColumnSpan="2"/>
 
-        <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="5">
+        <Grid Grid.Row="1" Style="{x:StaticResource BasicGridDivition}">
             <Button 
                 Grid.Column="0"
                 Command="{Binding NavigationCommand}"
@@ -39,6 +35,8 @@
                 </Button.ImageSource>
             </Button>
         </Grid>
-        
+        <Border Grid.Row="2" IsVisible="{Binding IsOffline}" Padding="{x:StaticResource DefaultPadding}" BackgroundColor="DarkRed">
+            <Label Text="No internet connection has been detected. Some features may be unavailable." HorizontalOptions="Center"/>
+        </Border>
     </Grid>
 </ContentPage>

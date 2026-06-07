@@ -2,8 +2,10 @@
 using Mde.SourceOfTruth.Api.Dto.MediaItem;
 using Mde.SourceOfTruth.Api.Dto.Memoria;
 using Mde.SourceOfTruth.Core.Entities;
+using Mde.SourceOfTruth.Core.Entities.enums;
 using Mde.SourceOfTruth.Core.Services.Interfaces;
 using Mde.SourceOfTruth.Core.Services.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,9 +13,22 @@ namespace Mde.SourceOfTruth.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class MemoriaController : ControllerBase
     {
         private readonly IMemoriaService _memoriaService;
+
+        // properties
+        private Guid? CurrentDeviceId
+        {
+            get
+            {
+                var deviceIdClaim = User.FindFirst("deviceId")?.Value;
+                if (Guid.TryParse(deviceIdClaim, out var deviceId)) return deviceId;
+
+                return null;
+            }
+        }
 
         // constructor
         public MemoriaController(IMemoriaService memoriaService)
@@ -23,41 +38,33 @@ namespace Mde.SourceOfTruth.Api.Controllers
 
         // ActionResult (GET)
         [HttpGet]
-        public async Task<ActionResult<MemoriaDetailResponseDto>> GetAllMemorias()
+        public async Task<ActionResult<MemoriaListReponseDto>> GetAllMemorias()
         {
-            ResultModel<IEnumerable<Memoria>> result = await _memoriaService.GetAllMemoriasAsync();
+            if(CurrentDeviceId == null) return Unauthorized("DeviceId claim is missing.");
+
+            ResultModel<IEnumerable<Memoria>> result = await _memoriaService.GetAllMemoriasAsync(CurrentDeviceId.Value);
             if(!result.IsSucces) return BadRequest(result.Errors);
 
-            IEnumerable<MemoriaDetailResponseDto> memoriaResponses = result.Data.Select(m => new MemoriaDetailResponseDto
+            IEnumerable<MemoriaListReponseDto> memoriaResponses = result.Data.Select(m => new MemoriaListReponseDto
             {
                 Id = m.Id,
                 Name = m.Name,
-                Occation = m.Occation,
-                Description = m.Description,
+                OccationType = m.Occation,
                 EventDate = m.EventDate,
-                CreatedOn = m.CreatedOn,
-                LastEditedOn = m.LastEditedOn,
-                Address = new AddressResponseDto
-                {
-                    Country = m.MemoriaAddress.Country,
-                    City = m.MemoriaAddress.City,
-                    Street = m.MemoriaAddress.Street,
-                    HouseNumber = m.MemoriaAddress.HouseNumber,
-                    Latitude = m.MemoriaAddress.Latitude,
-                    Longitude = m.MemoriaAddress.Longitude,
-                },
-                MediaMaterial = m.MediaMaterial.Select(media => new MediaItemResponseDto
-                {
-                    FilePath = media.FilePath,
-                    MediaType = media.Type,
-                }).ToList()
+                Latitude = m.MemoriaAddress.Latitude,
+                Longitude = m.MemoriaAddress.Longitude,
+                Country = m.MemoriaAddress.Country,
+                TotalPhotos = m.MediaMaterial.Count(ph => ph.Type.Equals(MediaType.Photo)),
+                TotalVideos = m.MediaMaterial.Count(ph => ph.Type.Equals(MediaType.Video)),
             });
             return Ok(memoriaResponses);
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<MemoriaDetailResponseDto>> GetMemoriaById(Guid id)
         {
-            ResultModel<Memoria> result = await _memoriaService.GetMemoriaByIdAsync(id);
+            if (CurrentDeviceId == null) return Unauthorized("DeviceId claim is missing.");
+
+            ResultModel<Memoria> result = await _memoriaService.GetMemoriaByIdAsync(id, CurrentDeviceId.Value);
             if(!result.IsSucces || result.Data == null) return NotFound(result.Errors);
 
             MemoriaDetailResponseDto memoriaResponse = new MemoriaDetailResponseDto
@@ -91,7 +98,10 @@ namespace Mde.SourceOfTruth.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<MemoriaDetailResponseDto>> CreateMemoria(MemoriaRequestDto memoriaRequest)
         {
+            if (CurrentDeviceId == null) return Unauthorized("DeviceId claim is missing.");
+
             Memoria newMemoria = MapToMakeEntity(memoriaRequest);
+            newMemoria.DeviceId = CurrentDeviceId.Value;
 
             ResultModel<Memoria> createdResult = await _memoriaService.CreateMemoriaAsync(newMemoria);
             if (!createdResult.IsSucces || createdResult.Data == null) return BadRequest(createdResult.Errors);
@@ -118,10 +128,12 @@ namespace Mde.SourceOfTruth.Api.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<MemoriaDetailResponseDto>> UpdateMemoria(Guid id, MemoriaRequestDto memoriaRequestDto)
         {
+            if (CurrentDeviceId == null) return Unauthorized("DeviceId claim is missing.");
+
             Memoria updatingMemoria = MapToMakeEntity(memoriaRequestDto);
             updatingMemoria.Id = id;
 
-            ResultModel<Memoria> updatedResult = await _memoriaService.UpdateMemoriaAsync(updatingMemoria);
+            ResultModel<Memoria> updatedResult = await _memoriaService.UpdateMemoriaAsync(updatingMemoria, CurrentDeviceId.Value);
             if(!updatedResult.IsSucces || updatedResult.Data == null) return BadRequest(updatedResult.Errors);
 
             MemoriaDetailResponseDto memoriaResponseDto = MapToShowReponse(updatedResult.Data);
@@ -133,7 +145,9 @@ namespace Mde.SourceOfTruth.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteMemoria(Guid id)
         {
-            ResultModel<Memoria> deletedResult = await _memoriaService.DeleteMemoriaAsync(id);
+            if (CurrentDeviceId == null) return Unauthorized("DeviceId claim is missing.");
+
+            ResultModel<Memoria> deletedResult = await _memoriaService.DeleteMemoriaAsync(id, CurrentDeviceId.Value);
             if (!deletedResult.IsSucces) return NotFound(deletedResult.Errors);
 
             return NoContent();

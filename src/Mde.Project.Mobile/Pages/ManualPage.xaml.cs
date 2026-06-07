@@ -19,16 +19,5 @@ public partial class ManualPage : ContentPage
     {
         base.OnAppearing();
 		_ViewModel.InitializeCommand.Execute(null);
-
-		/*manualWebView.Source = new HtmlWebViewSource
-		{
-			Html = $@"
-				< html >
-				< body style = 'font-family: sans-serif; padding: 15px;' >
-					< pre >{ text }</ pre >
-				</ body >
-				</ html > "
-
-		};*/
     }
 }

@@ -1,8 +1,16 @@
-﻿using CommunityToolkit.Maui;
+﻿#if ANDROID
+using Mde.Project.Mobile.Platforms.Android;
+using Plugin.LocalNotification;
+#elif WINDOWS
+using Mde.Project.Mobile.Platforms.Windows;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Dispatching;
+#endif
+
+using CommunityToolkit.Maui;
 using Mde.Project.Mobile.Core.Data;
 using Mde.Project.Mobile.Core.Services;
 using Mde.Project.Mobile.Core.Services.Interfaces;
-using Mde.Project.Mobile.Domain.Locations.Mock;
 using Mde.Project.Mobile.Domain.Services;
 using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Mde.Project.Mobile.Pages;
@@ -10,6 +18,7 @@ using Mde.Project.Mobile.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Handlers;
+
 
 namespace Mde.Project.Mobile
 {
@@ -23,6 +32,7 @@ namespace Mde.Project.Mobile
                 .UseMauiCommunityToolkit()
                 .UseMauiCommunityToolkitMediaElement(false);
 #if ANDROID
+            builder.UseLocalNotification();
             builder.UseMauiMaps();
 #endif
             builder.ConfigureFonts(fonts =>
@@ -40,36 +50,6 @@ namespace Mde.Project.Mobile
             });
 
 #if DEBUG
-
-            // UNDERLINES TEXT INPUT
-            builder.ConfigureMauiHandlers(handlers =>
-            {
-#if ANDROID
-                EntryHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
-                {
-                    handler.PlatformView.Background = null;
-                });
-                EditorHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
-                {
-                    handler.PlatformView.Background = null;
-                });
-                DatePickerHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
-                {
-                    handler.PlatformView.Background = null;
-                });
-                TimePickerHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
-                {
-                    handler.PlatformView.Background = null;
-                });
-                SearchBarHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
-                {
-                    handler.PlatformView.Background = null;
-                });
-
-#endif
-            });
-
-
             builder.Logging.AddDebug();
 #endif
 
@@ -110,23 +90,71 @@ namespace Mde.Project.Mobile
             builder.Services.AddScoped<IMediaService, MediaService>();
             builder.Services.AddScoped<IStatisticService, StatisticService>();
             builder.Services.AddScoped<ILocationService, LocationService>();
-            builder.Services.AddScoped<IManualService, ManualService>();
-            builder.Services.AddScoped<ISourceOfTruthService, SourceOfTruthService>();
             builder.Services.AddScoped<ILocalMemoriaCache, LocalMemoriaCache>();
 
-            builder.Services.AddSingleton<AppCloser>();
+            builder.Services.AddSingleton<IDeviceSystemService, DeviceSystemService>();
+            builder.Services.AddSingleton<AppShell>();
+            builder.Services.AddSingleton<IAuthService, AuthService>();
+            builder.Services.AddSingleton<ISourceOfTruthService, SourceOfTruthService>();
+#if ANDROID
+            builder.Services.AddSingleton<ISpeechToTextService, AndroidSpeechToTextService>();
+            builder.Services.AddSingleton<IPushNotificationService, AndroidNotificationsService>();
+            builder.Services.AddScoped<IMapService, AndroidMapService>();
 
-            if (OperatingSystem.IsWindows())
+            // UNDERLINES TEXT INPUT
+            builder.ConfigureMauiHandlers(handlers =>
             {
-                builder.Services.AddScoped<IMapService, WindowsMapService>();
-            }
-            else
+                EntryHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+                {
+                    handler.PlatformView.Background = null;
+                });
+                EditorHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+                {
+                    handler.PlatformView.Background = null;
+                });
+                DatePickerHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+                {
+                    handler.PlatformView.Background = null;
+                });
+                TimePickerHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+                {
+                    handler.PlatformView.Background = null;
+                });
+                SearchBarHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+                {
+                    handler.PlatformView.Background = null;
+                });
+            });
+#elif WINDOWS
+            builder.Services.AddSingleton<ISpeechToTextService, WindowsSpeechToTextService>();
+            builder.Services.AddSingleton<IPushNotificationService, WindowsNotificationsService>();
+            builder.Services.AddScoped<IMapService, WindowsMapService>();
+
+                        // UNDERLINES TEXT INPUT
+            builder.ConfigureMauiHandlers(handlers =>
             {
-                builder.Services.AddScoped<IMapService, AndroidMapService>();
-            }
-
-            builder.Services.AddHttpClient<IGeoCodingService, GoogleGeoCodingService>();
-
+                EntryHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+                {
+                    handler.PlatformView.BorderThickness = new Microsoft.UI.Xaml.Thickness(0);
+                });
+                EditorHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+                {
+                    handler.PlatformView.BorderThickness = new Microsoft.UI.Xaml.Thickness(0);
+                });
+                DatePickerHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+                {
+                    handler.PlatformView.BorderThickness = new Microsoft.UI.Xaml.Thickness(0);
+                });
+                TimePickerHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+                {
+                    handler.PlatformView.BorderThickness = new Microsoft.UI.Xaml.Thickness(0);
+                });
+                SearchBarHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+                {
+                    handler.PlatformView.BorderThickness = new Microsoft.UI.Xaml.Thickness(0);
+                });
+            });
+#endif
             // API CONNECTION
             builder.Services.AddHttpClient(Constants.MemoriaClientName,
                 config => config.BaseAddress = new Uri(Constants.MemoriaApiUrl));
@@ -134,7 +162,7 @@ namespace Mde.Project.Mobile
             var app = builder.Build();
 
             // SEEDING
-            using(var scope = app.Services.CreateScope())
+            using (var scope = app.Services.CreateScope())
             {
                 try
                 {

@@ -114,116 +114,44 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             Longitude = -0.1246254,
                             MemoriaId = new Guid("00000000-0000-0000-0000-000000000005"),
                             Street = "Westminster"
+                        });
+                });
+
+            modelBuilder.Entity("Mde.SourceOfTruth.Core.Entities.Device", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("DeviceIdentifier")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeviceName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RegisteredOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Devices");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("33333333-3333-3333-3333-333333333333"),
+                            DeviceIdentifier = "device-001",
+                            DeviceName = "John's Android",
+                            RegisteredOn = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            Id = new Guid("11111111-1111-1111-1111-111111111116"),
-                            City = "Athens",
-                            Country = "Greece",
-                            HouseNumber = "1",
-                            Latitude = 37.971532000000003,
-                            Longitude = 23.725749,
-                            MemoriaId = new Guid("00000000-0000-0000-0000-000000000006"),
-                            Street = "Acropolis Hill"
-                        },
-                        new
-                        {
-                            Id = new Guid("11111111-1111-1111-1111-111111111117"),
-                            City = "New York",
-                            Country = "USA",
-                            HouseNumber = "1",
-                            Latitude = 40.689249400000001,
-                            Longitude = -74.044500400000004,
-                            MemoriaId = new Guid("00000000-0000-0000-0000-000000000007"),
-                            Street = "Liberty Island"
-                        },
-                        new
-                        {
-                            Id = new Guid("11111111-1111-1111-1111-111111111118"),
-                            City = "Rio de Janeiro",
-                            Country = "Brazil",
-                            HouseNumber = "1",
-                            Latitude = -22.951916000000001,
-                            Longitude = -43.210487000000001,
-                            MemoriaId = new Guid("00000000-0000-0000-0000-000000000008"),
-                            Street = "Parque Nacional da Tijuca"
-                        },
-                        new
-                        {
-                            Id = new Guid("11111111-1111-1111-1111-111111111119"),
-                            City = "Agra",
-                            Country = "India",
-                            HouseNumber = "1",
-                            Latitude = 27.175144800000002,
-                            Longitude = 78.042142200000001,
-                            MemoriaId = new Guid("00000000-0000-0000-0000-000000000009"),
-                            Street = "Dharmapuri"
-                        },
-                        new
-                        {
-                            Id = new Guid("11111111-1111-1111-1111-111111111120"),
-                            City = "Sydney",
-                            Country = "Australia",
-                            HouseNumber = "1",
-                            Latitude = -33.856784400000002,
-                            Longitude = 151.21529670000001,
-                            MemoriaId = new Guid("00000000-0000-0000-0000-000000000010"),
-                            Street = "Bennelong Point"
-                        },
-                        new
-                        {
-                            Id = new Guid("11111111-1111-1111-1111-111111111121"),
-                            City = "Fujinomiya",
-                            Country = "Japan",
-                            HouseNumber = "1",
-                            Latitude = 35.360625499999998,
-                            Longitude = 138.7273634,
-                            MemoriaId = new Guid("00000000-0000-0000-0000-000000000011"),
-                            Street = "Kitayama"
-                        },
-                        new
-                        {
-                            Id = new Guid("11111111-1111-1111-1111-111111111122"),
-                            City = "Niagara Falls",
-                            Country = "Canada",
-                            HouseNumber = "1",
-                            Latitude = 43.079900000000002,
-                            Longitude = -79.074700000000007,
-                            MemoriaId = new Guid("00000000-0000-0000-0000-000000000012"),
-                            Street = "Niagara Parkway"
-                        },
-                        new
-                        {
-                            Id = new Guid("11111111-1111-1111-1111-111111111123"),
-                            City = "Grand Canyon Village",
-                            Country = "USA",
-                            HouseNumber = "1",
-                            Latitude = 36.106965199999998,
-                            Longitude = -112.1129972,
-                            MemoriaId = new Guid("00000000-0000-0000-0000-000000000013"),
-                            Street = "Grand Canyon Village"
-                        },
-                        new
-                        {
-                            Id = new Guid("11111111-1111-1111-1111-111111111124"),
-                            City = "Dubai",
-                            Country = "UAE",
-                            HouseNumber = "1",
-                            Latitude = 25.197196999999999,
-                            Longitude = 55.274375999999997,
-                            MemoriaId = new Guid("00000000-0000-0000-0000-000000000014"),
-                            Street = "1 Sheikh Mohammed bin Rashid Blvd"
-                        },
-                        new
-                        {
-                            Id = new Guid("11111111-1111-1111-1111-111111111125"),
-                            City = "Beijing",
-                            Country = "China",
-                            HouseNumber = "1",
-                            Latitude = 40.431907699999996,
-                            Longitude = 116.5703749,
-                            MemoriaId = new Guid("00000000-0000-0000-0000-000000000015"),
-                            Street = "Badaling"
+                            Id = new Guid("33333333-3333-3333-3333-333333333334"),
+                            DeviceIdentifier = "device-002",
+                            DeviceName = "Jack's Windows",
+                            RegisteredOn = new DateTime(2025, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -256,49 +184,9 @@ namespace Mde.SourceOfTruth.Core.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("22222222-2222-2222-2222-222222222220"),
-                            CreatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/france.jpg",
-                            MemoriaId = new Guid("00000000-0000-0000-0000-000000000001"),
-                            Type = "Photo"
-                        },
-                        new
-                        {
                             Id = new Guid("22222222-2222-2222-2222-222222222221"),
-                            CreatedAt = new DateTime(2025, 1, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/frankrijk.jpg",
-                            MemoriaId = new Guid("00000000-0000-0000-0000-000000000001"),
-                            Type = "Photo"
-                        },
-                        new
-                        {
-                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
-                            CreatedAt = new DateTime(2025, 1, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/athens.jpg",
-                            MemoriaId = new Guid("00000000-0000-0000-0000-000000000006"),
-                            Type = "Photo"
-                        },
-                        new
-                        {
-                            Id = new Guid("22222222-2222-2222-2222-222222222223"),
                             CreatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/koeken.jpg",
-                            MemoriaId = new Guid("00000000-0000-0000-0000-000000000008"),
-                            Type = "Photo"
-                        },
-                        new
-                        {
-                            Id = new Guid("22222222-2222-2222-2222-222222222224"),
-                            CreatedAt = new DateTime(2025, 1, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/guatemala.jpg",
-                            MemoriaId = new Guid("00000000-0000-0000-0000-000000000011"),
-                            Type = "Photo"
-                        },
-                        new
-                        {
-                            Id = new Guid("22222222-2222-2222-2222-222222222225"),
-                            CreatedAt = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/home.jpg",
+                            FilePath = "https://06dfrpsm-44338.brs.devtunnels.ms/img/paris1.jpg",
                             MemoriaId = new Guid("00000000-0000-0000-0000-000000000001"),
                             Type = "Photo"
                         });
@@ -316,6 +204,9 @@ namespace Mde.SourceOfTruth.Core.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("DeviceId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("EventDate")
                         .HasColumnType("datetime2");
 
@@ -332,6 +223,8 @@ namespace Mde.SourceOfTruth.Core.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DeviceId");
+
                     b.ToTable("Memorias");
 
                     b.HasData(
@@ -340,6 +233,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
                             CreatedOn = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Iconische toren en symbool van Parijs.",
+                            DeviceId = new Guid("33333333-3333-3333-3333-333333333333"),
                             EventDate = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Eiffel Tower",
@@ -350,6 +244,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             Id = new Guid("00000000-0000-0000-0000-000000000002"),
                             CreatedOn = new DateTime(2025, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Oud Romeins amfitheater.",
+                            DeviceId = new Guid("33333333-3333-3333-3333-333333333334"),
                             EventDate = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Colosseum",
@@ -360,6 +255,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             Id = new Guid("00000000-0000-0000-0000-000000000003"),
                             CreatedOn = new DateTime(2025, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Historische stadspoort in Berlijn.",
+                            DeviceId = new Guid("33333333-3333-3333-3333-333333333333"),
                             EventDate = new DateTime(2025, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Brandenburg Gate",
@@ -370,6 +266,7 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             Id = new Guid("00000000-0000-0000-0000-000000000004"),
                             CreatedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Beroemde basiliek ontworpen door Gaudí.",
+                            DeviceId = new Guid("33333333-3333-3333-3333-333333333333"),
                             EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Sagrada Familia",
@@ -380,109 +277,10 @@ namespace Mde.SourceOfTruth.Core.Migrations
                             Id = new Guid("00000000-0000-0000-0000-000000000005"),
                             CreatedOn = new DateTime(2025, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Bekende klokkentoren van Londen.",
+                            DeviceId = new Guid("33333333-3333-3333-3333-333333333333"),
                             EventDate = new DateTime(2025, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastEditedOn = new DateTime(2025, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Big Ben",
-                            Occation = "Other"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000006"),
-                            CreatedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Oude citadel met historische tempels.",
-                            EventDate = new DateTime(2025, 1, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastEditedOn = new DateTime(2025, 1, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Acropolis",
-                            Occation = "Friends"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000007"),
-                            CreatedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Vrijheidsbeeld in New York.",
-                            EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Statue of Liberty",
-                            Occation = "Friends"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000008"),
-                            CreatedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Groot Christusbeeld op de Corcovado.",
-                            EventDate = new DateTime(2025, 1, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Christ the Redeemer",
-                            Occation = "Work"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000009"),
-                            CreatedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Wit marmeren mausoleum.",
-                            EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Taj Mahal",
-                            Occation = "Travel"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000010"),
-                            CreatedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Iconisch operagebouw.",
-                            EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Sydney Opera House",
-                            Occation = "Other"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000011"),
-                            CreatedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Bekende vulkaan en berg.",
-                            EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Mount Fuji",
-                            Occation = "Work"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000012"),
-                            CreatedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Indrukwekkende watervallen.",
-                            EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Niagara Falls",
-                            Occation = "Travel"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000013"),
-                            CreatedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Diepe kloof gevormd door de Colorado rivier.",
-                            EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Grand Canyon",
-                            Occation = "Other"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000014"),
-                            CreatedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Hoogste gebouw ter wereld.",
-                            EventDate = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastEditedOn = new DateTime(2025, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Burj Khalifa",
-                            Occation = "Friends"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000000015"),
-                            CreatedOn = new DateTime(2025, 2, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Historische verdedigingsmuur.",
-                            EventDate = new DateTime(2025, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastEditedOn = new DateTime(2025, 2, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Great Wall",
                             Occation = "Other"
                         });
                 });
@@ -507,6 +305,22 @@ namespace Mde.SourceOfTruth.Core.Migrations
                         .IsRequired();
 
                     b.Navigation("Memoria");
+                });
+
+            modelBuilder.Entity("Mde.SourceOfTruth.Core.Entities.Memoria", b =>
+                {
+                    b.HasOne("Mde.SourceOfTruth.Core.Entities.Device", "SpecificDevice")
+                        .WithMany("Memorias")
+                        .HasForeignKey("DeviceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SpecificDevice");
+                });
+
+            modelBuilder.Entity("Mde.SourceOfTruth.Core.Entities.Device", b =>
+                {
+                    b.Navigation("Memorias");
                 });
 
             modelBuilder.Entity("Mde.SourceOfTruth.Core.Entities.Memoria", b =>

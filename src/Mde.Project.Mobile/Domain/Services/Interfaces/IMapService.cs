@@ -10,7 +10,7 @@ namespace Mde.Project.Mobile.Domain.Services.Interfaces
         // methoden
         Task<ResultModel<bool>> Initialize(object mapControl);
         Task<ResultModel<bool>> MoveTo(Location location);
-        Task<ResultModel<bool>> SetPins(IEnumerable<Memoria> items);
+        Task<ResultModel<bool>> SetPins(IEnumerable<MemoriaList> items);
         Task<ResultModel<bool>> ClearPins();
     }
 }

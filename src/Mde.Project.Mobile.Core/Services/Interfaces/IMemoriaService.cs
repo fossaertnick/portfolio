@@ -6,9 +6,9 @@ namespace Mde.Project.Mobile.Core.Services.Interfaces
     public interface IMemoriaService
     {
         // methodes
-        Task<ResultModel<IEnumerable<Memoria>>> GetAllMemoriaAsync();
+        Task<ResultModel<IEnumerable<MemoriaList>>> GetAllMemoriaAsync();
         Task<ResultModel<Memoria>> GetMemoriaByIdAsync(Guid id);
-        Task<ResultModel<IEnumerable<Memoria>>> GetMemoriaByFilterAsync(string searchTerm);
+        Task<ResultModel<IEnumerable<MemoriaList>>> GetMemoriaByFilterAsync(string searchTerm);
         Task<ResultModel<bool>> DeleteMemoriaAsync(Guid memoriaId);
         Task<ResultModel<bool>> SaveMemoriaAsync(Memoria saveMemoria);
     }

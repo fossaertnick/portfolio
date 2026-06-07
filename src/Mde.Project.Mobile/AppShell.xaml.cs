@@ -1,24 +1,27 @@
-﻿using Mde.Project.Mobile.Domain.Services;
+﻿using Mde.Project.Mobile.Domain.Services.Interfaces;
 
 namespace Mde.Project.Mobile
 {
     public partial class AppShell : Shell
     {
-        private readonly AppCloser _closer;
+        private readonly IDeviceSystemService _toClose;
 
         // constructor
-        public AppShell()
+        public AppShell(IDeviceSystemService toClose)
         {
             InitializeComponent();
-            _closer = new AppCloser();
+            _toClose = toClose;
         }
 
         // methoden
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+        }
         private async void ManualPage_Clicked(object sender, EventArgs e)
         {
             await Shell.Current.GoToAsync(nameof(ManualPage));
         }
-
         private async void Logout_Clicked(object sender, EventArgs e)
         {
             bool bevestiging = await DisplayAlertAsync(
@@ -30,7 +33,7 @@ namespace Mde.Project.Mobile
 
             if (!bevestiging) return;
 
-            _closer.Close();
+            _toClose.Close();
         }
     }
 }

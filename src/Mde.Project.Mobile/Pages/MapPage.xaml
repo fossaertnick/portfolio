@@ -8,5 +8,11 @@
              Shell.TabBarIsVisible="False"
              Shell.FlyoutBehavior="Disabled">
 
-        <maps:Map x:Name="MapView" MapType="Street" Grid.Row="1" Grid.ColumnSpan="2" Margin="10" IsShowingUser="True"/>
+    <Grid Style="{x:StaticResource TwoGrid}">
+        <maps:Map x:Name="MapView" MapType="Street" MapClicked="MapView_MapClicked"
+                  Margin="15" IsShowingUser="True" IsEnabled="{Binding HasInternet}"/>
+        <Border Grid.Row="1" IsVisible="{Binding IsOffline}" Padding="{x:StaticResource DefaultPadding}" BackgroundColor="DarkRed">
+            <Label Text="No internet connection has been detected. Some features may be unavailable." HorizontalOptions="Center"/>
+        </Border>
+    </Grid>
 </ContentPage>

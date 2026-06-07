@@ -7,21 +7,26 @@
              x:Class="Mde.Project.Mobile.Pages.StatisticsPage"
              Shell.FlyoutBehavior="Flyout">
 
-    <VerticalStackLayout
-        Padding="25,0,25,25"
-        Spacing="25">
+    <Grid Padding="10,20,10,10" Style="{x:StaticResource TwoGrid}">
 
-            <!-- Titel -->
+        <Grid IsVisible="{Binding IsBusy}" BackgroundColor="Black" Opacity="0.7">
+            <VerticalStackLayout  Style="{x:StaticResource LoadingBlock}" >
+                <ActivityIndicator IsRunning="{Binding IsBusy}" Style="{x:StaticResource Loading}"/>
+                <Label Text="Loading statistics..." TextColor="{DynamicResource White}"/>
+            </VerticalStackLayout>
+        </Grid>
+
+        <VerticalStackLayout Grid.Row="0" IsVisible="{Binding IsLoading}"
+        Spacing="{x:StaticResource DefaultSpacing}">
+
+        <!-- Titel -->
         <Label
             Text="Statistics"
-            FontSize="34"
-            FontAttributes="Bold"
+            Style="{x:StaticResource Titles}"
             HorizontalOptions="Center"/>
 
         <!-- Totaal Memorias -->
-            <Border
-            StrokeShape="RoundRectangle 15"
-            Padding="20">
+            <Border Style="{x:StaticResource CategoryBorders}" Padding="{x:StaticResource DefaultPadding}">
 
                 <Grid
                 ColumnDefinitions="Auto,*">
@@ -44,22 +49,19 @@
 
 
             <!-- Categorieën -->
-            <VerticalStackLayout Spacing="10">
+            <VerticalStackLayout Spacing="{x:StaticResource DefaultSpacing}">
 
-                <Label
-                Text="Categorieën"
+            <Label
+                Text="Categorieën : "
                 FontAttributes="Bold"
                 FontSize="20"/>
 
                 <Grid
-                ColumnDefinitions="*,*"
+                    Style="{x:StaticResource BasicGridDivition}"
                 RowDefinitions="Auto, Auto"
-                ColumnSpacing="12"
-                RowSpacing="12">
+                RowSpacing="{x:StaticResource DefaultSpacing}">
 
-                    <Border Grid.Row="0" Grid.Column="0"
-                        StrokeShape="RoundRectangle 12"
-                        Padding="15">
+                    <Border Grid.Row="0" Grid.Column="0" Style="{x:StaticResource CategoryBorders}">
 
                         <VerticalStackLayout>
                             <Label Text="Work:"/>
@@ -71,9 +73,7 @@
 
                     </Border>
 
-                    <Border Grid.Row="0" Grid.Column="1"
-                        StrokeShape="RoundRectangle 12"
-                        Padding="15">
+                    <Border Grid.Row="0" Grid.Column="1" Style="{x:StaticResource CategoryBorders}">
 
                         <VerticalStackLayout>
                             <Label Text="Travel:"/>
@@ -85,9 +85,7 @@
 
                     </Border>
 
-                    <Border Grid.Row="1" Grid.Column="0"
-                        StrokeShape="RoundRectangle 12"
-                        Padding="15">
+                    <Border Grid.Row="1" Grid.Column="0" Style="{x:StaticResource CategoryBorders}">
 
                         <VerticalStackLayout>
                             <Label Text="Home:"/>
@@ -99,9 +97,7 @@
 
                     </Border>
 
-                    <Border Grid.Row="1" Grid.Column="1"
-                        StrokeShape="RoundRectangle 12"
-                        Padding="15">
+                    <Border Grid.Row="1" Grid.Column="1" Style="{x:StaticResource CategoryBorders}">
 
                         <VerticalStackLayout>
                             <Label Text="Other:"/>
@@ -119,18 +115,17 @@
 
 
             <!-- Media -->
-            <Border
-            StrokeShape="RoundRectangle 15"
-            Padding="20">
+            <Border Style="{x:StaticResource CategoryBorders}" Padding="{x:StaticResource DefaultPadding}">
 
-                <VerticalStackLayout Spacing="15">
+                <VerticalStackLayout Spacing="{x:StaticResource DefaultSpacing}">
 
                     <Label
-                    Text="Media"
+                    Text="Media : "
                     FontSize="20"
                     FontAttributes="Bold"/>
 
                     <Grid
+                     Style="{x:StaticResource BasicGridDivition}"
                     ColumnDefinitions="*,Auto"
                     RowDefinitions="Auto,Auto">
 
@@ -160,12 +155,10 @@
 
 
             <!-- Favoriete locatie -->
-            <Border
-            StrokeShape="RoundRectangle 15"
-            Padding="20">
+            <Border Style="{x:StaticResource CategoryBorders}" Padding="{x:StaticResource DefaultPadding}">
 
                 <VerticalStackLayout
-                Spacing="8">
+                Spacing="{x:StaticResource DefaultSpacing}">
 
                     <Label
                     Text="Favorite destination:"
@@ -173,7 +166,7 @@
                     FontAttributes="Bold"/>
 
                 <Label
-                    Text="{Binding FavoriteMemoriaCity}"
+                    Text="{Binding FavoriteMemoriaCountry}"
                     FontSize="26"
                     HorizontalTextAlignment="Center"/>
 
@@ -182,4 +175,10 @@
             </Border>
 
         </VerticalStackLayout>
+
+        <Border Grid.Row="1" IsVisible="{Binding IsOffline}" Padding="{x:StaticResource DefaultPadding}" BackgroundColor="DarkRed">
+            <Label Text="No internet connection has been detected. Some features may be unavailable." HorizontalOptions="Center"/>
+        </Border>
+    </Grid>
+
 </ContentPage>

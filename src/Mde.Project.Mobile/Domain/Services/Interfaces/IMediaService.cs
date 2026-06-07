@@ -8,8 +8,5 @@ namespace Mde.Project.Mobile.Domain.Services.Interfaces
         // methoden
         ResultModel<MediaItem> PrepareMediaItem(FileResult fileResult);
         Task<ResultModel<bool>> DeleteMediaItemsCollectionAsync(IEnumerable<MediaItem> mediaItem);
-        Task<ResultModel<bool>> DeleteMediaItemAsync(MediaItem mediaItem);
-        Task<ResultModel<bool>> SyncMediaFiles(Memoria existingMemoria, Memoria updatedMemoria);
-        Task<ResultModel<MediaItem>> SaveVideoAsync(FileResult video);
     }
 }

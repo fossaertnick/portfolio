@@ -4,18 +4,42 @@
              xmlns:viewModels="clr-namespace:Mde.Project.Mobile.ViewModels"
              x:DataType="viewModels:SettingsViewModel"  
              x:Class="Mde.Project.Mobile.Pages.SettingsPage">
-    <VerticalStackLayout Spacing="15" Padding="20">
 
-        <Label Text="Settings" FontSize="35" HorizontalOptions="End" Margin="0,0,30,0"/>
+    <Grid Padding="{x:StaticResource DefaultPadding}" Style="{x:StaticResource TwoGrid}">
 
-        <VerticalStackLayout Spacing="10" HorizontalOptions="Center" Margin="25,25,25,0"
-                                   RadioButtonGroup.GroupName="Occation" 
-                                   RadioButtonGroup.SelectedValue="{Binding ColorPalet}">
-            <RadioButton Content="App green"/>
-            <RadioButton Content="Light/Dark"/>
-            <RadioButton Content="BloodRed"/>
-            <RadioButton Content="DeepBlue"/>
+        <VerticalStackLayout Grid.Row="0" Spacing="25" Padding="25" >
+
+            <Label Text="Settings" Style="{x:StaticResource Titles}" HorizontalOptions="Center" />
+
+
+            <Border Padding="{x:StaticResource DefaultPadding}" StrokeThickness="0" BackgroundColor="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource OffBlack}}">
+                <VerticalStackLayout Spacing="{x:StaticResource DefaultSpacing}">
+                    
+                
+                <Label Text="Choose theme"
+               FontSize="22"
+               TextColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" FontAttributes="Bold"/>
+
+                    <Button x:Name="GreenColor" Text="Deep Green"  TextColor="Black" BackgroundColor="#2E7D32" Clicked="GreenColor_Clicked"/>
+
+                <Button x:Name="PurpleColor" Text="Mauve Purple" TextColor="Black" BackgroundColor="#BA68C8" Clicked="PurpleColor_Clicked"/>
+
+                <Button x:Name="SystemColor" Text="Simple and Sober" BackgroundColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}"
+                        TextColor="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource Black}}" Clicked="SystemColor_Clicked" />
+
+                <Button x:Name="BlueColor" Text="Sky Blue" TextColor="Black" BackgroundColor="#64B5F6" Clicked="BlueColor_Clicked" />
+                
+                </VerticalStackLayout>
+            </Border>
+
+            <Grid Style="{x:StaticResource BasicGridDivition}" ColumnDefinitions="*,Auto">
+                <Label Text="Notifications : " VerticalOptions="Center" FontSize="18"/>
+                <Switch Grid.Column="1" VerticalOptions="Center" IsToggled="{Binding NotificationsEnabled}"/>
+            </Grid>
+            
         </VerticalStackLayout>
-
-    </VerticalStackLayout>
+        <Border Grid.Row="1" IsVisible="{Binding IsOffline}" Padding="{x:StaticResource DefaultPadding}" BackgroundColor="DarkRed">
+            <Label Text="No internet connection has been detected. Some features may be unavailable." HorizontalOptions="Center"/>
+        </Border>
+    </Grid>
 </ContentPage>

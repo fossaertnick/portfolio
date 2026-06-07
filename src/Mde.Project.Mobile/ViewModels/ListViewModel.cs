@@ -13,12 +13,12 @@ namespace Mde.Project.Mobile.ViewModels
         private readonly IMemoriaService _memoriaService;
 
         // fields
-        private ObservableCollection<Memoria> locations;
+        private ObservableCollection<MemoriaList> locations = new ObservableCollection<MemoriaList>();
         private string searchTerm;
         private CancellationTokenSource? _searchWay;
 
         // properties
-        public ObservableCollection<Memoria> Locations
+        public ObservableCollection<MemoriaList> Locations
         {
             get { return locations; }
             set => SetProperty(ref locations, value);
@@ -34,9 +34,16 @@ namespace Mde.Project.Mobile.ViewModels
                 }
             }
         }
+        public bool ShowMapButton => DeviceInfo.Current.Platform == DevicePlatform.Android;
+        public bool NoMemorias => IsOffline || Locations.Count <= 0;
+        public int SearchColumnSpan => ShowMapButton ? 1 : 2;
+
 
         // Commands
-        public ICommand InitializeMemoriaCommand { get; }
+        public ICommand InitializeMemoriaCommand => new Command(async () =>
+        {
+            await ExecuteInitializeMemoriaCommand();
+        });
         public ICommand DetailsMemoriaCommand => new Command<Guid>(async (memoriaId) =>
         {
             await ExecuteDetailsMemoriaCommand(memoriaId);
@@ -59,35 +66,19 @@ namespace Mde.Project.Mobile.ViewModels
         public ListViewModel(IMemoriaService memoriaService)
         {
             _memoriaService = memoriaService;
-            Locations = new ObservableCollection<Memoria>();
-            InitializeMemoriaCommand = new Command(async () => await ExecuteInitializeMemoriaCommand());
         }
 
         // methodes
-        private async Task RefreshMemoriaList()
-        {
-            var result = await _memoriaService.GetAllMemoriaAsync();
-            var memorias = await HandleResult(result);
-            if (memorias == null) return;
-
-            Locations.Clear();
-            foreach (var memoria in memorias)
-            {
-                Locations.Add(memoria);
-            }
-        }
         [RelayCommand]
         private async Task ExecuteInitializeMemoriaCommand()
         {
             try
             {
                 IsBusy = true;
-                IsLoading = true;
                 await RefreshMemoriaList();
             }
             finally
             {
-                IsLoading = false;
                 IsBusy = false;
             }
         }
@@ -134,34 +125,17 @@ namespace Mde.Project.Mobile.ViewModels
 
             await Shell.Current.GoToAsync($"{nameof(CreateOrUpdatePage)}?id={memoriaId}");
         }
-        private async Task ExecuteVisuallyFilterLocationsCommand(string name)
-        {
-            try
-            {
-                IsBusy = true;
-                if (string.IsNullOrWhiteSpace(name))
-                {
-                    await RefreshMemoriaList();
-                    return;
-                }
-
-                var result = await _memoriaService.GetMemoriaByFilterAsync(name);
-                var filtered = await HandleResult(result);
-                if (filtered == null) return;
-
-                Locations.Clear();
-                foreach(var memoria in filtered)
-                {
-                    Locations.Add(memoria);
-                }
-            }
-            finally
-            {
-                IsBusy = false;
-            }
-        }
         private async Task ExecuteDeleteMemoriaCommand(Guid memoriaId)
         {
+            bool bevestiging = await Shell.Current.DisplayAlertAsync(
+                "Delete",
+                "You want to delete this Memoria?",
+                "Yes",
+                "No"
+                );
+
+            if (!bevestiging) return;
+            
             try
             {
                 IsBusy = true;
@@ -178,8 +152,8 @@ namespace Mde.Project.Mobile.ViewModels
                 bool confirm = await Shell.Current.DisplayAlertAsync(
                     "Delete",
                     "Are you sure?",
-                    "YES",
-                    "NO");
+                    "Yes",
+                    "No");
                 if (!confirm) return;
                 var result = await _memoriaService.DeleteMemoriaAsync(memoriaId);
                 var deleted = await HandleResult(result);
@@ -200,11 +174,56 @@ namespace Mde.Project.Mobile.ViewModels
             {
                 await Task.Delay(300, _searchWay.Token);
 
-                await ExecuteVisuallyFilterLocationsCommand(search);
+                await ExecuteVisuallyFilterLocation(search);
             }
             catch (TaskCanceledException)
             {
 
+            }
+        }
+        protected override async Task OnInternetRestored()
+        {
+            await ExecuteInitializeMemoriaCommand();
+        }
+
+        // ondersteunende methoden
+        private async Task RefreshMemoriaList()
+        {
+            var result = await _memoriaService.GetAllMemoriaAsync();
+            var memorias = await HandleResult(result);
+            if (memorias == null) return;
+
+            Locations.Clear();
+            foreach (var memoria in memorias)
+            {
+                Locations.Add(memoria);
+            }
+        }
+        private async Task ExecuteVisuallyFilterLocation(string name)
+        {
+            try
+            {
+                IsBusy = true;
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    await RefreshMemoriaList();
+                    return;
+                }
+
+                await Task.Delay(1);
+                var result = await _memoriaService.GetMemoriaByFilterAsync(name);
+                var filtered = await HandleResult(result);
+                if (filtered == null) return;
+
+                Locations.Clear();
+                foreach(var memoria in filtered)
+                {
+                    Locations.Add(memoria);
+                }
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
     }

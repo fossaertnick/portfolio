@@ -1,4 +1,6 @@
-﻿using Mde.Project.Mobile.Core.Entities;
+﻿using CommunityToolkit.Maui.Extensions;
+using CommunityToolkit.Mvvm.Input;
+using Mde.Project.Mobile.Core.Entities;
 using Mde.Project.Mobile.Core.Services.Interfaces;
 using Mde.Project.Mobile.Pages;
 using System.Collections.ObjectModel;
@@ -6,7 +8,7 @@ using System.Windows.Input;
 
 namespace Mde.Project.Mobile.ViewModels
 {
-    public class DetailsViewModel : BaseViewModel, IQueryAttributable
+    public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
     {
         private readonly IMemoriaService _memoriaService;
 
@@ -31,6 +33,10 @@ namespace Mde.Project.Mobile.ViewModels
                 SetProperty(ref temporaryItems, value);
             }
         }
+        public bool HasMedia => TemporaryItems.Any() == true;
+        public GridLength MediaColumnWidth => HasMedia ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+        public GridLength ContentColumnWidth => HasMedia ? new GridLength(2, GridUnitType.Star) : new GridLength(1, GridUnitType.Star);
+
 
         // Commands
         public ICommand UpdateMemoriaCommand => new Command<Guid>(async (memoriaDetailsId) =>
@@ -47,14 +53,25 @@ namespace Mde.Project.Mobile.ViewModels
         {
             _memoriaService = memoriaService;
             TemporaryItems = new ObservableCollection<MediaItem>();
+            TemporaryItems.CollectionChanged += (_, __) =>
+            {
+                OnPropertyChanged(nameof(HasMedia));
+                OnPropertyChanged(nameof(ContentColumnWidth));
+                OnPropertyChanged(nameof(MediaColumnWidth));
+            };
         }
 
         // methoden
+        [RelayCommand]
+        private async Task OpenImageAsync(string path)
+        {
+            await Shell.Current.CurrentPage.ShowPopupAsync(new ImagePopup(path));
+        }
         private async Task ExecuteUpdateMemoriaCommand(Guid memoriaId)
         {
             if (memoriaId == Guid.Empty)
             {
-                await Shell.Current.DisplayAlert(
+                await Shell.Current.DisplayAlertAsync(
                     "Error",
                     "No valid memoria selected",
                     "OK");
@@ -66,12 +83,21 @@ namespace Mde.Project.Mobile.ViewModels
         }
         private async Task ExecuteDeleteMemoriaCommand(Guid memoriaId)
         {
+            bool bevestiging = await Shell.Current.DisplayAlertAsync(
+                "Delete",
+                "You want to delete this Memoria?",
+                "Yes",
+                "No"
+                );
+
+            if (!bevestiging) return;
+            
             try
             {
                 IsBusy = true;
                 if (memoriaId == Guid.Empty)
                 {
-                        await Shell.Current.DisplayAlert(
+                        await Shell.Current.DisplayAlertAsync(
                             "Error",
                             "No valid memoria selected",
                             "OK");
@@ -79,11 +105,11 @@ namespace Mde.Project.Mobile.ViewModels
                         return;
                 }
 
-                bool confirm = await Shell.Current.DisplayAlert(
-                    "Delete",
+                bool confirm = await Shell.Current.DisplayAlertAsync(
+                    "Confirmation",
                     "Are you sure?",
-                    "YES",
-                    "NO");
+                    "Yes",
+                    "No");
                 if (!confirm) return;
                 var result = await _memoriaService.DeleteMemoriaAsync(memoriaId);
                 var deleted = await HandleResult(result);
@@ -100,6 +126,8 @@ namespace Mde.Project.Mobile.ViewModels
         {
             await HandleNavigation(query);
         }
+
+        // ondersteunende methoden
         private async Task HandleNavigation(IDictionary<string, object> query)
         {
             try
@@ -141,6 +169,10 @@ namespace Mde.Project.Mobile.ViewModels
                     FilePath = media.FilePath,
                 });
             }
+
+            OnPropertyChanged(nameof(HasMedia));
+            OnPropertyChanged(nameof(ContentColumnWidth));
+            OnPropertyChanged(nameof(MediaColumnWidth));
         }
     }
 }

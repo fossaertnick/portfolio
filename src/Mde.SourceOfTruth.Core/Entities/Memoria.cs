@@ -1,4 +1,5 @@
-﻿using Mde.SourceOfTruth.Core.Entities.enums;
+﻿using Azure.Identity;
+using Mde.SourceOfTruth.Core.Entities.enums;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -19,7 +20,8 @@ namespace Mde.SourceOfTruth.Core.Entities
 
         // navigation properties
         public Address MemoriaAddress { get; set; } = null!;
-
         public ICollection<MediaItem> MediaMaterial { get; set; } = new List<MediaItem>();
+        public Guid DeviceId { get; set; }
+        public Device SpecificDevice { get; set; } = null!;
     }
 }
