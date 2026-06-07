@@ -1,15 +1,12 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Mde.Project.Mobile.Core.Data;
+﻿using Mde.Project.Mobile.Core.Data;
 using Mde.Project.Mobile.Core.Entities.Enums;
 using Mde.Project.Mobile.Core.Services.Interfaces;
-using Mde.Project.Mobile.Domain.Services.Interfaces;
 using Plugin.LocalNotification;
 
 namespace Mde.Project.Mobile.ViewModels
 {
     public partial class SettingsViewModel : BaseViewModel
     {
-        private readonly IDeviceSystemService _toUser;
         private readonly IPushNotificationService _toPush;
 
         // field
@@ -30,11 +27,10 @@ namespace Mde.Project.Mobile.ViewModels
         }
 
         // constructor
-        public SettingsViewModel(IDeviceSystemService toUser, IPushNotificationService toPush)
+        public SettingsViewModel(IPushNotificationService toPush)
         {
-            _toUser = toUser;
             _toPush = toPush;
-            NotificationsEnabled = Preferences.Get("", true);
+            notificationsEnabled = Preferences.Get(Constants.NotificationPermission, true);
         }
 
         // methoden

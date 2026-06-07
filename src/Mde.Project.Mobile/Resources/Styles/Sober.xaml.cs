@@ -1,8 +1,8 @@
 namespace Mde.Project.Mobile.Resources.Styles;
 
-public partial class Green : ResourceDictionary
+public partial class Sober : ResourceDictionary
 {
-	public Green()
+	public Sober()
 	{
 		InitializeComponent();
 	}

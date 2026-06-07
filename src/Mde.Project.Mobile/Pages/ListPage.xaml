@@ -28,11 +28,13 @@
                 <CollectionView x:Name="MemoriaList" ItemsSource="{Binding Locations}" Margin="{x:StaticResource DefaultMargin}" IsEnabled="{Binding HasInternet}" >
 
                 <CollectionView.EmptyView>
+                <Grid>
                     <VerticalStackLayout  Spacing="{x:StaticResource DefaultSpacing}" VerticalOptions="Center" HorizontalOptions="Center">
-                        <Label FontFamily="appIcons" Text="&#xea0f;" FontSize="100" TextColor="DarkRed" HorizontalOptions="Center" IsVisible="{Binding IsLoading}"/>
-                        <Label Text="There are no memorias to display." IsVisible="{Binding IsLoading}" />
-                        <Label Text="Add some." IsVisible="{Binding IsLoading}" HorizontalTextAlignment="Center"/>
+                        <Label FontFamily="appIcons" Text="&#xea0f;" FontSize="100" TextColor="DarkRed" HorizontalOptions="Center" IsVisible="{Binding IsLoading}" VerticalTextAlignment="Center"/>
+                        <Label Text="There are no memorias to display." IsVisible="{Binding IsLoading}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                        <Label Text="Add some." IsVisible="{Binding IsLoading}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
                     </VerticalStackLayout>
+                    </Grid>
                     </CollectionView.EmptyView>
 
                     <CollectionView.ItemTemplate>
@@ -92,7 +94,7 @@
                 <Grid IsVisible="{Binding IsBusy}" BackgroundColor="Black" Opacity="0.7">
                 <VerticalStackLayout  Style="{x:StaticResource LoadingBlock}">
                     <ActivityIndicator IsRunning="{Binding IsBusy}" Style="{x:StaticResource Loading}"/>
-                    <Label Text="Loading Memorias..."/>
+                    <Label Text="Loading Memorias..." TextColor="{DynamicResource White}"/>
                 </VerticalStackLayout>
             </Grid>
         </Grid>

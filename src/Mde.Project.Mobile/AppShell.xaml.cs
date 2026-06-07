@@ -35,6 +35,5 @@ namespace Mde.Project.Mobile
 
             _toClose.Close();
         }
-
     }
 }

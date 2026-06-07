@@ -21,7 +21,7 @@ namespace Mde.Project.Mobile.Domain.Services
 
             foreach (var dict in merged.ToList())
             {
-                if (dict is Purple || dict is Green || dict is blue)
+                if (dict is Purple || dict is Sober || dict is Blue)
                 {
                     merged.Remove(dict);
                 }
@@ -29,17 +29,17 @@ namespace Mde.Project.Mobile.Domain.Services
 
             _activeColorResource = null;
 
-            if (choice == ColorChoice.System)
+            if (choice == ColorChoice.Green)
             {
-                Preferences.Set(Constants.ColorChoice, (int)ColorChoice.System);
+                Preferences.Set(Constants.ColorChoice, (int)ColorChoice.Green);
                 return;
             }
 
             _activeColorResource = choice switch
             {
-                ColorChoice.Blue => new blue(),
+                ColorChoice.Blue => new Blue(),
                 ColorChoice.Purple => new Purple(),
-                ColorChoice.Green => new Green(),
+                ColorChoice.Sober => new Sober(),
                 _ => null
             };
 
@@ -52,7 +52,7 @@ namespace Mde.Project.Mobile.Domain.Services
         }
         public void LoadSavedTheme()
         {
-            var stored = Preferences.Get(Constants.ColorChoice, (int)ColorChoice.System);
+            var stored = Preferences.Get(Constants.ColorChoice, (int)ColorChoice.Green);
             ApplyColorTheme((ColorChoice)stored);
         }
 

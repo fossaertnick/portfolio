@@ -41,8 +41,8 @@
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#2E7D32" ForegroundScale="0.65" BaseSize="128,128" />
 		
 		<!-- Splash Screen -->
+		<MauiSplashScreen Include="Resources\Splash\splashscreen.png" Color="#000000" BaseSize="500,500" />
 
-		
 		<MauiImage Include="Resources\Images\*" />
 		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
 		
@@ -52,15 +52,7 @@
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Resources\Splash\splashscreen.png" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <MauiSplashScreen Include="Resources\Splash\splashscreen.png" />
-	</ItemGroup>
-
+	
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="14.1.0" />
 		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="9.0.0" />
@@ -117,10 +109,10 @@
 	  <MauiXaml Update="Pages\StatisticsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Resources\Styles\blue.xaml">
+	  <MauiXaml Update="Resources\Styles\Blue.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Resources\Styles\Green.xaml">
+	  <MauiXaml Update="Resources\Styles\Sober.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Resources\Styles\Layout.xaml">
@@ -133,6 +125,15 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Mde.Project.Mobile.Core\Mde.Project.Mobile.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Resources\Styles\blue.xaml.cs">
+	    <DependentUpon>Blue.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Resources\Styles\Sober.xaml.cs">
+	    <DependentUpon>Sober.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 </Project>

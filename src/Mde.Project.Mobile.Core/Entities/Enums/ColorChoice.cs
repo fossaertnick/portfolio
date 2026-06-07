@@ -2,7 +2,7 @@
 {
     public enum ColorChoice
     {
-        System,
+        Sober,
         Purple,
         Green,
         Blue

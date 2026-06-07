@@ -31,21 +31,21 @@ public partial class SettingsPage : ContentPage
         Preferences.Set(Constants.ColorChoice, (int)choice);
         _colorOptions.ApplyColorTheme(choice);
     }
-    private void systemColor_Clicked(object sender, EventArgs e)
+    private void SystemColor_Clicked(object sender, EventArgs e)
     {
-        Apply(ColorChoice.System);
+        Apply(ColorChoice.Sober);
     }
-    private void greenColor_Clicked(object sender, EventArgs e)
+    private void GreenColor_Clicked(object sender, EventArgs e)
     {
         Apply(ColorChoice.Green);
 
     }
-    private void blueColor_Clicked(object sender, EventArgs e)
+    private void BlueColor_Clicked(object sender, EventArgs e)
     {
         Apply(ColorChoice.Blue);
 
     }
-    private void purpleColor_Clicked(object sender, EventArgs e)
+    private void PurpleColor_Clicked(object sender, EventArgs e)
     {
         Apply(ColorChoice.Purple);
     }

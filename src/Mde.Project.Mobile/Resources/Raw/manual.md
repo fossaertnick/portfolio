@@ -1,20 +1,57 @@
-## Toevoegen van Memoriàs
+## Memoriás in the List
 
-Terecht komen op deze pagina kan via verschillende posities. Elke knop die de tekst 'Add' draagt zal je leiden naar de pagina waar je een nieuwe Memorià kan aanmaken. Bij het openen van deze pagina zal je mooi zien staan links vanboven dat dit de 'Create' pagina is. Hier kun je een titel, adres, datum, media en een beschrijving ingeven. Als extra keuze kan je altijd door een druk op de knop 'Where am I' je huidige coordinaten/adres opvragen. Indien gewenst kan de data daarna nog altijd verandert worden.
+Memoriás can be viewed in two different ways: either in the list view, where they are displayed in an organized manner, or on the map. In both cases, all your Memoriás will be shown.
 
-## Memoria’s bekijken
+## Memoriás in Detail
 
-Na het aanmaken van een herinnering kan je deze altijd in detail zien door het klikken op de Memorià in de lijst. Indien je je op de map bevindt kan je ook gewoon op rode pins klikken. Dit zal je ook leiden naar de details van die specifieke herinnering.
+Both the list and the map allow you to open a specific Memoriá and view its details. If images have been attached to the Memoriá, they will be displayed on the right side of the page. By tapping an image, it will open in a pop-up window. To close the image, simply tap outside of it.
 
-## Updaten van Memoriàs
+## Creating a Memoriá
 
-Indien gewenst kan een Memorià ook aangepast worden. Je weet nooit wanneer er nog meer fotos opduiken bij de vrienden die je wenst in je herinneringen te steken. Wanneer je je in de lijst bevindt met alle herinneringen kan je dan gewoon op de herinnering klikken en daar op de 'Update' knop duwen of met je vinger naar links vegen op de gewenste herinnering in de lijst. Hier zul je dan 3 opties zien. De oranje optie is de knop die je zal leiden tot waar je je Memorià kan updaten. Na de gewenste aanpassingen gedaan te hebben kan je gewoon op de knop duwen zo zal de info opgeslagen worden. OPGESPAST: bij aanmaak van een memoria kan je kiezen wanneer het event plaats vond, maar bij aanpassing van het event kan dit NIET meer.
+Simply press the large **"ADD"** button on the home screen or at the bottom of the page displaying all Memoriás. If the address is unknown, see the **Map** section below.
 
-## Updaten van Memoriàs
+**PLEASE NOTE:** If there is no internet connection, the **Create**, **Where am I now**, and **Microphone** functions will not be available.
 
-Het deleten van een Memorià is simpel. Klik op het specifieke event dat je wenst te deleten, dit zal je naar de detailspagina leide. En hier heb je een mooi rode knop die 'Delete' zegt. Druk op de knop en het is gebeurt. Je zal terug worden genavigeerd naar je lijst waar alle herinneringen staan. Alsook kan je een 'delete' knop terug vinden wanneer je links swiped op je herinnering. Daar zal terug je terug de mogelijkheid zien om dit te deleten
+## Updating a Memoriá
 
+If you want to edit an existing Memoriá, simply swipe the Memoriá to the left in the list and press the orange button. Alternatively, press the orange button while viewing the Memoriá details.
 
-## Statistieken
+**PLEASE NOTE:** If there is no internet connection, the **Update**, **Where am I now**, and **Microphone** functions will not be available.
 
-Op deze pagina kan je een mooi overzicht zien van al je opgeslagen herinneringen. Deze pagina is NIET aanpasbaar en dient enkel om data weer te geven 
+## Deleting a Memoriá
+
+If you want to delete an existing Memoriá, simply swipe the Memoriá to the left in the list and press the red button. Alternatively, press the red button while viewing the Memoriá details. You will be asked to confirm the deletion twice before the Memoriá is permanently removed.
+
+## Map
+
+This feature displays a blue marker indicating your current location. All previously saved Memoriás will also be shown on the map based on the information you have entered. By tapping a location on the map that does not already contain a Memoriá, you will be guided to the page for creating a new Memoriá. The address details of that location will already be filled in automatically.
+
+**PLEASE NOTE:** If there is no internet connection, a red notification banner will appear at the bottom of the page and some functionality will be unavailable.
+
+## Statistics
+
+This page provides an overview of all your Memoriás. You can see the total number of Memoriás, the number per category, the total number of photos, and your favorite destination.
+
+## Color Theme
+
+By default, the application follows your device's system theme. If desired, you can select a different theme. After tapping a color theme, the application will immediately (or after a few interactions) switch to the selected theme.
+
+## Notifications
+
+The first time you open the application, you will be asked whether you would like to receive notifications. Based on your choice, the **Notifications** switch in the settings page will be enabled or disabled. This setting can always be changed later.
+
+## Microphone
+
+The first time you use the microphone, permission will be requested. After that, its availability depends on the choice you made. The microphone can be used to enter the name, country, city, street (location), number, and description. For the best results, speak clearly into the microphone.
+
+**PLEASE NOTE:** The microphone only works in English and requires an active internet connection.
+
+## Location
+
+When using this feature (either on the map or while creating a Memoriá), location permission will be requested the first time. Your current location can then be retrieved and used.
+
+**PLEASE NOTE:** The **Where am I now** button only works when an internet connection is available.
+
+## What Happens If There Is No Internet Connection?
+
+If your internet connection is lost, the application will notify you with a small message displayed at the bottom of the page. As a result, several features will no longer be available until the connection is restored.

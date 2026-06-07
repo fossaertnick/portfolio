@@ -20,14 +20,14 @@
                FontSize="22"
                TextColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}" FontAttributes="Bold"/>
 
-                <Button x:Name="systemColor" Text="System" BackgroundColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}"
-                        TextColor="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource Black}}" Clicked="systemColor_Clicked" />
+                    <Button x:Name="GreenColor" Text="Deep Green"  TextColor="Black" BackgroundColor="#2E7D32" Clicked="GreenColor_Clicked"/>
 
-                <Button x:Name="purpleColor" Text="purple" TextColor="Black" BackgroundColor="#BA68C8" Clicked="purpleColor_Clicked"/>
+                <Button x:Name="PurpleColor" Text="Mauve Purple" TextColor="Black" BackgroundColor="#BA68C8" Clicked="PurpleColor_Clicked"/>
 
-                <Button x:Name="greenColor" Text="Natural Green"  TextColor="Black" BackgroundColor="#66BB6A" Clicked="greenColor_Clicked"/>
+                <Button x:Name="SystemColor" Text="Simple and Sober" BackgroundColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}"
+                        TextColor="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource Black}}" Clicked="SystemColor_Clicked" />
 
-                <Button x:Name="blueColor" Text="Sky Blue" TextColor="Black" BackgroundColor="#64B5F6" Clicked="blueColor_Clicked" />
+                <Button x:Name="BlueColor" Text="Sky Blue" TextColor="Black" BackgroundColor="#64B5F6" Clicked="BlueColor_Clicked" />
                 
                 </VerticalStackLayout>
             </Border>

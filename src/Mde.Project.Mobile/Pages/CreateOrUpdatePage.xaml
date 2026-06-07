@@ -25,7 +25,7 @@
             <Grid Grid.Row="0" Style="{x:StaticResource BasicGridDivition}" ColumnDefinitions="*,2*">
                 <Label Text="{Binding EditMode}" HorizontalTextAlignment="Start" VerticalTextAlignment="Center" Style="{x:StaticResource Titles}" TextColor="{AppThemeBinding Light={DynamicResource Primary}, Dark={DynamicResource White}}"/>
                 <Border Grid.Column="1" Style="{x:StaticResource SearchBorders}">
-                    <Entry Text="{Binding Name}" Placeholder="Naam ... " Keyboard="Text"/>
+                    <Entry Text="{Binding Name}" Placeholder="Name ... " Keyboard="Text"/>
                 </Border>
             </Grid>
 
@@ -45,7 +45,7 @@
                         <Entry Text="{Binding Street}" Placeholder="Street (place) ..." Keyboard="Text"/>
                     </Border>
                     <Border Style="{x:StaticResource SearchBorders}" Grid.Column="1">
-                        <Entry Text="{Binding HouseNumber}" Placeholder="Number ..." Keyboard="Numeric"/>
+                        <Entry Text="{Binding HouseNumber}" Placeholder="Nr ..." Keyboard="Numeric"/>
                     </Border>
                 </Grid>
 
@@ -116,7 +116,7 @@
 
                 <Border HeightRequest="150" Style="{x:StaticResource SearchBorders}">
                     <ScrollView>
-                        <Editor Text="{Binding Description}" Placeholder="Beschrijving ..." Keyboard="Plain" AutoSize="TextChanges"/>
+                        <Editor Text="{Binding Description}" Placeholder="Description ..." Keyboard="Plain" AutoSize="TextChanges"/>
                     </ScrollView>
                 </Border>
             </VerticalStackLayout>

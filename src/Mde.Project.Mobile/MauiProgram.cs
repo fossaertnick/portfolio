@@ -50,36 +50,6 @@ namespace Mde.Project.Mobile
             });
 
 #if DEBUG
-
-            // UNDERLINES TEXT INPUT
-            builder.ConfigureMauiHandlers(handlers =>
-            {
-#if ANDROID
-                EntryHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
-                {
-                    handler.PlatformView.Background = null;
-                });
-                EditorHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
-                {
-                    handler.PlatformView.Background = null;
-                });
-                DatePickerHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
-                {
-                    handler.PlatformView.Background = null;
-                });
-                TimePickerHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
-                {
-                    handler.PlatformView.Background = null;
-                });
-                SearchBarHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
-                {
-                    handler.PlatformView.Background = null;
-                });
-
-#endif
-            });
-
-
             builder.Logging.AddDebug();
 #endif
 
@@ -130,10 +100,60 @@ namespace Mde.Project.Mobile
             builder.Services.AddSingleton<ISpeechToTextService, AndroidSpeechToTextService>();
             builder.Services.AddSingleton<IPushNotificationService, AndroidNotificationsService>();
             builder.Services.AddScoped<IMapService, AndroidMapService>();
+
+            // UNDERLINES TEXT INPUT
+            builder.ConfigureMauiHandlers(handlers =>
+            {
+                EntryHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+                {
+                    handler.PlatformView.Background = null;
+                });
+                EditorHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+                {
+                    handler.PlatformView.Background = null;
+                });
+                DatePickerHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+                {
+                    handler.PlatformView.Background = null;
+                });
+                TimePickerHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+                {
+                    handler.PlatformView.Background = null;
+                });
+                SearchBarHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+                {
+                    handler.PlatformView.Background = null;
+                });
+            });
 #elif WINDOWS
             builder.Services.AddSingleton<ISpeechToTextService, WindowsSpeechToTextService>();
             builder.Services.AddSingleton<IPushNotificationService, WindowsNotificationsService>();
             builder.Services.AddScoped<IMapService, WindowsMapService>();
+
+                        // UNDERLINES TEXT INPUT
+            builder.ConfigureMauiHandlers(handlers =>
+            {
+                EntryHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+                {
+                    handler.PlatformView.BorderThickness = new Microsoft.UI.Xaml.Thickness(0);
+                });
+                EditorHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+                {
+                    handler.PlatformView.BorderThickness = new Microsoft.UI.Xaml.Thickness(0);
+                });
+                DatePickerHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+                {
+                    handler.PlatformView.BorderThickness = new Microsoft.UI.Xaml.Thickness(0);
+                });
+                TimePickerHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+                {
+                    handler.PlatformView.BorderThickness = new Microsoft.UI.Xaml.Thickness(0);
+                });
+                SearchBarHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+                {
+                    handler.PlatformView.BorderThickness = new Microsoft.UI.Xaml.Thickness(0);
+                });
+            });
 #endif
             // API CONNECTION
             builder.Services.AddHttpClient(Constants.MemoriaClientName,

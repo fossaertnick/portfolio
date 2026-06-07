@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:Mde.Project.Mobile.Pages"
     xmlns:local="clr-namespace:Mde.Project.Mobile"
-    Shell.TabBarBackgroundColor="{DynamicResource Primary}"
+    Shell.TabBarBackgroundColor="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource Primary}}"
     Shell.BackgroundColor="{AppThemeBinding Light={DynamicResource White}, Dark={DynamicResource Black}}"
     Shell.TitleColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}"
     Shell.ForegroundColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource White}}">
@@ -31,6 +31,6 @@
         </Tab>
         
     </FlyoutItem>
-    <MenuItem x:Name="ManualPage" Text="Handleiding" Clicked="ManualPage_Clicked"/>
+    <MenuItem x:Name="ManualPage" Text="Manual" Clicked="ManualPage_Clicked"/>
     <MenuItem x:Name="Logout" Text="Logout" Clicked="Logout_Clicked"/>
 </Shell>

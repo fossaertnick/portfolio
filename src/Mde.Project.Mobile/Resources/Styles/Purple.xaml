@@ -10,7 +10,7 @@
 
     <!-- Secundaire accenten -->
     <Color x:Key="Secondary">#E1BEE7</Color>
-    <Color x:Key="SecondaryDarkText">#000000</Color>
+    <Color x:Key="SecondaryDarkText">#121212</Color>
 
     <!-- Extra accent -->
     <Color x:Key="Tertiary">#BA68C8</Color>

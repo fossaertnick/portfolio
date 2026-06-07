@@ -1,8 +1,8 @@
 namespace Mde.Project.Mobile.Resources.Styles;
 
-public partial class blue : ResourceDictionary
+public partial class Blue : ResourceDictionary
 {
-	public blue()
+	public Blue()
 	{
 		InitializeComponent();
 	}
