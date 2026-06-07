@@ -31,10 +31,14 @@ namespace Mde.Project.Mobile
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
                 .UseMauiCommunityToolkitMediaElement(false);
+
+            // SERVICES USED FOR ANDROID CONTAINING NOTIFICATIONS AND MAP
 #if ANDROID
             builder.UseLocalNotification();
             builder.UseMauiMaps();
 #endif
+
+            // FONTS
             builder.ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -48,6 +52,10 @@ namespace Mde.Project.Mobile
             {
                 options.UseSqlite($"Filename={dbPath}");
             });
+
+            // API CONNECTION
+            builder.Services.AddHttpClient(Constants.MemoriaClientName,
+                config => config.BaseAddress = new Uri(Constants.MemoriaApiUrl));
 
 #if DEBUG
             builder.Logging.AddDebug();
@@ -97,11 +105,12 @@ namespace Mde.Project.Mobile
             builder.Services.AddSingleton<IAuthService, AuthService>();
             builder.Services.AddSingleton<ISourceOfTruthService, SourceOfTruthService>();
 #if ANDROID
+
+            // CERTAIN PLATFORM SPECIFIC CODE FOR ANDROID AS WELL AS THE 'STYLING' OF (entries/editor/datepicker/timepicker/searchbar)
             builder.Services.AddSingleton<ISpeechToTextService, AndroidSpeechToTextService>();
             builder.Services.AddSingleton<IPushNotificationService, AndroidNotificationsService>();
             builder.Services.AddScoped<IMapService, AndroidMapService>();
 
-            // UNDERLINES TEXT INPUT
             builder.ConfigureMauiHandlers(handlers =>
             {
                 EntryHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
@@ -126,11 +135,11 @@ namespace Mde.Project.Mobile
                 });
             });
 #elif WINDOWS
+            // CERTAIN PLATFORM SPECIFIC CODE FOR WINDOWS AS WELL AS THE 'STYLING' OF (entries/editor/datepicker/timepicker/searchbar)
             builder.Services.AddSingleton<ISpeechToTextService, WindowsSpeechToTextService>();
             builder.Services.AddSingleton<IPushNotificationService, WindowsNotificationsService>();
             builder.Services.AddScoped<IMapService, WindowsMapService>();
 
-                        // UNDERLINES TEXT INPUT
             builder.ConfigureMauiHandlers(handlers =>
             {
                 EntryHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
@@ -155,10 +164,7 @@ namespace Mde.Project.Mobile
                 });
             });
 #endif
-            // API CONNECTION
-            builder.Services.AddHttpClient(Constants.MemoriaClientName,
-                config => config.BaseAddress = new Uri(Constants.MemoriaApiUrl));
-            
+
             var app = builder.Build();
 
             // SEEDING

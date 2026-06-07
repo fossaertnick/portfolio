@@ -23,6 +23,7 @@ namespace Mde.Project.Mobile.Platforms.Windows
                 ShowNotifications(null);
                 Preferences.Set(LastNotificationTime, DateTime.UtcNow.Ticks);
             }
+            ShowNotifications(lastTicks);
 
             _timer = new Timer(CheckNotification, null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
         }

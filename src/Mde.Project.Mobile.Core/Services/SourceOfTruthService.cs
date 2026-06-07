@@ -180,6 +180,7 @@ namespace Mde.Project.Mobile.Core.Services
         }
         public async Task<string> UploadPhotoAsync(string localPath)
         {
+            await AddAuthorizationAsync();
             using var content = new MultipartFormDataContent();
             using var stream =  File.OpenRead(localPath);
             content.Add(new StreamContent(stream), "file", Path.GetFileName(localPath));
