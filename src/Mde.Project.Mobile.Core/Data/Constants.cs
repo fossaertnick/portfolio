@@ -9,8 +9,8 @@
         public const string Authenticate = "Auth/deviceId";
         public const string JwtTokenKey = "jwt_token";
 
-        // constanten API key
-        public const string GeoCodeaApiKey = "AIzaSyD6BQDVKAtnEm6N3LFjEm2s3XY_nDujX8U";
+        // constanten API key OPGELET!!!
+        public const string GeoCodeaApiKey = "hier zou de api key komen die ik verwijderd heb na afloop van het project";
 
         // preferences
         public const string NotificationPermission = "notification_permission";
