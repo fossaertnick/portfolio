@@ -4,33 +4,26 @@ let divOverviewFaces, divDetailsCharacter, divVoices, divVoiceCharacters, slcLoc
 const locationTypes = [
   {
     Name: "family",
-    Value: 1
   },
   {
     Name: "school",
-    Value: 2
   },
   {
     Name: "plant",
-    Value: 3
   },
   {
     Name: "hobby",
-    Value: 4
   },
 ];
 const sortingTypes = [
   {
     Name: "age",
-    Value: 1
   },
   {
     Name: "firstname",
-    Value: 2
   },
   {
     Name: "lastname",
-    Value: 3
   }
 ];
 const voiceActors = [
@@ -129,29 +122,23 @@ function showDetailsCharacter(character) {
   divVoiceCharacters.innerHTML = "";
   divDetailsCharacter.innerHTML = "";
 
-  let details = document.createElement("h3");
-  details.classList.add("bg-crimson")
-  details.textContent = "Details";
-
-  let titleName = document.createElement("h3");
-  titleName.textContent = "Name";
-  let name = document.createElement("p");
-  name.classList.add("details")
+  let name = document.createElement("h3");
+  name.classList.add("bg-crimson")
   name.textContent = `${character.firstname}`;
 
-  let titleAge = document.createElement("h3");
+  let titleAge = document.createElement("h4");
   titleAge.textContent = "Age";
   let age = document.createElement("p");
   age.classList.add("details")
   age.textContent = `${character.age}`;
 
-  let titleJob = document.createElement("h3");
+  let titleJob = document.createElement("h4");
   titleJob.textContent = "Job";
   let job = document.createElement("p");
   job.classList.add("details")
   job.textContent = `${character.job}`;
 
-  let titleQuote = document.createElement("h3");
+  let titleQuote = document.createElement("h4");
   titleQuote.textContent = "Quote";
   let quote = document.createElement("p");
   quote.classList.add("details")
@@ -164,13 +151,13 @@ function showDetailsCharacter(character) {
     quote.textContent = pickRandomQuote(character.favorite_quotes);
   }
 
-  let titleVoice = document.createElement("h3");
+  let titleVoice = document.createElement("h4");
   titleVoice.textContent = "Voice";
   let voice = document.createElement("p");
   voice.classList.add("details")
   voice.textContent = `${character.voice}`;
 
-  divDetailsCharacter.append(details, titleName, name, titleAge, age, titleJob, job, titleQuote, quote, titleVoice, voice)
+  divDetailsCharacter.append(name, titleAge, age, titleJob, job, titleQuote, quote, titleVoice, voice)
 }
 function pickRandomQuote(characterQuotes) {
   const quoteAtHand = characterQuotes[Math.floor(Math.random() * characterQuotes.length)];
@@ -194,6 +181,7 @@ function showVoicedCharacters(voiceActor) {
   divVoiceCharacters.appendChild(simpCharacter);
 }
 function basedOnLocationAndSort(location, sort) {
+  divDetailsCharacter.innerHTML = "";
   divVoiceCharacters.innerHTML = "";
   divOverviewFaces.innerHTML = "";
   let locationCharacters = [];
