@@ -1,226 +1,226 @@
 "use strict";
 
+let divOverviewFaces, divDetailsCharacter, divVoices, divVoiceCharacters, slcLocation, slcSort;
+const locationTypes = [
+  {
+    Name: "family",
+    Value: 1
+  },
+  {
+    Name: "school",
+    Value: 2
+  },
+  {
+    Name: "plant",
+    Value: 3
+  },
+  {
+    Name: "hobby",
+    Value: 4
+  },
+];
+const sortingTypes = [
+  {
+    Name: "age",
+    Value: 1
+  },
+  {
+    Name: "firstname",
+    Value: 2
+  },
+  {
+    Name: "lastname",
+    Value: 3
+  }
+];
+const voiceActors = [
+  {
+    Name: "Dan Castellaneta",
+  },
+  {
+    Name: "Nancy Cartwright",
+  },
+  {
+    Name: "Hank Azaria",
+  }
+];
+
 window.addEventListener("load", initialize);
-
-const sortOrder = ["Age", "Firstname", "Lastname"];
-const voices = ["Dan Castellaneta", "Nancy Cartwright", "Hank Azaria"];
-
-let divOverview, slcChoice, slcSort, divDetails, divVoices, divVoiceCharacters, parRandomQuote;
 
 function initialize() {
 
   // initialisering DOM
-  divOverview = document.querySelector("#overview");
-  divDetails = document.querySelector("#details");
-  divVoices = document.querySelector("#voices");
-  divVoiceCharacters = document.querySelector("#characters");
-
-  slcChoice = document.querySelector("#choise");
-  slcSort = document.getElementById("sort-items"); // heb hier 'getElementById' gebruikt gewoon om eens te veranderen
+  divOverviewFaces = document.getElementById("overview");
+  divDetailsCharacter = document.getElementById("details");
+  divVoices = document.getElementById("voices");
+  divVoiceCharacters = document.getElementById("characters");
+  slcLocation = document.querySelector("#choise");
+  slcSort = document.querySelector("#sort-items");
 
   // eventhandlers
-  slcChoice.addEventListener("change", typeSelected);
+  slcLocation.addEventListener("change", () => basedOnLocationAndSort(slcLocation[slcLocation.selectedIndex], slcSort[slcSort.selectedIndex]));
+  slcSort.addEventListener("change", () => basedOnLocationAndSort(slcLocation[slcLocation.selectedIndex], slcSort[slcSort.selectedIndex]));
 
   // functies
-  FillUpSlcType();
-  FillUpSlcSort();
+  loadWaysOfSorting();
   loadPeople();
-  LoadVoiceButtons();
 }
 
-// core function
+// core functions
+function loadWaysOfSorting() {
+  locationTypes.forEach(type => slcLocation.options[slcLocation.length] = new Option(`${type.Name}`, `${type.Value}`));
+  sortingTypes.forEach(type => slcSort.options[slcSort.length] = new Option(`${type.Name}`, `${type.Value}`))
+  voiceActors.forEach(actor => {
+    let btnName = document.createElement("button");
+    btnName.classList.add("notSelected");
+    btnName.addEventListener("click", () => {
+      btnName.classList.remove("notSelected");
+      btnName.classList.add("selected");
+      showVoicedCharacters(actor)
+    });
+    btnName.addEventListener("dblclick", () => {
+      btnName.classList.remove("selected");
+      btnName.classList.add("notSelected");
+      divVoiceCharacters.innerHTML = "";
+    });
+
+    btnName.textContent = actor.Name;
+    divVoices.appendChild(btnName);
+  })
+}
 function loadPeople() {
-
-  for (const person in members) {
-
-    const divPerson = createPerson(person);
-
-    divOverview.appendChild(divPerson);
+  for (let i = 0; i < members.length; i++) {
+    createSpecificOne(members[i])
   }
-}
-function FillUpSlcType() { // ik ben me ervan bewust dat dit hard gecodeerd staat
-
-  slcChoice[slcChoice.length] = new Option("family", "family");
-  slcChoice[slcChoice.length] = new Option("hobby", "hobby");
-  slcChoice[slcChoice.length] = new Option("plant", "plant");
-  slcChoice[slcChoice.length] = new Option("school", "school");
-
-}
-function FillUpSlcSort() { // ik ben me ervan bewust dat dit hard gecodeerd staat
-
-
-  for (const sort in sortOrder) {
-
-    slcSort[slcSort.length] = new Option(sortOrder[sort], sortOrder[sort])
-  }
-}
-function LoadVoiceButtons() {
-
-  for (const button in voices) {
-
-    const btnVoice = document.createElement("button");
-    btnVoice.id = `${voices[button]}`;
-    btnVoice.addEventListener("mouseover", changeColors)
-    btnVoice.addEventListener("mouseout", resetColor)
-    btnVoice.addEventListener("click", showVoices);
-    btnVoice.className = "notSelected";
-    btnVoice.textContent = voices[button];
-    divVoices.appendChild(btnVoice);
-  }
-
 }
 
 // supporting functions
-function appointRightFace(person) {
+function createSpecificOne(character) {
+  const simpCharacter = document.createElement("div");
+  simpCharacter.addEventListener("click", () => showDetailsCharacter(character));
 
-  const imgFace = document.createElement("img");
-  imgFace.id = members[person].firstname;
-  imgFace.className = "characters img";
-  imgFace.addEventListener("click", showInfo); // ik heb er een click van gemaakt die in een alert zal komen
+  let characterFace = document.createElement("img");
 
-  if (members[person].type === "family") {
+  let characterName = document.createElement("h3");
+  characterName.textContent = character.firstname;
 
-    imgFace.src = `/img/Family/${members[person].picture}`;
-    imgFace.alt = `${person.firstname} ${person.lastname}`;
-  }
-  else { // members[person].type !== "family" zullen de images uit de andere folder gehaald worden
+  characterFace = getTheCharactersImage(character);
 
-    imgFace.src = `/img/Other/${members[person].picture}`;
-    imgFace.alt = `${person.firstname} ${person.lastname}`;
-  }
-  return imgFace;
+  simpCharacter.append(characterName, characterFace);
+
+  divOverviewFaces.appendChild(simpCharacter);
 }
-function showInfo() {
+function getTheCharactersImage(character) {
+  let image = document.createElement("img");
 
+  if (character.type === "family") {
+    image.src = `img/Family/${character.picture}`;
+    image.title = `${character.lastname} ${character.firstname}`
+  }
+  else // (members[character].type === "hobby" || members[character].type === "school" || members[character].type === "plant")
+  {
+    image.src = `img/Other/${character.picture}`;
+    image.title = `${character.lastname} ${character.firstname}`
+  }
+
+  return image;
+}
+function showDetailsCharacter(character) {
   divVoiceCharacters.innerHTML = "";
-  const selectedFigureName = this.id;
-  const selectedFigure = members.find(e => e.firstname === selectedFigureName);
-  const divDetailedInfo = GetInfo(selectedFigure);
-  divDetails.innerHTML = "";
-  divDetails.appendChild(divDetailedInfo);
+  divDetailsCharacter.innerHTML = "";
+
+  let details = document.createElement("h3");
+  details.classList.add("bg-crimson")
+  details.textContent = "Details";
+
+  let titleName = document.createElement("h3");
+  titleName.textContent = "Name";
+  let name = document.createElement("p");
+  name.classList.add("details")
+  name.textContent = `${character.firstname}`;
+
+  let titleAge = document.createElement("h3");
+  titleAge.textContent = "Age";
+  let age = document.createElement("p");
+  age.classList.add("details")
+  age.textContent = `${character.age}`;
+
+  let titleJob = document.createElement("h3");
+  titleJob.textContent = "Job";
+  let job = document.createElement("p");
+  job.classList.add("details")
+  job.textContent = `${character.job}`;
+
+  let titleQuote = document.createElement("h3");
+  titleQuote.textContent = "Quote";
+  let quote = document.createElement("p");
+  quote.classList.add("details")
+
+
+  if (character.favorite_quotes === undefined) {
+    quote.textContent = "no quote here.";
+  }
+  else {
+    quote.textContent = pickRandomQuote(character.favorite_quotes);
+  }
+
+  let titleVoice = document.createElement("h3");
+  titleVoice.textContent = "Voice";
+  let voice = document.createElement("p");
+  voice.classList.add("details")
+  voice.textContent = `${character.voice}`;
+
+  divDetailsCharacter.append(details, titleName, name, titleAge, age, titleJob, job, titleQuote, quote, titleVoice, voice)
 }
-function GetInfo(selectedFigure) {
-  const divDetailedInfo = document.createElement("div");
-  divDetailedInfo.className = "details";
-
-  const h4Name = document.createElement("h4");
-  h4Name.className = "bg-crimson";
-  h4Name.textContent = `${selectedFigure.firstname} ${selectedFigure.lastname}`;
-
-  const h4Age = document.createElement("h4");
-  h4Age.className = "bg-deepsky-blue";
-  h4Age.textContent = `Age:`
-
-  const parAge = document.createElement("p");
-  parAge.textContent = `${selectedFigure.age}`;
-
-  const h4Job = document.createElement("h4");
-  h4Job.className = "bg-deepsky-blue";
-  h4Job.textContent = `Job:`
-
-  const parJob = document.createElement("p");
-  parJob.textContent = `${selectedFigure.job}`;
-
-  const h4Quote = document.createElement("h4");
-  h4Quote.className = "bg-deepsky-blue";
-  h4Quote.textContent = `Quote:`
-
-  const parQuote = document.createElement("p");
-  parQuote.textContent = `${selectedFigure.quote}`; // findRandomQuote(selectedFigure)
-
-  const h4Voice = document.createElement("h4");
-  h4Voice.className = "bg-deepsky-blue";
-  h4Voice.textContent = `Voice:`
-
-  const parVoice = document.createElement("p");
-  parVoice.textContent = `${selectedFigure.voice}`;
-
-  divDetailedInfo.appendChild(h4Name);
-  divDetailedInfo.appendChild(h4Age);
-  divDetailedInfo.appendChild(parAge);
-  divDetailedInfo.appendChild(h4Job);
-  divDetailedInfo.appendChild(parJob);
-  divDetailedInfo.appendChild(h4Quote);
-  divDetailedInfo.appendChild(parQuote);
-  divDetailedInfo.appendChild(h4Voice);
-  divDetailedInfo.appendChild(parVoice);
-
-  return divDetailedInfo;
+function pickRandomQuote(characterQuotes) {
+  const quoteAtHand = characterQuotes[Math.floor(Math.random() * characterQuotes.length)];
+  return quoteAtHand;
 }
-// supporting function FillUpSlcType (and shows character of selected type)
-function typeSelected() {
-
-  divDetails.innerHTML = "";
+function showVoicedCharacters(voiceActor) {
+  divDetailsCharacter.innerHTML = "";
   divVoiceCharacters.innerHTML = "";
-  const selectedTypeValue = slcChoice.value
 
-  divOverview.innerHTML = "";
-  for (var person in members) {
+  const simpCharacter = document.createElement("div");
+  simpCharacter.classList.add("characters");
+  members.forEach(character => {
+    if (character.voice === voiceActor.Name) 
+    {
+        let characterFace = document.createElement("img");
 
-    if (members[person].type === selectedTypeValue) {
-
-      const divPerson = createPerson(person);
-
-      divOverview.appendChild(divPerson);
+        characterFace = getTheCharactersImage(character);
+        simpCharacter.appendChild(characterFace);
     }
-  }
+  })
+  divVoiceCharacters.appendChild(simpCharacter);
 }
-function sortSelected() {   // Ik heb niet direct een idee hoe hier aan te beginnen :/
-
-
-}
-function sortSelected() {
-
-  // MOET NOG UITGEWERKT WORDEN
-}
-function showVoices() {
-
-  const selectedVoiceId = this.id;
+function basedOnLocationAndSort(location, sort) {
   divVoiceCharacters.innerHTML = "";
-  divDetails.innerHTML = "";
+  divOverviewFaces.innerHTML = "";
+  let locationCharacters = [];
 
-  for (var person in members) {
-
-    if (members[person].voice === selectedVoiceId) {
-
-      const divPerson = createPerson(person)
-
-      divVoiceCharacters.appendChild(divPerson);
+  members.forEach(character => {
+    if (location.text === "All") {
+      locationCharacters.push(character);
     }
-  }
-}
-function changeColors() {
-  this.className = "selected";
-}
-function resetColor() {
-  this.className = "notSelected";
-}
-function createPerson(person) {
-
-  const divPerson = document.createElement("div");
-
-  const h3Name = document.createElement("h3");
-  h3Name.textContent = members[person].firstname;
-
-  const imgFace = appointRightFace(person);
-
-  divPerson.appendChild(h3Name);
-  divPerson.appendChild(imgFace);
-
-  return divPerson;
-}
-/*function findRandomQuote(selectedFigure){
-
-  
-  for(const prop in selectedFigure){
-    if(typeof members[selectedFigure] == "object"){
-
-      const randomIndexNrByQuotes = Math.floor(Math.random() * prop.length);
-      parRandomQuote = members[selectedFigure].favorite_quotes.find(e => e === randomIndexNrByQuotes);
+    else if (character.type === location.text) {
+      locationCharacters.push(character);
     }
+  });
+
+  if (sort.text === "age") {
+    locationCharacters.sort((a, b) => b.age - a.age);
   }
-  return parRandomQuote;
-}*/
+  else if (sort.text === "firstname") {
+    locationCharacters.sort((a, b) => a.firstname.localeCompare(b.firstname));
+  }
+  else if (sort.text === "lastname") {
+    locationCharacters.sort((a, b) => a.lastname.localeCompare(b.lastname));
+  }
+
+  locationCharacters.forEach(character => { createSpecificOne(character) });
+}
+
+
 
 
 

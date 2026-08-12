@@ -349,11 +349,11 @@ const members = [
 },
 {
     firstname : "Santa",
-    lastname : "Litle Helper",    
+    lastname : "Little Helper",    
     type : "hobby",
     relation : "pet",
     age : 6,
-    picture : "Santas_Little_Helper.webp",
+    picture : "Santa_Little_Helper.webp",
     voice : "Frank Welker"
 },
 {
