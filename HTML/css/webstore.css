@@ -1,0 +1,200 @@
+html, body {
+  height: 100%;
+  padding: 0;
+}
+body {
+  display: grid;
+  grid-template-columns: 4fr 2fr;
+  grid-template-rows: max-content max-content auto max-content max-content;
+  grid-template-areas: "header nav-right" "nav nav" "main main" "disclaimer disclaimer" "footer footer";
+  grid-gap: 10px;
+  position: relative;
+  background-color: lightcyan;
+  font-family: Arial, Helvetica, sans-serif;
+  
+}
+header {
+  grid-area: header;
+  text-align: center;
+  border: 1px solid #000;
+  line-height: 4rem;
+}
+header h1 a {
+  text-decoration: none;
+  color: black;
+}
+nav.right {
+  grid-area: nav-right;
+  color: black;
+  border: 1px solid #000;
+  text-align: center;
+  border-top-right-radius: 1rem;
+}
+button {
+  cursor: pointer;
+}
+
+#button-left {
+  position: fixed;
+  left: 20px;
+  top: 20px;
+}
+button {
+    background-color: lightskyblue;
+    color: black;
+    border: 1px solid #000;
+    text-align: center;
+    width: 50px;
+    height: 50px;
+  }
+button:hover {
+  background-color: lightcyan;
+}
+button:active {
+  background-color: black;
+  color: white;
+}
+nav ul {
+  padding: 0;
+}
+nav ul li {
+  list-style-type: none;
+  padding: 10px;
+}
+nav ul li.list {
+  display: inline;
+  width: 100px;
+}
+nav ul li a {
+  text-decoration: none;
+  color: black;
+}
+a:hover {
+  color: lightskyblue;
+}
+a:active {
+  color: red;
+  font-size: larger;
+}
+nav.left {
+  padding-top: 0px;
+  grid-area: nav;
+  color: #fff;
+  text-align: center;
+}
+.link {
+  color: black;
+  font-weight: bolder;
+  font-style: italic;
+}
+.link:hover {
+  color: lightskyblue;
+}
+.link:active {
+  color: red;
+  font-size: larger;
+}
+main {
+  grid-area: main;
+  color: black;
+  border: 1px solid #000;
+}
+.title {
+  display: inline;
+  text-align: left;
+  padding-left: 25px;
+  border: none;
+}
+#flex-europe, #flex-afrika, #flex-noord-amerika, #flex-zuid-amerika {
+  display: flex;
+  flex-flow: row wrap;
+  width: 100%;
+  height: max-content;
+  justify-content: center;
+}
+.title {
+  width: 100%;
+  margin-left: 5%;
+}
+div.optie {
+  display: inline;
+  border: 1px solid #000;
+  margin: 25px;
+  width: 25%;
+  height: auto;
+}
+div.optie h3 {
+  padding: 19px;
+}
+div.optie  p {
+padding: 15px;
+text-align: center;
+}
+div.optie img {
+  width: 50%;
+  margin-left: 25%;
+  height: auto;
+}
+a.xtra:hover {
+  transform-box: fill-box;
+}
+.title {
+  display: inline;
+  text-align: left;
+  padding-left: 25px;
+  border: none;
+  color: red;
+}
+#button-right {
+  position: fixed;
+  right: 20px;
+  bottom: 135px;
+ }
+#disclaimer {
+  grid-area: disclaimer;
+  position: sticky;
+  left: 10px;
+  bottom: 10px;
+  background-color: red;
+  color: #fff;
+  border: 1px solid #000;
+  text-align: center;
+}
+footer {
+  padding-left: 10px;
+  grid-area: footer;
+  color: black;
+  border: 1px solid #000;
+  text-align: right;
+}
+footer p {
+  display: inline-block;
+  text-decoration: none;
+}
+footer p a {
+  line-height: 0.1rem;
+  position: absolute;
+  left: 10px;
+  text-decoration: none;
+  color: black;
+}
+
+/*tablet*/
+@media only screen and (max-width: 960px) {
+  body {
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: max-content max-content auto max-content max-content;
+    grid-template-areas: "header nav-right" "nav nav" "main main" "disclaimer disclaimer" "footer footer";
+  }
+  aside {
+    display: none;
+  }
+}
+
+/*mobiel*/
+@media only screen and (max-width: 600px) {
+#flex div img {
+  width: 100%;
+
+}
+}
