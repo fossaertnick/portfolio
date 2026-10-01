@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:Mde.Project.Mobile.ViewModels"
+             xmlns:converties="clr-namespace:Mde.Project.Mobile.Conventies"
+             x:DataType="viewModels:StatisticsViewModel"  
+             x:Class="Mde.Project.Mobile.Pages.StatisticsPage"
+             Shell.FlyoutBehavior="Flyout">
+
+    <Grid Padding="10,20,10,10" Style="{x:StaticResource TwoGrid}">
+
+        <Grid IsVisible="{Binding IsBusy}" BackgroundColor="Black" Opacity="0.7">
+            <VerticalStackLayout  Style="{x:StaticResource LoadingBlock}" >
+                <ActivityIndicator IsRunning="{Binding IsBusy}" Style="{x:StaticResource Loading}"/>
+                <Label Text="Loading statistics..." TextColor="{DynamicResource White}"/>
+            </VerticalStackLayout>
+        </Grid>
+
+        <VerticalStackLayout Grid.Row="0" IsVisible="{Binding IsLoading}"
+        Spacing="{x:StaticResource DefaultSpacing}">
+
+        <!-- Titel -->
+        <Label
+            Text="Statistics"
+            Style="{x:StaticResource Titles}"
+            HorizontalOptions="Center"/>
+
+        <!-- Totaal Memorias -->
+            <Border Style="{x:StaticResource CategoryBorders}" Padding="{x:StaticResource DefaultPadding}">
+
+                <Grid
+                ColumnDefinitions="Auto,*">
+
+                    <Label
+                    Text="Memorias:"
+                    FontSize="18"
+                    VerticalOptions="Center"/>
+
+                <Label
+                    Grid.Column="1"
+                    Text="{Binding TotalMemorias}"
+                    HorizontalOptions="End"
+                    FontSize="26"
+                    FontAttributes="Bold"/>
+
+                </Grid>
+
+            </Border>
+
+
+            <!-- Categorieën -->
+            <VerticalStackLayout Spacing="{x:StaticResource DefaultSpacing}">
+
+            <Label
+                Text="Categorieën : "
+                FontAttributes="Bold"
+                FontSize="20"/>
+
+                <Grid
+                    Style="{x:StaticResource BasicGridDivition}"
+                RowDefinitions="Auto, Auto"
+                RowSpacing="{x:StaticResource DefaultSpacing}">
+
+                    <Border Grid.Row="0" Grid.Column="0" Style="{x:StaticResource CategoryBorders}">
+
+                        <VerticalStackLayout>
+                            <Label Text="Work:"/>
+                        <Label
+                            Text="{Binding WerkMemoria}"
+                            FontSize="24"
+                            HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+
+                    </Border>
+
+                    <Border Grid.Row="0" Grid.Column="1" Style="{x:StaticResource CategoryBorders}">
+
+                        <VerticalStackLayout>
+                            <Label Text="Travel:"/>
+                        <Label
+                            Text="{Binding ReisMemoria}"
+                            FontSize="24"
+                            HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="0" Style="{x:StaticResource CategoryBorders}">
+
+                        <VerticalStackLayout>
+                            <Label Text="Home:"/>
+                        <Label
+                            Text="{Binding UitgaanMemoria}"
+                            FontSize="24"
+                            HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="1" Style="{x:StaticResource CategoryBorders}">
+
+                        <VerticalStackLayout>
+                            <Label Text="Other:"/>
+                        <Label
+                            Text="{Binding AndereMemoria}"
+                            FontSize="24"
+                            HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+
+                    </Border>
+
+                </Grid>
+
+            </VerticalStackLayout>
+
+
+            <!-- Media -->
+            <Border Style="{x:StaticResource CategoryBorders}" Padding="{x:StaticResource DefaultPadding}">
+
+                <VerticalStackLayout Spacing="{x:StaticResource DefaultSpacing}">
+
+                    <Label
+                    Text="Media : "
+                    FontSize="20"
+                    FontAttributes="Bold"/>
+
+                    <Grid
+                     Style="{x:StaticResource BasicGridDivition}"
+                    ColumnDefinitions="*,Auto"
+                    RowDefinitions="Auto,Auto">
+
+                        <Label
+                        Grid.Row="0"
+                        Text="Photo's:"/>
+
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Text="{Binding TotalMemoriaFotos}"/>
+
+                        <Label
+                        Grid.Row="1"
+                        Text="Video's:"/>
+                        
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Text="{Binding TotalMemoriaVideos}"/>
+
+                    </Grid>
+
+                </VerticalStackLayout>
+
+            </Border>
+
+
+            <!-- Favoriete locatie -->
+            <Border Style="{x:StaticResource CategoryBorders}" Padding="{x:StaticResource DefaultPadding}">
+
+                <VerticalStackLayout
+                Spacing="{x:StaticResource DefaultSpacing}">
+
+                    <Label
+                    Text="Favorite destination:"
+                    FontSize="20"
+                    FontAttributes="Bold"/>
+
+                <Label
+                    Text="{Binding FavoriteMemoriaCountry}"
+                    FontSize="26"
+                    HorizontalTextAlignment="Center"/>
+
+                </VerticalStackLayout>
+
+            </Border>
+
+        </VerticalStackLayout>
+
+        <Border Grid.Row="1" IsVisible="{Binding IsOffline}" Padding="{x:StaticResource DefaultPadding}" BackgroundColor="DarkRed">
+            <Label Text="No internet connection has been detected. Some features may be unavailable." HorizontalOptions="Center"/>
+        </Border>
+    </Grid>
+
+</ContentPage>

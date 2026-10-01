@@ -1,0 +1,285 @@
+html,
+body {
+  height: 100%;
+  padding: 0;
+}
+
+body {
+  display: grid;
+  grid-template-columns: 4fr 2fr;
+  grid-template-rows: max-content max-content auto max-content max-content;
+  grid-template-areas: "header nav-right" "nav nav" "main aside" "disclaimer disclaimer" "footer footer";
+  grid-gap: 10px;
+  position: relative;
+  background-color: lightcyan;
+  font-family: Arial, Helvetica, sans-serif;
+
+}
+
+header {
+  grid-area: header;
+  text-align: center;
+  border: 1px solid #000;
+  line-height: 4rem;
+}
+
+header h1 a {
+  text-decoration: none;
+  color: black;
+}
+nav.right {
+  grid-area: nav-right;
+  color: black;
+  border: 1px solid #000;
+  text-align: center;
+  border-top-right-radius: 1rem;
+}
+button {
+  cursor: pointer;
+}
+#button {
+  position: fixed;
+  left: 20px;
+  top: 20px;
+  background-color: lightskyblue;
+  color: black;
+  border: 1px solid #000;
+  text-align: center;
+  width: 50px;
+  height: 50px;
+}
+
+#button:hover {
+  background-color: lightcyan;
+}
+
+#button:active {
+  background-color: black;
+  color: white;
+}
+
+nav ul {
+  padding: 0;
+}
+
+nav ul li {
+  list-style-type: none;
+  padding: 10px;
+  width: auto;
+}
+
+nav ul li.list {
+  display: inline;
+  width: 100px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: black;
+}
+
+a:hover {
+  color: lightskyblue;
+}
+
+a:active {
+  color: red;
+  font-size: larger;
+}
+
+nav.left {
+  padding-top: 0px;
+  grid-area: nav;
+  color: #fff;
+  text-align: center;
+}
+
+main {
+  grid-area: main;
+  color: black;
+  border: 1px solid #000;
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: max-content;
+  grid-template-areas: "up" "bottom";
+}
+main section {
+  grid-area: up;
+}
+main section {
+  width: auto;
+  text-align: center;
+  padding: 20px;
+  margin: 20px;
+}
+form label {
+  display: inline-block;
+  width: 25%;
+  height: auto;
+  margin: 10px;
+  padding-left: 35px;
+}
+form input {
+  width: 40%;
+  height: auto;
+  margin: 10px;
+}
+form select {
+  width: 40%;
+  height: auto;
+  margin: 10px;
+}
+main div textarea {
+  width: 50%;
+  margin: 0px 0px 10px 25%;
+}
+input[type="submit"], input[type="reset"] {
+  width: 20%;
+  margin: 10px;
+  padding: 10px;
+  background-color: lightskyblue;
+  color: black;
+  border: 1px solid #000;
+  text-align: center;
+  margin: 0px 0px 10px 25%;
+}
+input[type="reset"] {
+  margin-left: 10%;
+}
+input[type="submit"]:hover, input[type="reset"]:hover {
+  background-color: lightcyan;
+}
+input[type="submit"]:active, input[type="reset"]:active {
+  background-color: black;
+  color: white;
+}
+aside {
+  grid-area: aside;
+  color: black;
+  border: 1px solid #000;
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: max-content 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-areas: "p" "frankrijk" "paaseiland" "peru" "portugal" "prague" "tanzania" "us";
+  row-gap: 10px;
+  padding-bottom: 10px;
+  overflow: scroll;
+}
+
+aside img {
+  padding-left: 10%;
+  width: 75%;
+  height: auto;
+}
+
+aside h2 {
+  grid-area: p;
+  text-align: center;
+}
+
+aside img.berlijn {
+  grid-area: berlijn;
+}
+
+aside img.bolivie {
+  grid-area: bolivie;
+}
+
+aside img.brazil {
+  grid-area: brazil;
+}
+
+aside img.chile {
+  grid-area: chile;
+}
+
+aside img.france {
+  grid-area: france;
+}
+
+aside img.galapagos {
+  grid-area: galapagos;
+}
+
+aside img.mexico {
+  grid-area: mexico;
+}
+
+#disclaimer {
+  grid-area: disclaimer;
+  position: sticky;
+  left: 10px;
+  bottom: 10px;
+  background-color: red;
+  color: #fff;
+  border: 1px solid #000;
+  text-align: center;
+}
+
+footer {
+  padding-left: 10px;
+  grid-area: footer;
+  color: black;
+  border: 1px solid #000;
+  text-align: right;
+}
+
+footer p {
+  display: inline-block;
+  text-decoration: none;
+}
+
+footer p a {
+  line-height: 0.1rem;
+  position: absolute;
+  left: 10px;
+  text-decoration: none;
+  color: black;
+}
+
+/*tablet*/
+@media only screen and (max-width: 960px) {
+  body {
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: max-content max-content auto max-content max-content;
+    grid-template-areas: "header nav-right" "nav nav" "main main" "disclaimer disclaimer" "footer footer";
+  }
+  aside {
+    display: none;
+  }
+  main {
+    grid-template-columns: 1fr;
+    grid-template-rows: max-content auto;
+    grid-template-areas: "up" "bottom";
+  }
+
+main form div {
+  display: block;
+  width: auto;
+}
+}
+
+
+
+
+/*mobiel*/
+@media only screen and (max-width: 600px) {
+  body {
+    grid-template-columns: auto;
+    grid-template-rows: max-content max-content max-content max-content auto max-content max-content;
+    grid-template-areas: "header" "button" "nav-right" "nav" "main" "disclaimer" "footer";
+  }
+
+  nav.right {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+  }
+
+  nav ul li {
+    display: inline;
+    width: 100px;
+  }
+
+}

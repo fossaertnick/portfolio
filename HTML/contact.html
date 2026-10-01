@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/contact.css">
+  <title>Contactpagina</title>
+</head>
+
+<body>
+  <header>
+    <h1>Contact</h1>
+  </header>
+  <nav class="right">
+    <ul>
+      <li><a href="webstore.html" target="_blank">Webwinkel:</a></li>
+      <li><a href="index.html" target="_blank">De Vrije Vogel:</a></li>
+    </ul>
+  </nav>
+  <a href="mailto:nick.fossaert@student.howest.be"><button id="button">Chat</button></a>
+  <nav class="left">
+    <ul>
+      <li class="list"><a href="webstore.html#europe" target="_blank">Europa:</a></li>
+      <li class="list"><a href="webstore.html#afrika" target="_blank">Afrika:</a></li>
+      <li class="list"><a href="webstore.html#noord-amerika" target="_blank">Noord-Amerika:</a></li>
+      <li class="list"><a href="webstore.html#zuid-amerika" target="_blank">Zuid-Amerika:</a></li>
+    </ul>
+  </nav>
+  <main>
+    <section>
+      <h2>Contacteer ons:</h2>
+      <p>Heeft u een vraag. Wenst u adviest of hulp met uw reservatie? Contacteer ons gerust. </br></br>
+        We zijn bereikbaar van maandag tot vrijdag van 09:30 tot 18:00 en zaterdag van 09:30 tot 16:00.</br></br>
+        Indien u ondanks alle onze zorg die zij aan de organisatie van onze reizen bestenden toch een klacht heeft,
+        twijfel dan zeker
+        niet om ons te contacteren. We zullen er alles aan doen om u bij te staan.
+      </p>
+      </section>
+    <form class="form" method="post" action="https://jkorpela.fi/cgi-bin/echo.cgi" target="_blank">
+      <div>
+        <label for="txt-voornaam">* Voornaam:</label>
+        <input id="txt-voornaam" type="text" name="voornaam" maxlength="25" required>
+        <label for="txt-achternaam">* Achternaam:</label>
+        <input id="txt-achternaam" type="text" name="achternaam" maxlength="25" required>
+        <label for="txt-adres">Adres:</label>
+        <input id="txt-adres" type="text" name="adres">
+      </div>
+      <div>
+        <label for="txt-email">* E-mail:</label>
+        <input id="txt-email" type="email" name="email" required placeholder="&#64;hotmail.com">
+        <label for="txt-tel">Tel:</label>
+        <input id="txt-tel" type="tel" name="tel" placeholder="012/345678" maxlength="25">
+          <label for="txt-land">Bestemming:</label>
+          <select name="land van interesse" type="text">
+            <optgroup label="Europa">
+              <option></option>
+              <option>Frankrijk</option>
+              <option>België</option>
+              <option>Nederland</option>
+              <option>Spanje</option>
+              <option>Italie</option>
+              <option>Portugal</option>
+            </optgroup>
+            <optgroup label="Afrika">
+              <option>Tanzania</option>
+              <option>Kenia</option>
+              <option>Marokko</option>
+              <option>Egypte</option>
+              <option>Senegal</option>
+            </optgroup>
+            <optgroup label="Noord-Amerika">
+              <option>Miami</option>
+              <option>Boston</option>
+              <option>New York</option>
+              <option>Washington</option>
+              <option>Guadalajara</option>
+              <option>Mexico-city</option>
+            </optgroup>
+            <optgroup label="Zuid-Amerika">
+              <option>Peru</option>
+              <option>Paaseiland</option>
+              <option>Chili</option>
+              <option>Argentinie</option>
+              <option>Brazilie</option>
+              <option>Colombia</option>
+              <option>Bolivie</option>
+              <option>Equador</option>
+              <option>Paraguay</option>
+            </optgroup>
+          </select>
+      </div>
+      <div>
+        <label for="txt-arrive">Arrive:</label>
+        <input class="date" id="txt-arrive" type="date" name="arrive">
+        <label for="txt-depart">Depart:</label>
+        <input class="date" id="txt-depart" type="date" name="depart">
+      </div>
+      </br>
+      <div>
+        <label for="Nederlands">Nederlands</label>
+        <input type="checkbox" name="NL" id="Nederlands">
+        <label for="Frans">Frans</label>
+        <input type="checkbox" name="FR" id="Frans">
+        <label for="Engels">Engels</label>
+        <input type="checkbox" name="En" id="Engels">
+        <label for="Spaans">Spaans</label>
+        <input type="checkbox" name="Sp" id="Spaans">
+      </div>
+      </br></br>
+      <div>
+        <textarea name="question" id="question" cols="34" rows="7" required
+          placeholder="* Stel hier uw vraag"></textarea>
+      </div>
+      <input type="submit" value="Verzend">
+      <input type="reset" value="reset">
+    </form>
+  </main>
+  <aside>
+    <h2>Mooie momenten reeds gemaakt:</h2>
+    <img class="frankrijk" src="img/vorige reizen contact/frankrijk.jpg" name="eifeltoren" alt="eifeltoren">
+    <img class="paaseiland" src="img/vorige reizen contact/paaseiland.jpg" name="paaseiland" alt="paaseiland">
+    <img class="peru" src="img/vorige reizen contact/peru.jpg" name="machu picchu" alt="machu picchu">
+    <img class="portugal" src="img/vorige reizen contact/portugal.jpg" name="evora" alt="evora">
+    <img class="prague" src="img/vorige reizen contact/prague.jpg" name="castle" alt="castle">
+    <img class="tanzania" src="img/vorige reizen contact/tanzania.jpg" name="beach" alt="beach">
+    <img class="us" src="img/vorige reizen contact/us.jpg" name="capitol" alt="capitol">
+  </aside>
+  <div id="disclaimer">
+    <p><strong>!! Dit is een virtuele oefenfirma. Informatie, transacties en goederen op deze website zijn fictief en
+        hebben
+        louter educatieve doeleinden. !!</strong></p>
+  </div>
+  <footer>
+    <p>&copy; Fossaert nick - WFB&#64;Home - Howest</p>
+    <p class="absolute"><a href="mailto:nick.fossaert&#64;student.howest.be">E-mail naar ...</a></br>
+      <a href="tel:+123456789">Bel naar ...</a>
+    </p>
+  </footer>
+</body>
+
+</html>

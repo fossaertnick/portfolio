@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:locations="clr-namespace:Mde.Project.Mobile.Core.Entities;assembly=Mde.Project.Mobile.Core"
+             xmlns:converties="clr-namespace:Mde.Project.Mobile.Conventies"
+             xmlns:viewModels="clr-namespace:Mde.Project.Mobile.ViewModels"
+             x:DataType="viewModels:ListViewModel"
+             x:Class="Mde.Project.Mobile.Pages.ListPage"
+             x:Name="page"
+             Shell.TabBarIsVisible="False"
+             Shell.FlyoutBehavior="Disabled"
+             Shell.NavBarIsVisible="False">
+
+    <Grid Padding="{x:StaticResource DefaultPadding}" Style="{x:StaticResource FourGrid}">
+
+        <Grid Grid.Row="0" Style="{x:StaticResource BasicGridDivition}" ColumnDefinitions="*,Auto">
+                <Border Grid.ColumnSpan="{Binding SearchColumnSpan}" Grid.Column="0" Style="{x:StaticResource SearchBorders}" HeightRequest="{x:StaticResource ButtonHeight}" 
+                        BackgroundColor="{DynamicResource Secondary}" Stroke="{DynamicResource Primary}">
+                    <SearchBar Placeholder="Filter..." InputTransparent="{Binding IsOffline}" Text="{Binding SearchTerm}" Keyboard="Text" TextColor="{AppThemeBinding Light={DynamicResource Black}, Dark={DynamicResource SecondaryDarkText}}"/>
+                    </Border>
+
+                <Button Grid.Column="1" Command="{Binding NavigationCommand}" Style="{x:StaticResource FullButtons}" 
+                        CommandParameter="map" Text="Map" IsVisible="{Binding ShowMapButton}" IsEnabled="{Binding HasInternet}"/>
+            </Grid>
+
+        <Grid Grid.Row="1">
+
+                <CollectionView x:Name="MemoriaList" ItemsSource="{Binding Locations}" Margin="{x:StaticResource DefaultMargin}" IsEnabled="{Binding HasInternet}" >
+
+                <CollectionView.EmptyView>
+                <Grid>
+                    <VerticalStackLayout  Spacing="{x:StaticResource DefaultSpacing}" VerticalOptions="Center" HorizontalOptions="Center">
+                        <Label FontFamily="appIcons" Text="&#xea0f;" FontSize="100" TextColor="DarkRed" HorizontalOptions="Center" IsVisible="{Binding IsLoading}" VerticalTextAlignment="Center"/>
+                        <Label Text="There are no memorias to display." IsVisible="{Binding IsLoading}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                        <Label Text="Add some." IsVisible="{Binding IsLoading}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                    </Grid>
+                    </CollectionView.EmptyView>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="locations:MemoriaList">
+                            <SwipeView >
+                                <SwipeView.RightItems>
+                                    <SwipeItems >
+                                    <SwipeItem Command="{Binding BindingContext.DeleteMemoriaCommand, Source={x:Reference page}}" CommandParameter="{Binding Id}" BackgroundColor="Red">
+                                            <SwipeItem.IconImageSource>
+                                                <FontImageSource FontFamily="appIcons" Glyph="&#xe9ad;" Size="10" Color="Black"/>
+                                            </SwipeItem.IconImageSource>
+                                        </SwipeItem>
+                                        <SwipeItem Command="{Binding BindingContext.UpdateMemoriaCommand, Source={x:Reference page}}" CommandParameter="{Binding Id}" BackgroundColor="Orange">
+                                            <SwipeItem.IconImageSource>
+                                                <FontImageSource FontFamily="appIcons" Glyph="&#xea9b;" Size="10" Color="Black"/>
+                                            </SwipeItem.IconImageSource>
+                                        </SwipeItem>
+                                        <SwipeItem Command="{Binding BindingContext.DetailsMemoriaCommand, Source={x:Reference page}}" CommandParameter="{Binding Id}" BackgroundColor="Gray">
+                                            <SwipeItem.IconImageSource>
+                                                <FontImageSource FontFamily="appIcons" Glyph="&#xe987;" Size="10" Color="Black"/>
+                                            </SwipeItem.IconImageSource>
+                                        </SwipeItem>
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <Border Style="{x:StaticResource SearchBorders}" HeightRequest="{x:StaticResource ButtonHeight}">
+
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding BindingContext.DetailsMemoriaCommand, Source={x:Reference page}}" 
+                                                                  NumberOfTapsRequired="1" CommandParameter="{Binding Id}"/>
+                                    </Border.GestureRecognizers>
+
+                                    <Grid ColumnDefinitions="Auto,*"
+                                                      RowDefinitions="Auto,Auto"
+                                                      ColumnSpacing="{x:StaticResource DefaultSpacing}">
+
+                                        <!-- Titel -->
+                                        <Label Grid.Column="1"
+                                                       Text="{Binding Name}"
+                                                       FontSize="16"
+                                                       FontAttributes="Bold" />
+
+                                        <!-- Subtekst -->
+                                        <Label Grid.Column="1"
+                                                       Grid.Row="1"
+                                                       FontSize="12"
+                                                       TextColor="Gray" 
+                                                       Text="{Binding EventDate}"/>
+
+                                    </Grid>
+
+                                </Border>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Grid IsVisible="{Binding IsBusy}" BackgroundColor="Black" Opacity="0.7">
+                <VerticalStackLayout  Style="{x:StaticResource LoadingBlock}">
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" Style="{x:StaticResource Loading}"/>
+                    <Label Text="Loading Memorias..." TextColor="{DynamicResource White}"/>
+                </VerticalStackLayout>
+            </Grid>
+        </Grid>
+
+
+        <Grid Grid.Row="2" Style="{x:StaticResource BasicGridDivition}">
+            <Button 
+                Grid.Column="0"
+                Command="{Binding NavigationCommand}"
+                Style="{x:StaticResource FullButtons}"
+                CommandParameter="add"
+                Text="Add"/>
+
+            <Button 
+                Grid.Column="1"
+                Command="{Binding NavigationCommand}"
+                Style="{x:StaticResource FullButtons}"
+                CommandParameter="//settingsPage">
+                <Button.ImageSource>
+                    <FontImageSource Glyph="&#xe994;" FontFamily="appIcons" Size="20"/>
+                </Button.ImageSource>
+            </Button>
+        </Grid>
+        <Border Grid.Row="3" IsVisible="{Binding IsOffline}" Padding="{x:StaticResource DefaultPadding}" BackgroundColor="DarkRed">
+            <Label Text="No internet connection has been detected. Some features may be unavailable." HorizontalOptions="Center"/>
+        </Border>
+    </Grid>
+</ContentPage>
